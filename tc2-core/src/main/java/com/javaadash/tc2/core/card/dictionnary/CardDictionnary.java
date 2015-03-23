@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import main.CardsGenerator;
-
 import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.condition.Condition;

@@ -10,6 +10,7 @@ import com.javaadash.tc2.core.TC2GameManager;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.card.condition.Condition;
+import com.javaadash.tc2.core.card.dictionnary.CardsGenerator;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
