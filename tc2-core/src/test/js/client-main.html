@@ -17,21 +17,41 @@
         </style>
         
             <!-- Notice the URL, this is handled by socket.io on the server automatically, via express -->
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script src="js/socket.io/socket.io.js"></script>
         
             <!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. --> 
         <script type="text/javascript">
-
+			
+			console.log( 'In the javascript' );
+			
                 //This is all that needs
-            var socket = io.connect('/');
+           var socket = io.connect('http://localhost:9092', {
+             'reconnection delay' : 2000,
+             'force new connection' : true
+           });
+           
+           socket.on('list_games_result', function(games_list) {
+                // here is your handler on messages from server
+                console.log( 'Message received' + data);
+           });
 
-                //Now we can listen for that event
-            socket.on('onconnected', function( data ) {
+       		socket.on('connect', function() {
+       		    console.log( 'Trying connect' );
+                // connection established, now we can send an objects
 
-                    //Note that the data is the object we sent from the server, as is. So we can assume its id exists. 
-                console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
 
-            });
+                // send json-object to server
+                // '@class' property should be defined and should 
+                // equals to full class name.
+                //var obj = { '@class' : 'java.lang.String', };
+                //socket.json.send(obj);
+
+                // send event-object to server
+                // '@class' property is NOT necessary in this case
+                var event = {};
+                socket.emit('list_games', event);
+
+       		});
 
         </script>
  
