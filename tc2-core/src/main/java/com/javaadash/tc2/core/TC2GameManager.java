@@ -79,8 +79,8 @@ public class TC2GameManager
                     // start next Turn
                     context.setTurn(context.getTurn()+1);
                     tmpPlayer = context.getFirstPlayer();
-                    context.setStartPlayer(context.getSecondPlayer());
-                    context.setNextPlayer(tmpPlayer);
+                    context.setFirstPlayer(context.getSecondPlayer());
+                    context.setSecondPlayer(tmpPlayer);
                     break;
             }
             
@@ -96,13 +96,13 @@ public class TC2GameManager
 	{
 		if(Math.random() < 0.5 )
 		{
-			context.setStartPlayer(player1);
-			context.setNextPlayer(player2);
+			context.setFirstPlayer(player1);
+			context.setSecondPlayer(player2);
 		}
 		else
 		{
-			context.setStartPlayer(player2);
-			context.setNextPlayer(player1);
+			context.setFirstPlayer(player2);
+			context.setSecondPlayer(player1);
 		}
 		log.info("Player {} starts the game", context.getFirstPlayer());
 	}

@@ -106,8 +106,8 @@ public class BoardClearerTest extends TestCase
 		Player p2 = GameUtils.getPlayer("junit2", maxCharacters, maxActions, 0);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// player 1 has an action on board, player 2 has a character on board
 		p1.getIngameDeck().setCardLocation(

@@ -31,9 +31,9 @@ public class GameContext
 		return firstPlayer;
 	}
 	
-	public void setStartPlayer(Player startPlayer) 
+	public void setFirstPlayer(Player firstPlayer) 
 	{
-		this.firstPlayer = startPlayer;
+		this.firstPlayer = firstPlayer;
 	}
 	
 	public Player getSecondPlayer() 
@@ -41,9 +41,9 @@ public class GameContext
 		return secondPlayer;
 	}
 	
-	public void setNextPlayer(Player nextPlayer) 
+	public void setSecondPlayer(Player secondPlayer) 
 	{
-		this.secondPlayer = nextPlayer;
+		this.secondPlayer = secondPlayer;
 	}
     
     public void setCurrentPlayer(Player p)

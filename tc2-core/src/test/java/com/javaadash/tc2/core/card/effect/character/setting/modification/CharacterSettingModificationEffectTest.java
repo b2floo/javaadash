@@ -29,11 +29,11 @@ public class CharacterSettingModificationEffectTest extends TestCase
 		targetCharacter.setIntSetting(setting, initialSetting);
 		startPlayer.getIngameDeck().setCardLocation(targetCharacter, CardLocation.BOARD);
 		
-		context.setStartPlayer(startPlayer);
+		context.setFirstPlayer(startPlayer);
 		context.setCurrentPlayer(startPlayer);
 		
 		Player nextPlayer = GameUtils.getPlayer("junit2", 1, 0, 0);
-		context.setNextPlayer(nextPlayer);
+		context.setSecondPlayer(nextPlayer);
 		
 		effect.resolve(context);
 		
@@ -52,11 +52,11 @@ public class CharacterSettingModificationEffectTest extends TestCase
 		targetCharacter.setIntSetting(setting, initialSetting + modifier);
 		startPlayer.getIngameDeck().setCardLocation(targetCharacter, CardLocation.BOARD);
 		
-		context.setStartPlayer(startPlayer);
+		context.setFirstPlayer(startPlayer);
 		context.setCurrentPlayer(startPlayer);
 		
 		Player nextPlayer = GameUtils.getPlayer("junit2", 1, 0, 0);
-		context.setNextPlayer(nextPlayer);
+		context.setSecondPlayer(nextPlayer);
 		
 		effect.resolveEnd(context);
 		

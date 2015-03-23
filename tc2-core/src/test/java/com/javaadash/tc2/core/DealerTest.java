@@ -49,8 +49,8 @@ public class DealerTest extends TestCase
 		Player p2 = GameUtils.getPlayer("junit2", 0, maxActions, handsize2);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		dealer.dealCards(context);

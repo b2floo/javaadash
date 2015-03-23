@@ -72,8 +72,8 @@ public class WinnerCheckTest extends TestCase
 			c.setIntSetting("LIFE", 1);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
@@ -93,8 +93,8 @@ public class WinnerCheckTest extends TestCase
 			c.setIntSetting("LIFE", -1);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
@@ -114,8 +114,8 @@ public class WinnerCheckTest extends TestCase
 			c.setIntSetting("LIFE", 1);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
@@ -137,8 +137,8 @@ public class WinnerCheckTest extends TestCase
 			c.setIntSetting("LIFE", -1);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
@@ -160,8 +160,8 @@ public class WinnerCheckTest extends TestCase
 			c.setIntSetting("LIFE", -1);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
@@ -183,8 +183,8 @@ public class WinnerCheckTest extends TestCase
 			c.setIntSetting("LIFE", -1);
 		
 		GameContext context = new GameContext();
-		context.setStartPlayer(p1);
-		context.setNextPlayer(p2);
+		context.setFirstPlayer(p1);
+		context.setSecondPlayer(p2);
 		
 		// deal cards
 		winnerCheck.checkWinner(context);

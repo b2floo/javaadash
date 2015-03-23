@@ -9,6 +9,8 @@ import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.javaadash.tc2.core.CardType;
+import com.javaadash.tc2.core.GameState;
+import com.javaadash.tc2.core.TC2AsynchronousGameManager;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.context.GameContext;
@@ -33,9 +35,9 @@ public class TC2Server {
     Configuration config = new Configuration();
     config.setHostname("localhost");
     config.setPort(9092);
+    config.setOrigin("http://localhost");
 
     final SocketIOServer server = new SocketIOServer(config);
-
 
     server.addEventListener("join_any_game", JoinGameAttrs.class,
         new DataListener<JoinGameAttrs>() {
@@ -48,7 +50,6 @@ public class TC2Server {
 
             Map.Entry<String, Player> pendingGameRequest = lobby.getPendingGameRequest();
 
-
             if (pendingGameRequest == null) {
               System.out.println("pendingGameRequest == null");
 
@@ -60,8 +61,7 @@ public class TC2Server {
                 for (int i = 0; i < nbActions; i++) {
                   deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
                 }
-                new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client
-                    .getSessionId().toString()));
+                p1 = new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
               } catch (TC2CoreException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -81,25 +81,21 @@ public class TC2Server {
                 for (int i = 0; i < nbActions; i++) {
                   deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
                 }
-                new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client
-                    .getSessionId().toString()));
+                p1 = new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
               } catch (TC2CoreException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
               }
 
               GameContext gameContext = new GameContext();
-              gameContext.setStartPlayer(pendingGameRequest.getValue());
-              gameContext.setNextPlayer(p1);
+              gameContext.setFirstPlayer(pendingGameRequest.getValue());
+              gameContext.setSecondPlayer(p1);
+              gameContext.setState(GameState.BEGINNING);
               lobby.removePendingGameRequest(roomId);
-              lobby.getCurrentGames().put(roomId, new GameContext());
-              System.out.println("Before sending the start_game message");
-              System.out.println("server.getRoomOperations(roomId)="
-                  + server.getRoomOperations(roomId));
-              System.out.println("server.getRoomOperations(roomId).getClients()"
-                  + server.getRoomOperations(roomId).getClients().size());
-              server.getRoomOperations(roomId).sendEvent("start_game");
-              System.out.println("start_game sent");
+              lobby.getCurrentGames().put(roomId, gameContext);
+
+              TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
+              gameManager.handleGame(gameContext);
             }
           }
         });

@@ -25,7 +25,7 @@ public class CharacterSettingConditionTest extends TestCase
 		Player p = GameUtils.getPlayer("junit", 1, 0, 0);
 		// add the player to context
 		context.setCurrentPlayer(p);
-		context.setStartPlayer(p);
+		context.setFirstPlayer(p);
 		
 		//put the character on board
 		c = p.getIngameDeck().getCard(CardType.CHARACTER,CardLocation.HAND);

@@ -1,5 +1,6 @@
 package com.javaadash.tc2.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +12,7 @@ import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.context.GameContext;
+import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 /**
@@ -27,6 +29,8 @@ public class PlayManager
 	{
 		switch (context.getState()) 
 		{
+			case GameState.BEGINNING:
+				startGame(context);
 			case GameState.PLAYER_CHOOSE_CHARACTER:
 				chooseCharacter(context);
 				break;
@@ -44,7 +48,21 @@ public class PlayManager
 		}
 	}
 	
-	private void chooseCharacter(GameContext context)
+	protected void startGame(GameContext context) {
+		log.info("Starting the game");
+		try {
+			context.getFirstPlayer().getPlayerInterface().startGame();
+			context.getSecondPlayer().getPlayerInterface().startGame();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TC2CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	protected void chooseCharacter(GameContext context)
 	{
 		Player currentPlayer = context.getCurrentPlayer();
 		log.info("{} chooses a character", currentPlayer.getName());
@@ -66,7 +84,7 @@ public class PlayManager
 			currentPlayer.getIngameDeck().setCardLocation(selectedCharacter, CardLocation.BOARD);
 	}
 	
-	private void chooseAction(GameContext context)
+	protected void chooseAction(GameContext context)
 	{
 		Player currentPlayer = context.getCurrentPlayer();
 		log.info("{} chooses an action",  currentPlayer.getName());
@@ -88,7 +106,7 @@ public class PlayManager
 			currentPlayer.getIngameDeck().setCardLocation(selectedAction, CardLocation.BOARD);
 	}
 	
-	private void chooseDiscard(GameContext context)
+	protected void chooseDiscard(GameContext context)
 	{
 		Player currentPlayer = context.getCurrentPlayer();
 		log.debug("{} chooses discard",  currentPlayer.getName());

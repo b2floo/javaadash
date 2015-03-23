@@ -26,8 +26,8 @@ public class TargetResolverTest extends TestCase
     	Card char2 = p2.getIngameDeck().getCard(CardType.CHARACTER,CardLocation.HAND);
     	p2.getIngameDeck().setCardLocation(char2, CardLocation.BOARD);
     	
-    	context.setStartPlayer(p1);
-    	context.setNextPlayer(p2);
+    	context.setFirstPlayer(p1);
+    	context.setSecondPlayer(p2);
     	
     	//current player= p1
     	context.setCurrentPlayer(p1);
@@ -53,8 +53,8 @@ public class TargetResolverTest extends TestCase
     	Card char2 = p2.getIngameDeck().getCard(CardType.CHARACTER,CardLocation.HAND);
     	p2.getIngameDeck().setCardLocation(char2, CardLocation.BOARD);
     	
-    	context.setStartPlayer(p1);
-    	context.setNextPlayer(p2);
+    	context.setFirstPlayer(p1);
+    	context.setSecondPlayer(p2);
     	
     	//current player= p1
     	context.setCurrentPlayer(p1);
