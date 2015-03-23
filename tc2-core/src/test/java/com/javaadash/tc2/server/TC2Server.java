@@ -1,15 +1,32 @@
 package com.javaadash.tc2.server;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
+import com.javaadash.tc2.core.CardType;
+import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.Deck;
+import com.javaadash.tc2.core.context.GameContext;
+import com.javaadash.tc2.core.exceptions.TC2CoreException;
+import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class TC2Server {
+
+  static TC2Lobby lobby = new TC2Lobby();
+  static Map<Integer, Integer> limits = new HashMap<Integer, Integer>();
+  static int nbActions = 2;
+  static int nbCharacters = 2;
+  static {
+
+    limits.put(CardType.ACTION, nbActions);
+    limits.put(CardType.CHARACTER, nbCharacters);
+  }
+
 
   public static void main(String[] args) throws InterruptedException {
 
@@ -19,26 +36,73 @@ public class TC2Server {
 
     final SocketIOServer server = new SocketIOServer(config);
 
-    server.addEventListener("list_games", Object.class, new DataListener<Object>() {
 
-      @Override
-      public void onData(final SocketIOClient client, Object data, final AckRequest ackRequest) {
+    server.addEventListener("join_any_game", JoinGameAttrs.class,
+        new DataListener<JoinGameAttrs>() {
 
-        System.out.println("Received data!!!");
-        // check is ack requested by client,
-        // but it's not required check
-        if (ackRequest.isAckRequested()) {
-          // send ack response with data to client
-          ackRequest.sendAckData("client message was delivered to server!", "yeah!");
-        }
+          @Override
+          public void onData(final SocketIOClient client, JoinGameAttrs attrs,
+              final AckRequest ackRequest) {
 
-        // send object to socket.io client
-        Set<String> games = new HashSet<String>();
-        games.add("GAME1");
-        games.add("GAME2");
-        client.sendEvent("list_games_result", games);
-      }
-    });
+            System.out.println("Received msg from " + attrs.getUsername());
+
+            Map.Entry<String, Player> pendingGameRequest = lobby.getPendingGameRequest();
+
+
+            if (pendingGameRequest == null) {
+              System.out.println("pendingGameRequest == null");
+
+              Deck deck1 = new Deck(limits);
+              Player p1 = null;
+              try {
+                deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
+                deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
+                for (int i = 0; i < nbActions; i++) {
+                  deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
+                }
+                new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client
+                    .getSessionId().toString()));
+              } catch (TC2CoreException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+
+              lobby.addPendingGameRequest(client.getSessionId().toString(), p1);
+              client.joinRoom(client.getSessionId().toString());
+            } else {
+              String roomId = pendingGameRequest.getKey();
+              client.joinRoom(roomId);
+
+              Deck deck1 = new Deck(limits);
+              Player p1 = null;
+              try {
+                deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
+                deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
+                for (int i = 0; i < nbActions; i++) {
+                  deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
+                }
+                new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client
+                    .getSessionId().toString()));
+              } catch (TC2CoreException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+
+              GameContext gameContext = new GameContext();
+              gameContext.setStartPlayer(pendingGameRequest.getValue());
+              gameContext.setNextPlayer(p1);
+              lobby.removePendingGameRequest(roomId);
+              lobby.getCurrentGames().put(roomId, new GameContext());
+              System.out.println("Before sending the start_game message");
+              System.out.println("server.getRoomOperations(roomId)="
+                  + server.getRoomOperations(roomId));
+              System.out.println("server.getRoomOperations(roomId).getClients()"
+                  + server.getRoomOperations(roomId).getClients().size());
+              server.getRoomOperations(roomId).sendEvent("start_game");
+              System.out.println("start_game sent");
+            }
+          }
+        });
 
     server.start();
 
