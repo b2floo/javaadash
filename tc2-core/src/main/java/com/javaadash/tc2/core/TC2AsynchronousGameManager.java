@@ -23,10 +23,9 @@ public class TC2AsynchronousGameManager
 		case GameState.BEGINNING:
 			new Dealer().dealCards(context);
 			new PlayManager().startGame(context);
-			context.setState(GameState.CARDS_DISTRIBUTION);
-		case GameState.CARDS_DISTRIBUTION:
-			
 			context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
+		case GameState.PLAYER_CHOOSE_CHARACTER:
+			
 		default:
 		}
 	}

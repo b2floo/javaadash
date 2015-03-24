@@ -2,7 +2,9 @@ package com.javaadash.tc2.server;
 
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage;
 import com.javaadash.tc2.core.interfaces.message.JoinGameMessage;
+import com.javaadash.tc2.server.listener.ChooseCharacterListener;
 import com.javaadash.tc2.server.listener.JoinGameListener;
 
 public class TC2Server {
@@ -21,6 +23,9 @@ public class TC2Server {
     server.addEventListener("join_any_game", JoinGameMessage.class,
         new JoinGameListener(lobby));
 
+    server.addEventListener("choose_character", ChooseCharacterMessage.class,
+            new ChooseCharacterListener(lobby));
+    
     server.start();
 
     Thread.sleep(Integer.MAX_VALUE);

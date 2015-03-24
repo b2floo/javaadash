@@ -62,10 +62,10 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
          }
 
          lobby.addPendingGameRequest(client.getSessionId().toString(), p1);
-         client.joinRoom(client.getSessionId().toString());
+         client.set("roomId", client.getSessionId().toString());
        } else {
          String roomId = pendingGameRequest.getKey();
-         client.joinRoom(roomId);
+         client.set("roomId", roomId);
 
          Deck deck1 = new Deck(limits);
          Player p1 = null;
@@ -82,9 +82,11 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
          }
 
          GameContext gameContext = new GameContext();
+         gameContext.setState(GameState.BEGINNING);
+         gameContext.setTurn(0);
          gameContext.setFirstPlayer(pendingGameRequest.getValue());
          gameContext.setSecondPlayer(p1);
-         gameContext.setState(GameState.BEGINNING);
+         
          lobby.removePendingGameRequest(roomId);
          lobby.getCurrentGames().put(roomId, gameContext);
 
