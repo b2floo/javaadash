@@ -56,6 +56,9 @@
 			
 			socket.on('start_game', function(data) {
 				output('<span class="username-msg">Starting a game with '+data.opponent+'!</span>');
+				// now ask for my cards
+				socket.emit('get_characters');
+				socket.emit('get_cards');
        		});
 
 
