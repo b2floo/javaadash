@@ -17,22 +17,17 @@ public class TC2AsynchronousGameManager
 	
 	public void handleGame(GameContext context)
 	{
-		boolean endHandle = false;
-		
-        while(!endHandle) {
-        	log.info("Handling game, current state="+context.getState());
-        	// TODO add a state to shuffle players??
-        	switch(context.getState()) {
-        		case GameState.BEGINNING:
-        			new PlayManager().startGame(context);
-        			context.setState(GameState.CARDS_DISTRIBUTION);
-        		case GameState.CARDS_DISTRIBUTION:
-           			new Dealer().dealCards(context);
-        			context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
-        			endHandle = true;
-        		default:
-        			endHandle = true;
-        	}
-        }
+		log.info("Handling game, current state="+context.getState());
+		// TODO add a state to shuffle players??
+		switch(context.getState()) {
+		case GameState.BEGINNING:
+			new Dealer().dealCards(context);
+			new PlayManager().startGame(context);
+			context.setState(GameState.CARDS_DISTRIBUTION);
+		case GameState.CARDS_DISTRIBUTION:
+			
+			context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
+		default:
+		}
 	}
 }

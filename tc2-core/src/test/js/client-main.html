@@ -49,13 +49,30 @@
 			
 			socket.on('start_game', function(data) {
 				output('<span class="username-msg">Starting a game with '+data.opponent+'!</span>');
+				output('<span class="username-msg">Available characters: </span>');
+				outputList(data.myCharacters);
+				output('<span class="username-msg">Available cards: </span>');
+				outputList(data.myHand);
+				output('<span class="username-msg">Opponent characters: </span>');
+				outputList(data.myOpponentCharacters);
        		});
+
 
 			function output(message) {
 	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
 	            var element = $("<div>" + currentTime + " " + message + "</div>");
-				$('#console').prepend(element);
+				$('#console').append(element);
 			}
+
+            function outputList(array) {
+              var full_list = "";
+              for(var i=0; i<array.length; ++i) {
+                  full_list = full_list + array[i].id + '<br>';
+              }
+              $("#console").append(full_list);     
+            }
+
+			
         </script>
  
     </head>
