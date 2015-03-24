@@ -19,17 +19,20 @@
 			.send-msg {color:#888}
 		</style>
 
-        <!-- Notice the URL, this is handled by socket.io on the server automatically, via express -->
         <script src="js/socket.io/socket.io.js"></script>
         <script src="js/moment.min.js"></script>
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         
         <!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. --> 
         <script type="text/javascript">
+			function output(message) {
+	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
+	            var element = $("<div>" + currentTime + " " + message + "</div>");
+				$('#console').prepend(element);
+			}
 			
 			console.log( 'javascript -- start' );
 			var username = 'user' + Math.floor((Math.random()*1000)+1);
-			console.log( 'generated username '+username );
 			
            //This is all that needs
            var socket = io.connect('http://localhost:9092', {
@@ -41,7 +44,11 @@
        		    console.log( 'Connected...' );
                 // connection established, now we can send an objects
        		});
-           
+       		
+       		$(window).load(function(){ 
+       			output('<span class="username-msg">Welcome '+username+'!</span>');
+       		})
+       		
        		function joinAnyGame() {
                 var jsonObject = {username: username};
             	socket.emit('join_any_game', jsonObject);
@@ -51,11 +58,7 @@
 				output('<span class="username-msg">Starting a game with '+data.opponent+'!</span>');
        		});
 
-			function output(message) {
-	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
-	            var element = $("<div>" + currentTime + " " + message + "</div>");
-				$('#console').prepend(element);
-			}
+
         </script>
  
     </head>
