@@ -1,6 +1,6 @@
-package com.javaadash.tc2.server;
+package com.javaadash.tc2.core.interfaces.message;
 
-public class JoinGameAttrs {
+public class JoinGameMessage {
   private String username = null;
 
   public String getUsername() {

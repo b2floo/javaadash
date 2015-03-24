@@ -6,6 +6,7 @@ import java.util.Collection;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
+import com.javaadash.tc2.core.interfaces.message.StartGameMessage;
 import com.javaadash.tc2.core.interfaces.player.TC2PlayerInterface;
 
 public class SocketIoPlayerInterface implements TC2PlayerInterface {
@@ -18,8 +19,9 @@ public class SocketIoPlayerInterface implements TC2PlayerInterface {
   }
 
   @Override
-  public void startGame() throws IOException, TC2CoreException {
-    client.sendEvent("start_game");
+  public void startGame(StartGameMessage msg) throws IOException, TC2CoreException {
+
+    client.sendEvent("start_game", msg);
   }
 
   @Override

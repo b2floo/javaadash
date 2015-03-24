@@ -45,8 +45,8 @@
             	socket.emit('join_any_game', jsonObject);
 			};
 			
-			socket.on('start_game', function() {
-       		    console.log( 'Received start_game with data:');
+			socket.on('start_game', function(data) {
+       		    console.log( 'Received start_game with data:'+data.opponent);
        		});
 
         </script>

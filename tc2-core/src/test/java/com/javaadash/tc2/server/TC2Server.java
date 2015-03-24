@@ -15,6 +15,7 @@ import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
+import com.javaadash.tc2.core.interfaces.message.JoinGameMessage;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class TC2Server {
@@ -35,15 +36,15 @@ public class TC2Server {
     Configuration config = new Configuration();
     config.setHostname("localhost");
     config.setPort(9092);
-    config.setOrigin("http://localhost");
+    // config.setOrigin("http://localhost");
 
     final SocketIOServer server = new SocketIOServer(config);
 
-    server.addEventListener("join_any_game", JoinGameAttrs.class,
-        new DataListener<JoinGameAttrs>() {
+    server.addEventListener("join_any_game", JoinGameMessage.class,
+        new DataListener<JoinGameMessage>() {
 
           @Override
-          public void onData(final SocketIOClient client, JoinGameAttrs attrs,
+          public void onData(final SocketIOClient client, JoinGameMessage attrs,
               final AckRequest ackRequest) {
 
             System.out.println("Received msg from " + attrs.getUsername());
