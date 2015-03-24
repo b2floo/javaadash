@@ -21,6 +21,8 @@
 
         <!-- Notice the URL, this is handled by socket.io on the server automatically, via express -->
         <script src="js/socket.io/socket.io.js"></script>
+        <script src="js/moment.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         
         <!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. --> 
         <script type="text/javascript">
@@ -46,9 +48,14 @@
 			};
 			
 			socket.on('start_game', function(data) {
-       		    console.log( 'Received start_game with data:'+data.opponent);
+				output('<span class="username-msg">Starting a game with '+data.opponent+'!</span>');
        		});
 
+			function output(message) {
+	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
+	            var element = $("<div>" + currentTime + " " + message + "</div>");
+				$('#console').prepend(element);
+			}
         </script>
  
     </head>
@@ -63,5 +70,7 @@
 	       <!--<input id="username" class="input-xlarge" type="text" placeholder="Enter your name--"/>-->
 	       <button type="button" onClick="joinAnyGame()" class="btn">Join any game</button>
 	    </form>
+	    
+	    <div id="console" class="well">
     </body>
 </html>
