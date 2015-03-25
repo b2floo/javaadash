@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
@@ -14,6 +15,8 @@ import com.javaadash.tc2.core.card.effect.Effect;
 public class Card implements Serializable
 {
 	private static final long serialVersionUID = 3548312040504128825L;
+	// TODO remove the generator
+	private static AtomicInteger idGenerator = new AtomicInteger();
 	
 	protected Integer id;
 	protected String description;
@@ -29,17 +32,21 @@ public class Card implements Serializable
     
     public Card(Integer type) {
     	this.type = type;
+    	this.id = idGenerator.getAndIncrement();
     }
     
     public Card(Integer type, String description) {
     	this.type = type;
     	this.description = description;
+    	this.id = idGenerator.getAndIncrement();
     }
     
 	public Card(Integer id, Integer type, String description, 
 			Collection<Effect> effects, Collection<Condition> conditions, Map<String, String> settings) {
-		this.description = description;
+		this.id = id;
 		this.type = type;
+		this.description = description;
+
 		this.effects = effects;
 		this.conditions = conditions;
 		this.settings = settings;

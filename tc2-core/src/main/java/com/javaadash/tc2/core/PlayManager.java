@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.board.CardLocation;
+import com.javaadash.tc2.core.board.CardsToDescriptionHelper;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardDescription;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
@@ -49,10 +51,29 @@ public class PlayManager {
   protected void startGame(GameContext context) {
     log.info("Starting the game");
     try {
-      context.getFirstPlayer().getPlayerInterface()
-          .startGame(new StartGameMessage(context.getSecondPlayer().getName()));
-      context.getSecondPlayer().getPlayerInterface()
-          .startGame(new StartGameMessage(context.getFirstPlayer().getName()));
+    	// create list to be sent
+    	List<CardDescription> player1Hand = CardsToDescriptionHelper.toCardsDescription(
+    			context.getFirstPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.HAND));
+    	List<CardDescription> player1Characters = CardsToDescriptionHelper.toCardsDescription(
+    			context.getFirstPlayer().getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND));		
+    	List<CardDescription> player2Hand = CardsToDescriptionHelper.toCardsDescription(
+    			context.getSecondPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.HAND));
+    	List<CardDescription> player2Characters = CardsToDescriptionHelper.toCardsDescription(
+    			context.getSecondPlayer().getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND));	
+    	
+    	StartGameMessage player1msg = new StartGameMessage(context.getSecondPlayer().getName());
+    	player1msg.setMyHand(player1Hand);
+    	player1msg.setMyCharacters(player1Characters);
+    	player1msg.setMyOpponentCharacters(player2Characters);
+    	context.getFirstPlayer().getPlayerInterface()
+          .startGame(player1msg);
+    	
+    	StartGameMessage player2msg = new StartGameMessage(context.getFirstPlayer().getName());
+    	player2msg.setMyHand(player2Hand);
+    	player2msg.setMyCharacters(player2Characters);
+    	player2msg.setMyOpponentCharacters(player1Characters);
+    	context.getSecondPlayer().getPlayerInterface()
+          	.startGame(player2msg);
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

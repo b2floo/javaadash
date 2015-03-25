@@ -25,11 +25,6 @@
         
         <!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. --> 
         <script type="text/javascript">
-			function output(message) {
-	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
-	            var element = $("<div>" + currentTime + " " + message + "</div>");
-				$('#console').prepend(element);
-			}
 			
 			console.log( 'javascript -- start' );
 			var username = 'user' + Math.floor((Math.random()*1000)+1);
@@ -59,9 +54,32 @@
 				// now ask for my cards
 				socket.emit('get_characters');
 				socket.emit('get_cards');
+				output('<span class="username-msg">Available characters: </span>');
+				outputList(data.myCharacters);
+				output('<span class="username-msg">Available cards: </span>');
+				outputList(data.myHand);
+				output('<span class="username-msg">Opponent characters: </span>');
+				outputList(data.myOpponentCharacters);
+				var jsonObject = {username: username};
+				socket.emit('choose_character', jsonObject);
        		});
 
 
+			function output(message) {
+	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
+	            var element = $("<div>" + currentTime + " " + message + "</div>");
+				$('#console').append(element);
+			}
+
+            function outputList(array) {
+              var full_list = "";
+              for(var i=0; i<array.length; ++i) {
+                  full_list = full_list + array[i].id + '<br>';
+              }
+              $("#console").append(full_list);     
+            }
+
+			
         </script>
  
     </head>
