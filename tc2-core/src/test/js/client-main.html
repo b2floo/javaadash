@@ -60,7 +60,8 @@
 				outputList(data.myHand);
 				output('<span class="username-msg">Opponent characters: </span>');
 				outputList(data.myOpponentCharacters);
-				var jsonObject = {username: username};
+				var jsonObject = { 'characterCard' : data.myCharacters[0].id, 
+				 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
 				socket.emit('choose_character', jsonObject);
        		});
 

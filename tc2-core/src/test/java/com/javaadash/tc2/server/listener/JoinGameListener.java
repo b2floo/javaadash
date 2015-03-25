@@ -20,77 +20,78 @@ import com.javaadash.tc2.server.TC2Lobby;
 
 public class JoinGameListener implements DataListener<JoinGameMessage> {
 
-	  static Map<Integer, Integer> limits = new HashMap<Integer, Integer>();
-	  static int nbActions = 2;
-	  static int nbCharacters = 2;
-	  static {
+  static Map<Integer, Integer> limits = new HashMap<Integer, Integer>();
+  static int nbActions = 2;
+  static int nbCharacters = 2;
+  static {
 
-	    limits.put(CardType.ACTION, nbActions);
-	    limits.put(CardType.CHARACTER, nbCharacters);
-	  }
-	  
-	 private TC2Lobby lobby;
-	 private TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
-	 
-	 public JoinGameListener(TC2Lobby lobby) {
-		 this.lobby = lobby;
-	 }
-	 
-	 @Override
-     public void onData(final SocketIOClient client, JoinGameMessage attrs,
-         final AckRequest ackRequest) {
+    limits.put(CardType.ACTION, nbActions);
+    limits.put(CardType.CHARACTER, nbCharacters);
+  }
 
-       System.out.println("Received msg from " + attrs.getUsername());
+  private TC2Lobby lobby;
+  private TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
 
-       Map.Entry<String, Player> pendingGameRequest = lobby.getPendingGameRequest();
+  public JoinGameListener(TC2Lobby lobby) {
+    this.lobby = lobby;
+  }
 
-       if (pendingGameRequest == null) {
-         System.out.println("pendingGameRequest == null");
+  @Override
+  public void onData(final SocketIOClient client, JoinGameMessage msg, final AckRequest ackRequest) {
 
-         Deck deck1 = new Deck(limits);
-         Player p1 = null;
-         try {
-           deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
-           deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
-           for (int i = 0; i < nbActions; i++) {
-             deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
-           }
-           p1 = new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
-         } catch (TC2CoreException e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
-         }
+    System.out.println("Received msg from " + msg.getUsername());
 
-         lobby.addPendingGameRequest(client.getSessionId().toString(), p1);
-         client.set("roomId", client.getSessionId().toString());
-       } else {
-         String roomId = pendingGameRequest.getKey();
-         client.set("roomId", roomId);
+    Map.Entry<String, Player> pendingGameRequest = lobby.getPendingGameRequest();
 
-         Deck deck1 = new Deck(limits);
-         Player p1 = null;
-         try {
-           deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
-           deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
-           for (int i = 0; i < nbActions; i++) {
-             deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
-           }
-           p1 = new Player(attrs.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
-         } catch (TC2CoreException e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
-         }
+    if (pendingGameRequest == null) {
+      System.out.println("pendingGameRequest == null");
 
-         GameContext gameContext = new GameContext();
-         gameContext.setState(GameState.BEGINNING);
-         gameContext.setTurn(0);
-         gameContext.setFirstPlayer(pendingGameRequest.getValue());
-         gameContext.setSecondPlayer(p1);
-         
-         lobby.removePendingGameRequest(roomId);
-         lobby.getCurrentGames().put(roomId, gameContext);
+      Deck deck1 = new Deck(limits);
+      Player p1 = null;
+      try {
+        deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
+        deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
+        for (int i = 0; i < nbActions; i++) {
+          deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
+        }
+        p1 = new Player(msg.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
+      } catch (TC2CoreException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
 
-         gameManager.handleGame(gameContext);
-       }
-	 }
+      lobby.addPendingGameRequest(client.getSessionId().toString(), p1);
+      client.set("roomId", client.getSessionId().toString());
+      client.set("username", msg.getUsername());
+    } else {
+      String roomId = pendingGameRequest.getKey();
+      client.set("roomId", roomId);
+      client.set("username", msg.getUsername());
+
+      Deck deck1 = new Deck(limits);
+      Player p1 = null;
+      try {
+        deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
+        deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
+        for (int i = 0; i < nbActions; i++) {
+          deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
+        }
+        p1 = new Player(msg.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
+      } catch (TC2CoreException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      GameContext gameContext = new GameContext();
+      gameContext.setState(GameState.BEGINNING);
+      gameContext.setTurn(0);
+      gameContext.setFirstPlayer(pendingGameRequest.getValue());
+      gameContext.setSecondPlayer(p1);
+
+      lobby.removePendingGameRequest(roomId);
+      lobby.getCurrentGames().put(roomId, gameContext);
+
+      gameManager.handleGame(gameContext);
+    }
+  }
 }

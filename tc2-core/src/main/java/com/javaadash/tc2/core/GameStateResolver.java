@@ -20,7 +20,7 @@ public class GameStateResolver
 				break;
 				
 			case GameState.PLAYER_CHOOSE_CHARACTER:
-			case GameState.PLAYER_CHOOSE_ACTIONS:
+			case GameState.PLAYER_CHOOSE_ACTION:
 			case GameState.PLAYER_CHOOSE_DISCARD:
 				playManager.play(context);
 				break;

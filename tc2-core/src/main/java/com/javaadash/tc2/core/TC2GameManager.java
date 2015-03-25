@@ -43,7 +43,7 @@ public class TC2GameManager
 			
 			
 			// players choose an action one after the other
-			context.setState(GameState.PLAYER_CHOOSE_ACTIONS);
+			context.setState(GameState.PLAYER_CHOOSE_ACTION);
 			setupConcurrentAction(context, stateResolver);
 			
 			// after cards are decided, now we resolve the turn

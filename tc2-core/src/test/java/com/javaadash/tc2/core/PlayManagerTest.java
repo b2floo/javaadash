@@ -53,7 +53,7 @@ public class PlayManagerTest extends TestCase
 		p.setPlayerInterface(mockPlayerInterface);
 		
 		GameContext context = new GameContext();
-		context.setState(GameState.PLAYER_CHOOSE_ACTIONS);
+		context.setState(GameState.PLAYER_CHOOSE_ACTION);
 		context.setCurrentPlayer(p);
 		assertEquals(-1, mockPlayerInterface.getAvailableActionsSize());
 		playManager.play(context);
@@ -71,7 +71,7 @@ public class PlayManagerTest extends TestCase
 		
 		assertEquals(0, p.getIngameDeck().getCards(CardType.ACTION,CardLocation.BOARD).size());
 		GameContext context = new GameContext();
-		context.setState(GameState.PLAYER_CHOOSE_ACTIONS);
+		context.setState(GameState.PLAYER_CHOOSE_ACTION);
 		context.setCurrentPlayer(p);
 		assertEquals(-1, mockPlayerInterface.getAvailableActionsSize());
 		playManager.play(context);
@@ -115,7 +115,7 @@ public class PlayManagerTest extends TestCase
 		}
 		
 		GameContext context = new GameContext();
-		context.setState(GameState.PLAYER_CHOOSE_ACTIONS);
+		context.setState(GameState.PLAYER_CHOOSE_ACTION);
 		context.setCurrentPlayer(p);
 		assertEquals(-1, mockPlayerInterface.getAvailableActionsSize());
 		playManager.play(context);

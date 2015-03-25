@@ -35,7 +35,7 @@ public class PlayManager {
         chooseCharacter(context);
         break;
 
-      case GameState.PLAYER_CHOOSE_ACTIONS:
+      case GameState.PLAYER_CHOOSE_ACTION:
         chooseAction(context);
         break;
 
