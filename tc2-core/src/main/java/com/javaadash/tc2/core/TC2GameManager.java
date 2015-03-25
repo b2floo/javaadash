@@ -63,11 +63,11 @@ public class TC2GameManager
 			log.debug("End turn {}", context.getTurn());
             switch (context.getWinner()) 
             {
-                case START_PLAYER:
+                case FIRST_PLAYER:
                     log.info("Winner is {}", context.getFirstPlayer());
                     endGame = true;
                     break;
-                case NEXT_PLAYER:
+                case SECOND_PLAYER:
                     log.info("Winner is {}", context.getSecondPlayer());
                     endGame = true;
                     break;

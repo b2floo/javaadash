@@ -51,9 +51,7 @@
 			
 			socket.on('start_game', function(data) {
 				output('<span class="username-msg">Starting a game with '+data.opponent+'!</span>');
-				// now ask for my cards
-				socket.emit('get_characters');
-				socket.emit('get_cards');
+
 				output('<span class="username-msg">Available characters: </span>');
 				outputCardList(data.myCharacters);
 				output('<span class="username-msg">Available cards: </span>');
@@ -63,10 +61,34 @@
 				var characterCard = { 'characterCard' : data.myCharacters[0].id, 
 				 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
 				socket.emit('choose_character', characterCard);
-				var actionCard = { 'actionCards' : [data.myHand[0]], 
+				var actionCards = { 'actionCards' : [data.myHand[0]], 
 				 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
-				socket.emit('choose_action', actionCard);
+				socket.emit('choose_action', actionCards);
        		});
+       		
+       		socket.on('update_game', function(data) {
+                output('<span class="username-msg">Update after turn</span>');
+
+                output('<span class="username-msg">Available characters: </span>');
+                outputCardList(data.myCharacters);
+                output('<span class="username-msg">Available cards: </span>');
+                outputCardList(data.myHand);
+                output('<span class="username-msg">Opponent characters: </span>');
+                outputCardList(data.myOpponentCharacters);
+                
+                // choose a card to discard
+                var discardCards = { 'discardCards' : [data.myHand[0]], 
+                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
+                socket.emit('choose_discard', discardCards);
+            });
+            
+            socket.on('end_game', function(data) {
+                output('<span class="username-msg">GAME OVER</span>');
+
+                output('<span>Winner is: '+data.winner+' </span>');
+                output('<span>Your score is: '+data.myScore+' </span>');
+                output('<span>Opponent score is: '+data.myOpponentScore+' </span>');
+            });
 
 
 			function output(message) {

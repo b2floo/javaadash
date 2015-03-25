@@ -15,14 +15,16 @@ import com.javaadash.tc2.core.card.CardDescription;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
+import com.javaadash.tc2.core.interfaces.message.EndGameMessage;
 import com.javaadash.tc2.core.interfaces.message.StartGameMessage;
+import com.javaadash.tc2.core.interfaces.message.UpdateGameMessage;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 /**
  * Interacts with the player when choices are needed
  * 
  * @author b2floo
- *
+ * 
  */
 public class PlayManager {
   private Logger log = LoggerFactory.getLogger(Player.class);
@@ -51,29 +53,31 @@ public class PlayManager {
   protected void startGame(GameContext context) {
     log.info("Starting the game");
     try {
-    	// create list to be sent
-    	List<CardDescription> player1Hand = CardsToDescriptionHelper.toCardsDescription(
-    			context.getFirstPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.HAND));
-    	List<CardDescription> player1Characters = CardsToDescriptionHelper.toCardsDescription(
-    			context.getFirstPlayer().getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND));		
-    	List<CardDescription> player2Hand = CardsToDescriptionHelper.toCardsDescription(
-    			context.getSecondPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.HAND));
-    	List<CardDescription> player2Characters = CardsToDescriptionHelper.toCardsDescription(
-    			context.getSecondPlayer().getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND));	
-    	
-    	StartGameMessage player1msg = new StartGameMessage(context.getSecondPlayer().getName());
-    	player1msg.setMyHand(player1Hand);
-    	player1msg.setMyCharacters(player1Characters);
-    	player1msg.setMyOpponentCharacters(player2Characters);
-    	context.getFirstPlayer().getPlayerInterface()
-          .startGame(player1msg);
-    	
-    	StartGameMessage player2msg = new StartGameMessage(context.getFirstPlayer().getName());
-    	player2msg.setMyHand(player2Hand);
-    	player2msg.setMyCharacters(player2Characters);
-    	player2msg.setMyOpponentCharacters(player1Characters);
-    	context.getSecondPlayer().getPlayerInterface()
-          	.startGame(player2msg);
+      // create list to be sent
+      List<CardDescription> player1Hand =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.HAND));
+      List<CardDescription> player1Characters =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.CHARACTER, CardLocation.HAND));
+      List<CardDescription> player2Hand =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.HAND));
+      List<CardDescription> player2Characters =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.CHARACTER, CardLocation.HAND));
+
+      StartGameMessage player1msg = new StartGameMessage(context.getSecondPlayer().getName());
+      player1msg.setMyHand(player1Hand);
+      player1msg.setMyCharacters(player1Characters);
+      player1msg.setMyOpponentCharacters(player2Characters);
+      context.getFirstPlayer().getPlayerInterface().startGame(player1msg);
+
+      StartGameMessage player2msg = new StartGameMessage(context.getFirstPlayer().getName());
+      player2msg.setMyHand(player2Hand);
+      player2msg.setMyCharacters(player2Characters);
+      player2msg.setMyOpponentCharacters(player1Characters);
+      context.getSecondPlayer().getPlayerInterface().startGame(player2msg);
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -81,6 +85,73 @@ public class PlayManager {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  protected void updateGameStatus(GameContext context) {
+    log.info("Updating game status");
+    try {
+      // create list to be sent
+      List<CardDescription> player1Hand =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.HAND));
+      List<CardDescription> player1Characters =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.CHARACTER, CardLocation.HAND));
+
+      List<CardDescription> player2Hand =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.HAND));
+      List<CardDescription> player2Characters =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.CHARACTER, CardLocation.HAND));
+
+      UpdateGameMessage player1msg = new UpdateGameMessage();
+      player1msg.setMyHand(player1Hand);
+      player1msg.setMyCharacters(player1Characters);
+      player1msg.setMyOpponentCharacters(player2Characters);
+      context.getFirstPlayer().getPlayerInterface().updateGameStatus(player1msg);
+
+      UpdateGameMessage player2msg = new UpdateGameMessage();
+      player2msg.setMyHand(player2Hand);
+      player2msg.setMyCharacters(player2Characters);
+      player2msg.setMyOpponentCharacters(player1Characters);
+      context.getSecondPlayer().getPlayerInterface().updateGameStatus(player2msg);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (TC2CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  protected void endGame(GameContext context) {
+    log.info("End game");
+
+    String winner = "_TIE_";
+    switch (context.getWinner()) {
+      case FIRST_PLAYER:
+        winner = context.getFirstPlayer().getName();
+        break;
+      case SECOND_PLAYER:
+        winner = context.getSecondPlayer().getName();
+        break;
+    }
+
+    Integer player1Score = context.getFirstPlayer().getScore();
+    Integer player2Score = context.getSecondPlayer().getScore();
+
+    EndGameMessage player1msg = new EndGameMessage();
+    player1msg.setWinner(winner);
+    player1msg.setMyScore(player1Score);
+    player1msg.setMyOpponentScore(player2Score);
+    context.getFirstPlayer().getPlayerInterface().endGame(player1msg);
+
+    EndGameMessage player2msg = new EndGameMessage();
+    player2msg.setWinner(winner);
+    player2msg.setMyScore(player2Score);
+    player2msg.setMyOpponentScore(player1Score);
+    context.getSecondPlayer().getPlayerInterface().endGame(player2msg);
   }
 
   protected void chooseCharacter(GameContext context) {

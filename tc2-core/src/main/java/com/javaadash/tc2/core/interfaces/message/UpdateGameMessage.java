@@ -1,0 +1,35 @@
+package com.javaadash.tc2.core.interfaces.message;
+
+import java.util.List;
+
+import com.javaadash.tc2.core.card.CardDescription;
+
+public class UpdateGameMessage {
+  private List<CardDescription> myHand;
+  private List<CardDescription> myCharacters;
+  private List<CardDescription> myOpponentCharacters;
+
+  public List<CardDescription> getMyHand() {
+    return myHand;
+  }
+
+  public void setMyHand(List<CardDescription> myHand) {
+    this.myHand = myHand;
+  }
+
+  public List<CardDescription> getMyCharacters() {
+    return myCharacters;
+  }
+
+  public void setMyCharacters(List<CardDescription> myCharacters) {
+    this.myCharacters = myCharacters;
+  }
+
+  public List<CardDescription> getMyOpponentCharacters() {
+    return myOpponentCharacters;
+  }
+
+  public void setMyOpponentCharacters(List<CardDescription> myOpponentCharacters) {
+    this.myOpponentCharacters = myOpponentCharacters;
+  }
+}

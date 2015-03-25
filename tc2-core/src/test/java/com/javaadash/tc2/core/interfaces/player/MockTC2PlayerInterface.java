@@ -1,9 +1,13 @@
 package com.javaadash.tc2.core.interfaces.player;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.exceptions.TC2CoreException;
+import com.javaadash.tc2.core.interfaces.message.EndGameMessage;
 import com.javaadash.tc2.core.interfaces.message.StartGameMessage;
+import com.javaadash.tc2.core.interfaces.message.UpdateGameMessage;
 
 public class MockTC2PlayerInterface implements TC2PlayerInterface {
 
@@ -40,5 +44,17 @@ public class MockTC2PlayerInterface implements TC2PlayerInterface {
 
   public int getAvailableActionsSize() {
     return availableActionsSize;
+  }
+
+  @Override
+  public void updateGameStatus(UpdateGameMessage message) throws IOException, TC2CoreException {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void endGame(EndGameMessage msg) {
+    // TODO Auto-generated method stub
+
   }
 }

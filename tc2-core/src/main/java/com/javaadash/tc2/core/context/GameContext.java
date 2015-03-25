@@ -19,7 +19,7 @@ public class GameContext {
   private Winner winner = null;
 
   public enum Winner {
-    START_PLAYER, NEXT_PLAYER, TIE, NOT_YET;
+    FIRST_PLAYER, SECOND_PLAYER, TIE, NOT_YET;
   }
 
   public int getTurn() {

@@ -98,7 +98,7 @@ public class WinnerCheckTest extends TestCase
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
-		assertEquals(Winner.START_PLAYER, context.getWinner());
+		assertEquals(Winner.FIRST_PLAYER, context.getWinner());
 	}
 	
 	public void testCheckWinnerNextPlayer() throws Exception
@@ -119,7 +119,7 @@ public class WinnerCheckTest extends TestCase
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
-		assertEquals(Winner.NEXT_PLAYER, context.getWinner());
+		assertEquals(Winner.SECOND_PLAYER, context.getWinner());
 	}
 	
 	public void testCheckWinnerStartPlayer_BothOut() throws Exception
@@ -142,7 +142,7 @@ public class WinnerCheckTest extends TestCase
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
-		assertEquals(Winner.START_PLAYER, context.getWinner());
+		assertEquals(Winner.FIRST_PLAYER, context.getWinner());
 	}
 	
 	public void testCheckWinnerNextPlayer_BothOut() throws Exception
@@ -165,7 +165,7 @@ public class WinnerCheckTest extends TestCase
 		
 		// deal cards
 		winnerCheck.checkWinner(context);
-		assertEquals(Winner.NEXT_PLAYER, context.getWinner());
+		assertEquals(Winner.SECOND_PLAYER, context.getWinner());
 	}
 	
 	public void testCheckWinnerTie() throws Exception

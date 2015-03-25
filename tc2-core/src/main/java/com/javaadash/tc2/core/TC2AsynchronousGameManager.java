@@ -20,6 +20,7 @@ import com.javaadash.tc2.core.interfaces.player.PlayerData;
  */
 public class TC2AsynchronousGameManager {
   private Logger log = LoggerFactory.getLogger(TC2AsynchronousGameManager.class);
+  private PlayManager playManager = new PlayManager();
 
   public void handleGame(GameContext context) {
     log.info("Handling game, current state [" + context.getState() + "]");
@@ -27,7 +28,7 @@ public class TC2AsynchronousGameManager {
     switch (context.getState()) {
       case GameState.BEGINNING:
         new Dealer().dealCards(context);
-        new PlayManager().startGame(context);
+        playManager.startGame(context);
         context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
         break;
 
@@ -97,12 +98,70 @@ public class TC2AsynchronousGameManager {
                     + "] does not match any character in hand");
               }
             }
+            data.getPlayedCards().clear();
           }
           log.info("All cards on board, can start resolution");
           // after cards are decided, now we resolve the turn
           context.setState(GameState.TURN_RESOLUTION);
           new TurnResolver().resolveTurn(context);
           log.info("Turn resolved!!");
+
+          playManager.updateGameStatus(context);
+          // TODO check if game is over and send appropriate message
+          context.setState(GameState.PLAYER_CHOOSE_DISCARD);
+        }
+      case GameState.PLAYER_CHOOSE_DISCARD:
+        choicesOver = true;
+        for (PlayerData data : context.getPlayerDatas()) {
+          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_DISCARD)
+            choicesOver = false;
+        }
+        if (choicesOver) {
+          // time to check cards and add to deck
+          for (PlayerData data : context.getPlayerDatas()) {
+            List<CardDescription> discardCards = data.getPlayedCards();
+            // retrieve the current players hand
+            // TODO fix those crazy back and forward between descriptions and cards
+            List<Card> inHandActions =
+                data.getPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.HAND);
+            List<CardDescription> inHandActionsDesc =
+                CardsToDescriptionHelper.toCardsDescription(inHandActions);
+
+            for (CardDescription discardCard : discardCards) {
+              int index = inHandActionsDesc.indexOf(discardCard);
+              if (index >= 0) {
+                log.debug("Discard matched an action in hand, put it in discard");
+                Card inHandAction = inHandActions.get(index);
+                data.getPlayer().getIngameDeck()
+                    .setCardLocation(inHandAction, CardLocation.DISCARD);
+              } else {
+                throw new IllegalStateException("Selected action [" + discardCard.getId()
+                    + "] does not match any character in hand");
+              }
+            }
+            data.getPlayedCards().clear();
+          }
+          log.info("Discard part finished");
+          // now check the winner
+          log.info("Checking the winner");
+          new WinnerCheck().checkWinner(context);
+
+          log.debug("End turn {}", context.getTurn());
+          switch (context.getWinner()) {
+            case FIRST_PLAYER:
+            case SECOND_PLAYER:
+            case TIE:
+              playManager.endGame(context);
+              break;
+            case NOT_YET:
+              // start next Turn
+              context.setTurn(context.getTurn() + 1);
+              break;
+          }
+
+          log.info("Score {}:{} - {}:{}", new Object[] {context.getFirstPlayer(),
+              context.getFirstPlayer().getScore(), context.getSecondPlayer(),
+              context.getSecondPlayer().getScore()});
         }
         break;
       default:
