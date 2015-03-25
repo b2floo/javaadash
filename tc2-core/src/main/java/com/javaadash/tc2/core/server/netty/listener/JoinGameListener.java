@@ -1,15 +1,14 @@
-package com.javaadash.tc2.server.listener;
+package com.javaadash.tc2.core.server.netty.listener;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import main.DeckGenerator;
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.DataListener;
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.GameState;
 import com.javaadash.tc2.core.TC2AsynchronousGameManager;
-import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
@@ -20,14 +19,7 @@ import com.javaadash.tc2.server.TC2Lobby;
 
 public class JoinGameListener implements DataListener<JoinGameMessage> {
 
-  static Map<Integer, Integer> limits = new HashMap<Integer, Integer>();
   static int nbActions = 2;
-  static int nbCharacters = 2;
-  static {
-
-    limits.put(CardType.ACTION, nbActions);
-    limits.put(CardType.CHARACTER, nbCharacters);
-  }
 
   private TC2Lobby lobby;
   private TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
@@ -46,14 +38,9 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
     if (pendingGameRequest == null) {
       System.out.println("pendingGameRequest == null");
 
-      Deck deck1 = new Deck(limits);
       Player p1 = null;
       try {
-        deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
-        deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
-        for (int i = 0; i < nbActions; i++) {
-          deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
-        }
+        Deck deck1 = DeckGenerator.getDeck(nbActions);
         p1 = new Player(msg.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
       } catch (TC2CoreException e) {
         // TODO Auto-generated catch block
@@ -68,15 +55,10 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
       client.set("roomId", roomId);
       client.set("username", msg.getUsername());
 
-      Deck deck1 = new Deck(limits);
-      Player p1 = null;
+      Player p2 = null;
       try {
-        deck1.addCard(new Card(CardType.CHARACTER, "ABI"));
-        deck1.addCard(new Card(CardType.CHARACTER, "ABO"));
-        for (int i = 0; i < nbActions; i++) {
-          deck1.addCard(new Card(CardType.ACTION, "ACTION" + i));
-        }
-        p1 = new Player(msg.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
+        Deck deck2 = DeckGenerator.getDeck(nbActions);
+        p2 = new Player(msg.getUsername(), deck2, 5, new SocketIoPlayerInterface(client));
       } catch (TC2CoreException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -86,7 +68,7 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
       gameContext.setState(GameState.BEGINNING);
       gameContext.setTurn(0);
       gameContext.setFirstPlayer(pendingGameRequest.getValue());
-      gameContext.setSecondPlayer(p1);
+      gameContext.setSecondPlayer(p2);
 
       lobby.removePendingGameRequest(roomId);
       lobby.getCurrentGames().put(roomId, gameContext);

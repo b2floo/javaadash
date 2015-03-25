@@ -66,8 +66,47 @@ public class TC2AsynchronousGameManager {
         }
         break;
       case GameState.PLAYER_CHOOSE_ACTION:
+        choicesOver = true;
+        for (PlayerData data : context.getPlayerDatas()) {
+          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_ACTION)
+            choicesOver = false;
+        }
+        if (choicesOver) {
+          // time to check cards and add to deck
+          for (PlayerData data : context.getPlayerDatas()) {
+            if (data.getPlayedCards().size() == 0)
+              throw new IllegalStateException(
+                  "No card selected where as the players state is PLAYER_CHOOSE_ACTION");
+            List<CardDescription> actionCards = data.getPlayedCards();
+            // retrieve the current players hand
+            // TODO fix those crazy back and forward between descriptions and cards
+            List<Card> inHandActions =
+                data.getPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.HAND);
+            List<CardDescription> inHandActionsDesc =
+                CardsToDescriptionHelper.toCardsDescription(inHandActions);
+
+            for (CardDescription actionCard : actionCards) {
+              int index = inHandActionsDesc.indexOf(actionCard);
+              // TODO also check restrictions
+              if (index >= 0) {
+                log.debug("Action matched an action in hand, put it on board");
+                Card inHandAction = inHandActions.get(index);
+                data.getPlayer().getIngameDeck().setCardLocation(inHandAction, CardLocation.BOARD);
+              } else {
+                throw new IllegalStateException("Selected action [" + actionCard.getId()
+                    + "] does not match any character in hand");
+              }
+            }
+          }
+          log.info("All cards on board, can start resolution");
+          // after cards are decided, now we resolve the turn
+          context.setState(GameState.TURN_RESOLUTION);
+          new TurnResolver().resolveTurn(context);
+          log.info("Turn resolved!!");
+        }
         break;
       default:
+        break;
     }
   }
 }

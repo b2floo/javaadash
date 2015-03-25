@@ -1,4 +1,4 @@
-package com.javaadash.tc2.server.listener;
+package com.javaadash.tc2.core.server.netty.listener;
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -6,21 +6,21 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.javaadash.tc2.core.GameState;
 import com.javaadash.tc2.core.TC2AsynchronousGameManager;
 import com.javaadash.tc2.core.context.GameContext;
-import com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage;
+import com.javaadash.tc2.core.interfaces.message.ChooseActionMessage;
 import com.javaadash.tc2.core.interfaces.player.PlayerData;
 import com.javaadash.tc2.server.TC2Lobby;
 
-public class ChooseCharacterListener implements DataListener<ChooseCharacterMessage> {
+public class ChooseActionListener implements DataListener<ChooseActionMessage> {
 
   private TC2Lobby lobby;
   private TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
 
-  public ChooseCharacterListener(TC2Lobby lobby) {
+  public ChooseActionListener(TC2Lobby lobby) {
     this.lobby = lobby;
   }
 
   @Override
-  public void onData(SocketIOClient client, ChooseCharacterMessage msg, AckRequest ack)
+  public void onData(SocketIOClient client, ChooseActionMessage msg, AckRequest ack)
       throws Exception {
     System.out.println("Received msg from " + client.get("username"));
 
@@ -36,13 +36,13 @@ public class ChooseCharacterListener implements DataListener<ChooseCharacterMess
           + client.get("username"));
     }
 
-    if (playerData.getPlayerState() >= GameState.PLAYER_CHOOSE_CHARACTER) {
+    if (playerData.getPlayerState() >= GameState.PLAYER_CHOOSE_ACTION) {
       throw new IllegalStateException("Current players state [" + playerData.getPlayerState()
-          + "] can' handle a choose_character message from : " + client.get("username"));
+          + "] can' handle a choose_action message from : " + client.get("username"));
     }
 
-    playerData.setPlayerState(GameState.PLAYER_CHOOSE_CHARACTER);
-    playerData.getPlayedCards().add(msg.getCharacterCard());
+    playerData.setPlayerState(GameState.PLAYER_CHOOSE_ACTION);
+    playerData.getPlayedCards().addAll(msg.getActionCards());
 
     gameManager.handleGame(context);
   }
