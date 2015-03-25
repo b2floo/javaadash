@@ -1,7 +1,10 @@
 package com.javaadash.tc2.core.card;
 
+import java.util.Map;
+
 public class CardDescription {
   private Integer id;
+  private Map<String, String> settings;
 
   public CardDescription() {}
 
@@ -15,6 +18,14 @@ public class CardDescription {
 
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  public Map<String, String> getSettings() {
+    return settings;
+  }
+
+  public void setSettings(Map<String, String> settings) {
+    this.settings = settings;
   }
 
   @Override

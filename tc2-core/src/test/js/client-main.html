@@ -55,11 +55,11 @@
 				socket.emit('get_characters');
 				socket.emit('get_cards');
 				output('<span class="username-msg">Available characters: </span>');
-				outputList(data.myCharacters);
+				outputCardList(data.myCharacters);
 				output('<span class="username-msg">Available cards: </span>');
-				outputList(data.myHand);
+				outputCardList(data.myHand);
 				output('<span class="username-msg">Opponent characters: </span>');
-				outputList(data.myOpponentCharacters);
+				outputCardList(data.myOpponentCharacters);
 				var characterCard = { 'characterCard' : data.myCharacters[0].id, 
 				 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
 				socket.emit('choose_character', characterCard);
@@ -75,12 +75,10 @@
 				$('#console').append(element);
 			}
 
-            function outputList(array) {
-              var full_list = "";
-              for(var i=0; i<array.length; ++i) {
-                  full_list = full_list + array[i].id + '<br>';
-              }
-              $("#console").append(full_list);     
+            function outputCardList(cards) {
+              for(var i=0; i<cards.length; ++i) {
+                  output('Card ID: '+ cards[i].id + '; LIFE: '+ cards[i].settings['LIFE']);
+              }    
             }
 
 			
