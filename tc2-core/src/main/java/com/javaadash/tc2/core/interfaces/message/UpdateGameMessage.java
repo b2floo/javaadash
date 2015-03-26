@@ -5,9 +5,18 @@ import java.util.List;
 import com.javaadash.tc2.core.card.CardDescription;
 
 public class UpdateGameMessage {
+  private Integer gameState;
   private List<CardDescription> myHand;
   private List<CardDescription> myCharacters;
   private List<CardDescription> myOpponentCharacters;
+
+  public Integer getGameState() {
+    return gameState;
+  }
+
+  public void setGameState(Integer gameState) {
+    this.gameState = gameState;
+  }
 
   public List<CardDescription> getMyHand() {
     return myHand;

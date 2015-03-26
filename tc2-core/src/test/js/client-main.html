@@ -26,6 +26,10 @@
         <!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. --> 
         <script type="text/javascript">
 			
+			var STATE_PLAYER_CHOOSE_CHARACTER = 3;
+			var STATE_PLAYER_CHOOSE_ACTION = 4;
+			var STATE_PLAYER_CHOOSE_DISCARD = 6;
+			
 			console.log( 'javascript -- start' );
 			var username = 'user' + Math.floor((Math.random()*1000)+1);
 			
@@ -77,9 +81,18 @@
                 outputCardList(data.myOpponentCharacters);
                 
                 // choose a card to discard
-                var discardCards = { 'discardCards' : [data.myHand[0]], 
-                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
-                socket.emit('choose_discard', discardCards);
+                if(data.gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
+	                var characterCard = { 'characterCard' : data.myCharacters[0].id, 
+					 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
+					socket.emit('choose_character', characterCard);
+					var actionCards = { 'actionCards' : [data.myHand[0]], 
+				 	'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
+					socket.emit('choose_action', actionCards);
+                } else if(data.gameState == STATE_PLAYER_CHOOSE_DISCARD) {
+	                var discardCards = { 'discardCards' : [data.myHand[0]], 
+	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
+	                socket.emit('choose_discard', discardCards);
+                }
             });
             
             socket.on('end_game', function(data) {

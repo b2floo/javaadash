@@ -31,7 +31,7 @@ public class PlayManager {
 
   public void play(GameContext context) {
     switch (context.getState()) {
-      case GameState.BEGINNING:
+      case GameState.BEGIN_TURN:
         startGame(context);
       case GameState.PLAYER_CHOOSE_CHARACTER:
         chooseCharacter(context);
@@ -109,12 +109,14 @@ public class PlayManager {
       player1msg.setMyHand(player1Hand);
       player1msg.setMyCharacters(player1Characters);
       player1msg.setMyOpponentCharacters(player2Characters);
+      player1msg.setGameState(context.getState());
       context.getFirstPlayer().getPlayerInterface().updateGameStatus(player1msg);
 
       UpdateGameMessage player2msg = new UpdateGameMessage();
       player2msg.setMyHand(player2Hand);
       player2msg.setMyCharacters(player2Characters);
       player2msg.setMyOpponentCharacters(player1Characters);
+      player2msg.setGameState(context.getState());
       context.getSecondPlayer().getPlayerInterface().updateGameStatus(player2msg);
     } catch (IOException e) {
       // TODO Auto-generated catch block

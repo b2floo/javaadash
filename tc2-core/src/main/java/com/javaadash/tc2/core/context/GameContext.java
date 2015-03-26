@@ -45,7 +45,7 @@ public class GameContext {
   public void setFirstPlayer(Player firstPlayer) {
     PlayerData data = new PlayerData();
     data.setPlayer(firstPlayer);
-    data.setPlayerState(GameState.BEGINNING);
+    data.setPlayerState(GameState.BEGIN_TURN);
     playersData.put(firstPlayer.getName(), data);
   }
 
@@ -56,7 +56,7 @@ public class GameContext {
   public void setSecondPlayer(Player secondPlayer) {
     PlayerData data = new PlayerData();
     data.setPlayer(secondPlayer);
-    data.setPlayerState(GameState.BEGINNING);
+    data.setPlayerState(GameState.BEGIN_TURN);
     playersData.put(secondPlayer.getName(), data);
   }
 

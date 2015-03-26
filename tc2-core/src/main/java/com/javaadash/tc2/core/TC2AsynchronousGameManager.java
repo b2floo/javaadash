@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.javaadash.tc2.core.board.BoardClearer;
 import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.board.CardsToDescriptionHelper;
 import com.javaadash.tc2.core.card.Card;
@@ -26,17 +27,27 @@ public class TC2AsynchronousGameManager {
     log.info("Handling game, current state [" + context.getState() + "]");
     // TODO add a state to shuffle players??
     switch (context.getState()) {
-      case GameState.BEGINNING:
+    // TODO dont do twice the deal send message
+      case GameState.BEGIN_GAME:
         new Dealer().dealCards(context);
         playManager.startGame(context);
         context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
         break;
-
+      case GameState.BEGIN_TURN:
+        new Dealer().dealCards(context);
+        context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
+        for (PlayerData data : context.getPlayerDatas()) {
+          data.setPlayerState(GameState.BEGIN_TURN);
+        }
+        playManager.updateGameStatus(context);
+        break;
       case GameState.PLAYER_CHOOSE_CHARACTER:
         boolean choicesOver = true;
         for (PlayerData data : context.getPlayerDatas()) {
-          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_CHARACTER)
+          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_CHARACTER) {
+            log.info("All players have not yet made their choi");
             choicesOver = false;
+          }
         }
         if (choicesOver) {
           // time to check cards and add to deck
@@ -106,10 +117,11 @@ public class TC2AsynchronousGameManager {
           new TurnResolver().resolveTurn(context);
           log.info("Turn resolved!!");
 
-          playManager.updateGameStatus(context);
           // TODO check if game is over and send appropriate message
           context.setState(GameState.PLAYER_CHOOSE_DISCARD);
+          playManager.updateGameStatus(context);
         }
+        break;
       case GameState.PLAYER_CHOOSE_DISCARD:
         choicesOver = true;
         for (PlayerData data : context.getPlayerDatas()) {
@@ -146,6 +158,10 @@ public class TC2AsynchronousGameManager {
           log.info("Checking the winner");
           new WinnerCheck().checkWinner(context);
 
+          log.info("Score {}:{} - {}:{}", new Object[] {context.getFirstPlayer(),
+              context.getFirstPlayer().getScore(), context.getSecondPlayer(),
+              context.getSecondPlayer().getScore()});
+
           log.debug("End turn {}", context.getTurn());
           switch (context.getWinner()) {
             case FIRST_PLAYER:
@@ -156,12 +172,11 @@ public class TC2AsynchronousGameManager {
             case NOT_YET:
               // start next Turn
               context.setTurn(context.getTurn() + 1);
+              context.setState(GameState.BEGIN_TURN);
+              new BoardClearer().clearBoard(context);
+              handleGame(context);
               break;
           }
-
-          log.info("Score {}:{} - {}:{}", new Object[] {context.getFirstPlayer(),
-              context.getFirstPlayer().getScore(), context.getSecondPlayer(),
-              context.getSecondPlayer().getScore()});
         }
         break;
       default:

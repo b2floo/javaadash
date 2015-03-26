@@ -19,7 +19,7 @@ import com.javaadash.tc2.server.TC2Lobby;
 
 public class JoinGameListener implements DataListener<JoinGameMessage> {
 
-  static int nbActions = 2;
+  static int nbActions = 10;
 
   private TC2Lobby lobby;
   private TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
@@ -65,7 +65,7 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
       }
 
       GameContext gameContext = new GameContext();
-      gameContext.setState(GameState.BEGINNING);
+      gameContext.setState(GameState.BEGIN_TURN);
       gameContext.setTurn(0);
       gameContext.setFirstPlayer(pendingGameRequest.getValue());
       gameContext.setSecondPlayer(p2);
