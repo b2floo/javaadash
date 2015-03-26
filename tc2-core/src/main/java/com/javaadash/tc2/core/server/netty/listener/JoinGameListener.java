@@ -4,6 +4,9 @@ import java.util.Map;
 
 import main.DeckGenerator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.DataListener;
@@ -19,6 +22,7 @@ import com.javaadash.tc2.server.TC2Lobby;
 
 public class JoinGameListener implements DataListener<JoinGameMessage> {
 
+  private Logger log = LoggerFactory.getLogger(JoinGameListener.class);
   static int nbActions = 10;
 
   private TC2Lobby lobby;
@@ -31,12 +35,12 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
   @Override
   public void onData(final SocketIOClient client, JoinGameMessage msg, final AckRequest ackRequest) {
 
-    System.out.println("Received msg from " + msg.getUsername());
+    log.debug("Received join request from " + msg.getUsername());
 
     Map.Entry<String, Player> pendingGameRequest = lobby.getPendingGameRequest();
 
     if (pendingGameRequest == null) {
-      System.out.println("pendingGameRequest == null");
+      log.debug("No game request pending, creating a new room ");
 
       Player p1 = null;
       try {
@@ -50,8 +54,10 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
       lobby.addPendingGameRequest(client.getSessionId().toString(), p1);
       client.set("roomId", client.getSessionId().toString());
       client.set("username", msg.getUsername());
+      log.debug("New room created with id: " + client.getSessionId());
     } else {
       String roomId = pendingGameRequest.getKey();
+      log.debug("Joining pending game " + roomId);
       client.set("roomId", roomId);
       client.set("username", msg.getUsername());
 
@@ -64,11 +70,9 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
         e.printStackTrace();
       }
 
-      GameContext gameContext = new GameContext();
-      gameContext.setState(GameState.BEGIN_TURN);
+      GameContext gameContext = new GameContext(pendingGameRequest.getValue(), p2);
+      gameContext.setState(GameState.BEGIN_GAME);
       gameContext.setTurn(0);
-      gameContext.setFirstPlayer(pendingGameRequest.getValue());
-      gameContext.setSecondPlayer(p2);
 
       lobby.removePendingGameRequest(roomId);
       lobby.getCurrentGames().put(roomId, gameContext);

@@ -12,6 +12,7 @@ public class GameContext {
 
   // store everything related to players
   private LinkedMap<String, PlayerData> playersData = new LinkedMap<String, PlayerData>();
+  private boolean alternate = false;
 
   private int turn = 0;
   private Player currentPlayer = null;
@@ -20,6 +21,22 @@ public class GameContext {
 
   public enum Winner {
     FIRST_PLAYER, SECOND_PLAYER, TIE, NOT_YET;
+  }
+
+  public GameContext() {
+
+  }
+
+  public GameContext(Player player1, Player player2) {
+    PlayerData data = new PlayerData();
+    data.setPlayer(player1);
+    data.setPlayerState(GameState.BEGIN_TURN);
+    playersData.put(player1.getName(), data);
+
+    data = new PlayerData();
+    data.setPlayer(player2);
+    data.setPlayerState(GameState.BEGIN_TURN);
+    playersData.put(player2.getName(), data);
   }
 
   public int getTurn() {
@@ -39,25 +56,15 @@ public class GameContext {
   }
 
   public Player getFirstPlayer() {
-    return playersData.getValue(0).getPlayer();
-  }
-
-  public void setFirstPlayer(Player firstPlayer) {
-    PlayerData data = new PlayerData();
-    data.setPlayer(firstPlayer);
-    data.setPlayerState(GameState.BEGIN_TURN);
-    playersData.put(firstPlayer.getName(), data);
+    return alternate ? playersData.getValue(1).getPlayer() : playersData.getValue(0).getPlayer();
   }
 
   public Player getSecondPlayer() {
-    return playersData.getValue(1).getPlayer();
+    return alternate ? playersData.getValue(0).getPlayer() : playersData.getValue(1).getPlayer();
   }
 
-  public void setSecondPlayer(Player secondPlayer) {
-    PlayerData data = new PlayerData();
-    data.setPlayer(secondPlayer);
-    data.setPlayerState(GameState.BEGIN_TURN);
-    playersData.put(secondPlayer.getName(), data);
+  public void alternatePlayers() {
+    alternate = !alternate;
   }
 
   public void setCurrentPlayer(Player p) {

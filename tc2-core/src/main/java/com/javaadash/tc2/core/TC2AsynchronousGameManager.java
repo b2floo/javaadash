@@ -20,21 +20,26 @@ import com.javaadash.tc2.core.interfaces.player.PlayerData;
  * @author b2floo
  */
 public class TC2AsynchronousGameManager {
+
   private Logger log = LoggerFactory.getLogger(TC2AsynchronousGameManager.class);
   private PlayManager playManager = new PlayManager();
+  private Dealer dealer = new Dealer();
 
   public void handleGame(GameContext context) {
-    log.info("Handling game, current state [" + context.getState() + "]");
-    // TODO add a state to shuffle players??
+
     switch (context.getState()) {
-    // TODO dont do twice the deal send message
+      // TODO dont do twice the deal send message
       case GameState.BEGIN_GAME:
-        new Dealer().dealCards(context);
+        log.debug("Handling game, current state [BEGIN_GAME]");
+        whoStarts(context);
+        dealer.dealCards(context);
         playManager.startGame(context);
         context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
         break;
       case GameState.BEGIN_TURN:
-        new Dealer().dealCards(context);
+        log.debug("Handling game, current state [BEGIN_TURN]");
+        context.alternatePlayers();
+        dealer.dealCards(context);
         context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
         for (PlayerData data : context.getPlayerDatas()) {
           data.setPlayerState(GameState.BEGIN_TURN);
@@ -42,10 +47,11 @@ public class TC2AsynchronousGameManager {
         playManager.updateGameStatus(context);
         break;
       case GameState.PLAYER_CHOOSE_CHARACTER:
+        log.debug("Handling game, current state [PLAYER_CHOOSE_CHARACTER]");
         boolean choicesOver = true;
         for (PlayerData data : context.getPlayerDatas()) {
           if (data.getPlayerState() < GameState.PLAYER_CHOOSE_CHARACTER) {
-            log.info("All players have not yet made their choi");
+            log.debug("All players have not yet made their choice");
             choicesOver = false;
           }
         }
@@ -65,12 +71,14 @@ public class TC2AsynchronousGameManager {
 
             int index = inHandCharactersDesc.indexOf(characterCard);
             if (index >= 0) {
-              log.debug("Character matched a character in hand, put it on board");
+              log.debug("Character matched a character in hand of player "
+                  + data.getPlayer().getName() + ", put it on board");
               Card inHandCharacter = inHandCharacters.get(index);
               data.getPlayer().getIngameDeck().setCardLocation(inHandCharacter, CardLocation.BOARD);
             } else {
               throw new IllegalStateException("Selected character [" + characterCard.getId()
-                  + "] does not match any character in hand");
+                  + "] does not match any character in hand  of player "
+                  + data.getPlayer().getName());
             }
             context.setState(GameState.PLAYER_CHOOSE_ACTION);
             // TODO send a message for authorized actions
@@ -78,10 +86,13 @@ public class TC2AsynchronousGameManager {
         }
         break;
       case GameState.PLAYER_CHOOSE_ACTION:
+        log.debug("Handling game, current state [PLAYER_CHOOSE_ACTION]");
         choicesOver = true;
         for (PlayerData data : context.getPlayerDatas()) {
-          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_ACTION)
+          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_ACTION) {
             choicesOver = false;
+            log.debug("All players have not yet made their choice");
+          }
         }
         if (choicesOver) {
           // time to check cards and add to deck
@@ -101,12 +112,14 @@ public class TC2AsynchronousGameManager {
               int index = inHandActionsDesc.indexOf(actionCard);
               // TODO also check restrictions
               if (index >= 0) {
-                log.debug("Action matched an action in hand, put it on board");
+                log.debug("Action matched an action in hand of player "
+                    + data.getPlayer().getName() + ", put it on board");
                 Card inHandAction = inHandActions.get(index);
                 data.getPlayer().getIngameDeck().setCardLocation(inHandAction, CardLocation.BOARD);
               } else {
                 throw new IllegalStateException("Selected action [" + actionCard.getId()
-                    + "] does not match any character in hand");
+                    + "] does not match any character in hand of player "
+                    + data.getPlayer().getName());
               }
             }
             data.getPlayedCards().clear();
@@ -123,10 +136,13 @@ public class TC2AsynchronousGameManager {
         }
         break;
       case GameState.PLAYER_CHOOSE_DISCARD:
+        log.debug("Handling game, current state [PLAYER_CHOOSE_DISCARD]");
         choicesOver = true;
         for (PlayerData data : context.getPlayerDatas()) {
-          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_DISCARD)
+          if (data.getPlayerState() < GameState.PLAYER_CHOOSE_DISCARD) {
             choicesOver = false;
+            log.debug("All players have not yet made their choice");
+          }
         }
         if (choicesOver) {
           // time to check cards and add to deck
@@ -142,13 +158,15 @@ public class TC2AsynchronousGameManager {
             for (CardDescription discardCard : discardCards) {
               int index = inHandActionsDesc.indexOf(discardCard);
               if (index >= 0) {
-                log.debug("Discard matched an action in hand, put it in discard");
+                log.debug("Discard matched an action in hand of player "
+                    + data.getPlayer().getName() + ", put it in discard");
                 Card inHandAction = inHandActions.get(index);
                 data.getPlayer().getIngameDeck()
                     .setCardLocation(inHandAction, CardLocation.DISCARD);
               } else {
                 throw new IllegalStateException("Selected action [" + discardCard.getId()
-                    + "] does not match any character in hand");
+                    + "] for discard does not match any action in hand of player "
+                    + data.getPlayer().getName());
               }
             }
             data.getPlayedCards().clear();
@@ -170,10 +188,10 @@ public class TC2AsynchronousGameManager {
               playManager.endGame(context);
               break;
             case NOT_YET:
+              new BoardClearer().clearBoard(context);
               // start next Turn
               context.setTurn(context.getTurn() + 1);
               context.setState(GameState.BEGIN_TURN);
-              new BoardClearer().clearBoard(context);
               handleGame(context);
               break;
           }
@@ -182,5 +200,12 @@ public class TC2AsynchronousGameManager {
       default:
         break;
     }
+  }
+
+  private void whoStarts(GameContext context) {
+    if (Math.random() < 0.5) {
+      context.alternatePlayers();
+    }
+    log.info("Player {} starts the game", context.getFirstPlayer());
   }
 }

@@ -51,7 +51,7 @@ public class PlayManager {
   }
 
   protected void startGame(GameContext context) {
-    log.info("Starting the game");
+    log.debug("Sending a start_game message");
     try {
       // create list to be sent
       List<CardDescription> player1Hand =
@@ -72,12 +72,14 @@ public class PlayManager {
       player1msg.setMyCharacters(player1Characters);
       player1msg.setMyOpponentCharacters(player2Characters);
       context.getFirstPlayer().getPlayerInterface().startGame(player1msg);
+      log.debug("start_game message sent to user " + context.getFirstPlayer().getName());
 
       StartGameMessage player2msg = new StartGameMessage(context.getFirstPlayer().getName());
       player2msg.setMyHand(player2Hand);
       player2msg.setMyCharacters(player2Characters);
       player2msg.setMyOpponentCharacters(player1Characters);
       context.getSecondPlayer().getPlayerInterface().startGame(player2msg);
+      log.debug("start_game message sent to user " + context.getSecondPlayer().getName());
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -88,7 +90,7 @@ public class PlayManager {
   }
 
   protected void updateGameStatus(GameContext context) {
-    log.info("Updating game status");
+    log.debug("Sending a update_game message");
     try {
       // create list to be sent
       List<CardDescription> player1Hand =
@@ -111,6 +113,7 @@ public class PlayManager {
       player1msg.setMyOpponentCharacters(player2Characters);
       player1msg.setGameState(context.getState());
       context.getFirstPlayer().getPlayerInterface().updateGameStatus(player1msg);
+      log.debug(player1msg + " sent to user " + context.getFirstPlayer().getName());
 
       UpdateGameMessage player2msg = new UpdateGameMessage();
       player2msg.setMyHand(player2Hand);
@@ -118,6 +121,7 @@ public class PlayManager {
       player2msg.setMyOpponentCharacters(player1Characters);
       player2msg.setGameState(context.getState());
       context.getSecondPlayer().getPlayerInterface().updateGameStatus(player2msg);
+      log.debug(player2msg + " sent to user " + context.getSecondPlayer().getName());
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -128,8 +132,7 @@ public class PlayManager {
   }
 
   protected void endGame(GameContext context) {
-    log.info("End game");
-
+    log.debug("Sending an end_game message");
     String winner = "_TIE_";
     switch (context.getWinner()) {
       case FIRST_PLAYER:
@@ -148,12 +151,14 @@ public class PlayManager {
     player1msg.setMyScore(player1Score);
     player1msg.setMyOpponentScore(player2Score);
     context.getFirstPlayer().getPlayerInterface().endGame(player1msg);
+    log.debug("end_game message sent to user " + context.getFirstPlayer().getName());
 
     EndGameMessage player2msg = new EndGameMessage();
     player2msg.setWinner(winner);
     player2msg.setMyScore(player2Score);
     player2msg.setMyOpponentScore(player1Score);
     context.getSecondPlayer().getPlayerInterface().endGame(player2msg);
+    log.debug("end_game message sent to user " + context.getSecondPlayer().getName());
   }
 
   protected void chooseCharacter(GameContext context) {

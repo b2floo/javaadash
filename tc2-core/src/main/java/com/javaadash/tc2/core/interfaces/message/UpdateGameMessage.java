@@ -41,4 +41,10 @@ public class UpdateGameMessage {
   public void setMyOpponentCharacters(List<CardDescription> myOpponentCharacters) {
     this.myOpponentCharacters = myOpponentCharacters;
   }
+
+  @Override
+  public String toString() {
+    return "UpdateGameMessage [gameState=" + gameState + ", myHand=" + myHand + ", myCharacters="
+        + myCharacters + ", myOpponentCharacters=" + myOpponentCharacters + "]";
+  }
 }

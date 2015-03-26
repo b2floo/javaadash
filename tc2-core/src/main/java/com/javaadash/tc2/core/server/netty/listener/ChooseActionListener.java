@@ -1,5 +1,8 @@
 package com.javaadash.tc2.core.server.netty.listener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.listener.DataListener;
@@ -11,6 +14,7 @@ import com.javaadash.tc2.core.interfaces.player.PlayerData;
 import com.javaadash.tc2.server.TC2Lobby;
 
 public class ChooseActionListener implements DataListener<ChooseActionMessage> {
+  private Logger log = LoggerFactory.getLogger(ChooseActionListener.class);
 
   private TC2Lobby lobby;
   private TC2AsynchronousGameManager gameManager = new TC2AsynchronousGameManager();
@@ -22,7 +26,7 @@ public class ChooseActionListener implements DataListener<ChooseActionMessage> {
   @Override
   public void onData(SocketIOClient client, ChooseActionMessage msg, AckRequest ack)
       throws Exception {
-    System.out.println("Received msg from " + client.get("username"));
+    log.debug("Received choose character from " + client.get("username"));
 
     GameContext context = lobby.getCurrentGames().get(client.get("roomId"));
     if (context == null) {

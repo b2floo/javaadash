@@ -52,4 +52,9 @@ public class CardDescription {
       return false;
     return true;
   }
+
+  @Override
+  public String toString() {
+    return "CardDescription [id=" + id + ", settings=" + settings + "]";
+  }
 }
