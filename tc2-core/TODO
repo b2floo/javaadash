@@ -1,7 +1,9 @@
-0/ more than 1 turn
-1/ alternate players
+
 2/ display all informations: turn, cards in hand, on board, in discard, out of game
 3/ disable cards when character chosen
-4/ add feature choosing by player
+4/ add choice by player instead of automatic game
 5/ add timer for each state
 
+DONE:
+0/ more than 1 turn
+1/ alternate players
