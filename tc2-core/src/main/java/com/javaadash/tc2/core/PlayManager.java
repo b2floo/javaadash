@@ -92,13 +92,19 @@ public class PlayManager {
   protected void updateGameStatus(GameContext context) {
     log.debug("Sending a update_game message");
     try {
-      // create list to be sent
+      // TODO creation of description might be very time consuming, remove this
       List<CardDescription> player1Hand =
           CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
               .getCards(CardType.ACTION, CardLocation.HAND));
       List<CardDescription> player1Characters =
           CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
               .getCards(CardType.CHARACTER, CardLocation.HAND));
+      List<CardDescription> player1Board =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.BOARD));
+      List<CardDescription> player1Discard =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.DISCARD));
 
       List<CardDescription> player2Hand =
           CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
@@ -106,20 +112,36 @@ public class PlayManager {
       List<CardDescription> player2Characters =
           CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
               .getCards(CardType.CHARACTER, CardLocation.HAND));
+      List<CardDescription> player2Board =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.BOARD));
+      List<CardDescription> player2Discard =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.ACTION, CardLocation.DISCARD));
 
       UpdateGameMessage player1msg = new UpdateGameMessage();
       player1msg.setMyHand(player1Hand);
       player1msg.setMyCharacters(player1Characters);
+      player1msg.setMyBoard(player1Board);
+      player1msg.setMyDiscard(player1Discard);
       player1msg.setMyOpponentCharacters(player2Characters);
+      player1msg.setMyOpponentBoard(player2Board);
+      player1msg.setMyOpponentDiscard(player2Discard);
       player1msg.setGameState(context.getState());
+      player1msg.setTurn(context.getTurn());
       context.getFirstPlayer().getPlayerInterface().updateGameStatus(player1msg);
       log.debug(player1msg + " sent to user " + context.getFirstPlayer().getName());
 
       UpdateGameMessage player2msg = new UpdateGameMessage();
       player2msg.setMyHand(player2Hand);
       player2msg.setMyCharacters(player2Characters);
+      player2msg.setMyBoard(player2Board);
+      player2msg.setMyDiscard(player2Discard);
       player2msg.setMyOpponentCharacters(player1Characters);
+      player2msg.setMyOpponentBoard(player1Board);
+      player2msg.setMyOpponentDiscard(player1Discard);
       player2msg.setGameState(context.getState());
+      player2msg.setTurn(context.getTurn());
       context.getSecondPlayer().getPlayerInterface().updateGameStatus(player2msg);
       log.debug(player2msg + " sent to user " + context.getSecondPlayer().getName());
     } catch (IOException e) {

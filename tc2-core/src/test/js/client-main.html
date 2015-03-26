@@ -71,15 +71,22 @@
        		});
        		
        		socket.on('update_game', function(data) {
-                output('<span class="username-msg">Update after turn</span>');
+                output('<span class="username-msg">Update :: turn '+data.turn+'</span>');
 
                 output('<span class="username-msg">Available characters: </span>');
                 outputCardList(data.myCharacters);
                 output('<span class="username-msg">Available cards: </span>');
                 outputCardList(data.myHand);
+                output('<span class="username-msg">My board: </span>');
+                outputCardList(data.myBoard);
+                output('<span class="username-msg">My discard: </span>');
+                outputCardList(data.myDiscard);
                 output('<span class="username-msg">Opponent characters: </span>');
                 outputCardList(data.myOpponentCharacters);
-                
+                output('<span class="username-msg">Opponent board: </span>');
+                outputCardList(data.myOpponentBoard);
+                output('<span class="username-msg">Opponent discard: </span>');
+                outputCardList(data.myOpponentDiscard);
                 // choose a card to discard
                 if(data.gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
 	                var characterCard = { 'characterCard' : data.myCharacters[0].id, 
