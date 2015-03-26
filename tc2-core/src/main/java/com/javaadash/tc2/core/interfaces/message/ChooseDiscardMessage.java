@@ -15,4 +15,10 @@ public class ChooseDiscardMessage {
   public void setDiscardCards(List<CardDescription> discardCards) {
     this.discardCards = discardCards;
   }
+
+  @Override
+  public String toString() {
+    return "ChooseDiscardMessage [discardCards=" + discardCards + "]";
+  }
+
 }

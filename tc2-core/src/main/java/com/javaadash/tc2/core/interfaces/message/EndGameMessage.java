@@ -28,4 +28,11 @@ public class EndGameMessage {
   public void setMyOpponentScore(Integer myOpponentScore) {
     this.myOpponentScore = myOpponentScore;
   }
+
+  @Override
+  public String toString() {
+    return "EndGameMessage [winner=" + winner + ", myScore=" + myScore + ", myOpponentScore="
+        + myOpponentScore + "]";
+  }
+
 }

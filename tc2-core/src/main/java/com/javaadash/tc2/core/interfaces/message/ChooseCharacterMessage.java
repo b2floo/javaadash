@@ -13,4 +13,9 @@ public class ChooseCharacterMessage {
   public void setCharacterCard(CardDescription characterCard) {
     this.characterCard = characterCard;
   }
+
+  @Override
+  public String toString() {
+    return "ChooseCharacterMessage [characterCard=" + characterCard + "]";
+  }
 }

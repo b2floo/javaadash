@@ -15,4 +15,9 @@ public class ChooseActionMessage {
   public void setActionCards(List<CardDescription> actionCards) {
     this.actionCards = actionCards;
   }
+
+  @Override
+  public String toString() {
+    return "ChooseActionMessage [actionCards=" + actionCards + "]";
+  }
 }
