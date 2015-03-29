@@ -10,6 +10,7 @@ import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.board.CardsToDescriptionHelper;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardDescription;
+import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.interfaces.player.PlayerData;
 
@@ -81,7 +82,10 @@ public class TC2AsynchronousGameManager {
                   + data.getPlayer().getName());
             }
             context.setState(GameState.PLAYER_CHOOSE_ACTION);
-            // TODO send a message for authorized actions
+
+            // update available actions
+            updateAvailableActions(context);
+            playManager.updateGameStatus(context);
           }
         }
         break;
@@ -207,5 +211,17 @@ public class TC2AsynchronousGameManager {
       context.alternatePlayers();
     }
     log.info("Player {} starts the game", context.getFirstPlayer());
+  }
+
+  void updateAvailableActions(GameContext context) {
+    for (Card action : context.getCurrentPlayer().getIngameDeck()
+        .getCards(CardType.ACTION, CardLocation.HAND)) {
+      log.debug("Check restriction on action {} ", action);
+      for (Condition condition : action.getConditions()) {
+        log.debug("Condition : {}", condition);
+        if (!condition.isFulfilled(context))
+          action.setAvailable(false);
+      }
+    }
   }
 }

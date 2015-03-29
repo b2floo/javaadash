@@ -21,6 +21,7 @@ public class Card implements Serializable {
   protected Collection<Condition> conditions = new ArrayList<Condition>();
   protected Map<String, String> settings = new HashMap<String, String>();
   protected Chain chain;
+  protected Boolean available = true;
 
   public Card() {
 
@@ -94,6 +95,14 @@ public class Card implements Serializable {
     return id;
   }
 
+  public Boolean getAvailable() {
+    return available;
+  }
+
+  public void setAvailable(Boolean available) {
+    this.available = available;
+  }
+
   // TODO in a factory and throw exceptions
   public static Map<String, String> createSettings(String desc) {
     Map<String, String> settings = new HashMap<String, String>();
@@ -106,7 +115,8 @@ public class Card implements Serializable {
 
   @Override
   public String toString() {
-    return "Card [description=" + description + ", effects=" + effects + ", conditions="
-        + conditions + ", settings=" + settings + ", chain=" + chain + "]";
+    return "Card [id=" + id + ", description=" + description + ", type=" + type + ", effects="
+        + effects + ", conditions=" + conditions + ", settings=" + settings + ", chain=" + chain
+        + ", available=" + available + "]";
   }
 }
