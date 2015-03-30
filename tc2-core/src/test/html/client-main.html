@@ -3,7 +3,15 @@
     <head>
         <title> Real time multi-player games with HTML5</title>
         <meta charset="utf-8" />
-        <link href="bootstrap.css" rel="stylesheet">
+        <!--<link href="bootstrap.css" rel="stylesheet">-->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         
 		<style>
 			body { 
@@ -31,7 +39,6 @@
 			var STATE_PLAYER_CHOOSE_DISCARD = 6;
 			
 			console.log( 'javascript -- start' );
-			var username = 'user' + Math.floor((Math.random()*1000)+1);
 			
            //This is all that needs
            var socket = io.connect('http://localhost:9092', {
@@ -44,11 +51,8 @@
                 // connection established, now we can send an objects
        		});
        		
-       		$(window).load(function(){ 
-       			output('<span class="username-msg">Welcome '+username+'!</span>');
-       		})
-       		
        		function joinAnyGame() {
+       		    var username = $('#username').val();
                 var jsonObject = {username: username};
             	socket.emit('join_any_game', jsonObject);
 			};
@@ -135,10 +139,36 @@
 		<br/>
 	
 	    <form class="well form-inline" onsubmit="return false;">
-	       <!--<input id="username" class="input-xlarge" type="text" placeholder="Enter your name--"/>-->
+	       <input id="username" class="input-xlarge" type="text" placeholder="Enter your name--"/>
 	       <button type="button" onClick="joinAnyGame()" class="btn">Join any game</button>
 	    </form>
-	    
-	    <div id="console" class="well">
+
+        <div class="container">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">My cards</div>
+                            <div class="panel-body">
+                                <button class="btn">Middle</button>
+                                <button class="btn">Right</button>
+                                <button class="btn btn-default">Button</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Opponents cards</div>
+                            <div class="panel-body"></div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div id="console" class="well"></div>
+
     </body>
 </html>
