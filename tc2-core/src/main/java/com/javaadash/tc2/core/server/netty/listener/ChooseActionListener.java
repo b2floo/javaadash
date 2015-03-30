@@ -26,7 +26,7 @@ public class ChooseActionListener implements DataListener<ChooseActionMessage> {
   @Override
   public void onData(SocketIOClient client, ChooseActionMessage msg, AckRequest ack)
       throws Exception {
-    log.debug("Received choose character from " + client.get("username"));
+    log.debug("Received choose action " + msg + " from " + client.get("username"));
 
     GameContext context = lobby.getCurrentGames().get(client.get("roomId"));
     if (context == null) {

@@ -12,6 +12,7 @@ public class CardsToDescriptionHelper {
     for (Card card : cards) {
       CardDescription desc = new CardDescription(card.getId());
       desc.setSettings(card.getSettings());
+      desc.setAvailable(card.getAvailable());
       cardDescriptions.add(desc);
     }
     return cardDescriptions;

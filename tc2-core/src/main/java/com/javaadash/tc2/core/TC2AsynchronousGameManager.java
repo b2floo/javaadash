@@ -72,18 +72,25 @@ public class TC2AsynchronousGameManager {
 
             int index = inHandCharactersDesc.indexOf(characterCard);
             if (index >= 0) {
-              log.debug("Character matched a character in hand of player "
-                  + data.getPlayer().getName() + ", put it on board");
+              log.debug("Selected character [" + characterCard.getId()
+                  + "] matched a character in hand of player " + data.getPlayer().getName());
               Card inHandCharacter = inHandCharacters.get(index);
-              data.getPlayer().getIngameDeck().setCardLocation(inHandCharacter, CardLocation.BOARD);
+              if (inHandCharacter.getAvailable()) {
+                data.getPlayer().getIngameDeck()
+                    .setCardLocation(inHandCharacter, CardLocation.BOARD);
+              } else {
+                throw new IllegalStateException("Selected character [" + characterCard.getId()
+                    + "] match a character but is not available for " + data.getPlayer().getName());
+              }
             } else {
               throw new IllegalStateException("Selected character [" + characterCard.getId()
-                  + "] does not match any character in hand  of player "
+                  + "] does not match any character in hand of player "
                   + data.getPlayer().getName());
             }
             context.setState(GameState.PLAYER_CHOOSE_ACTION);
 
             // update available actions
+            context.setCurrentPlayer(data.getPlayer());
             updateAvailableActions(context);
             playManager.updateGameStatus(context);
           }
@@ -114,12 +121,18 @@ public class TC2AsynchronousGameManager {
 
             for (CardDescription actionCard : actionCards) {
               int index = inHandActionsDesc.indexOf(actionCard);
-              // TODO also check restrictions
               if (index >= 0) {
-                log.debug("Action matched an action in hand of player "
-                    + data.getPlayer().getName() + ", put it on board");
+
+                log.debug("Selected action [" + actionCard.getId()
+                    + "] matched an action in hand of player " + data.getPlayer().getName());
                 Card inHandAction = inHandActions.get(index);
-                data.getPlayer().getIngameDeck().setCardLocation(inHandAction, CardLocation.BOARD);
+                if (inHandAction.getAvailable()) {
+                  data.getPlayer().getIngameDeck()
+                      .setCardLocation(inHandAction, CardLocation.BOARD);
+                } else {
+                  throw new IllegalStateException("Selected action [" + actionCard.getId()
+                      + "] match an action but is not available for " + data.getPlayer().getName());
+                }
               } else {
                 throw new IllegalStateException("Selected action [" + actionCard.getId()
                     + "] does not match any character in hand of player "
@@ -162,15 +175,19 @@ public class TC2AsynchronousGameManager {
             for (CardDescription discardCard : discardCards) {
               int index = inHandActionsDesc.indexOf(discardCard);
               if (index >= 0) {
-                log.debug("Discard matched an action in hand of player "
-                    + data.getPlayer().getName() + ", put it in discard");
+                log.debug("Selected discard [" + discardCard.getId()
+                    + "] matched an action in hand of player " + data.getPlayer().getName());
                 Card inHandAction = inHandActions.get(index);
-                data.getPlayer().getIngameDeck()
-                    .setCardLocation(inHandAction, CardLocation.DISCARD);
+                if (inHandAction.getAvailable()) {
+                  data.getPlayer().getIngameDeck()
+                      .setCardLocation(inHandAction, CardLocation.DISCARD);
+                } else {
+                  throw new IllegalStateException("Selected discard [" + discardCard.getId()
+                      + "] match an action but is not available for " + data.getPlayer().getName());
+                }
               } else {
-                throw new IllegalStateException("Selected action [" + discardCard.getId()
-                    + "] for discard does not match any action in hand of player "
-                    + data.getPlayer().getName());
+                throw new IllegalStateException("Selected discard [" + discardCard.getId()
+                    + "] does not match any action in hand of player " + data.getPlayer().getName());
               }
             }
             data.getPlayedCards().clear();

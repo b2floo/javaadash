@@ -16,7 +16,6 @@ public class BoardClearerTest extends TestCase {
     int maxCharacterrs = 2;
     InGameDeck inGameDeck = GameUtils.getInGameDeck(maxCharacterrs, 0, 0);
 
-    // nothing on board
     for (Integer cardLocation : MockCardLocation.values()) {
       for (Card c : inGameDeck.getCards(CardType.CHARACTER)) {
         inGameDeck.setCardLocation(c, cardLocation);
@@ -24,7 +23,7 @@ public class BoardClearerTest extends TestCase {
 
       boardClearer.clearPlayerBoard(inGameDeck);
       // check cards stay in cardLocation
-      if (cardLocation == CardLocation.BOARD || cardLocation == CardLocation.DISCARD) {
+      if (cardLocation == CardLocation.BOARD) {
         assertEquals(0, inGameDeck.getCards(CardType.CHARACTER, cardLocation).size());
       } else {
         assertEquals(maxCharacterrs, inGameDeck.getCards(CardType.CHARACTER, cardLocation).size());
@@ -43,16 +42,17 @@ public class BoardClearerTest extends TestCase {
       index++;
       inGameDeck.setCardLocation(c, CardLocation.BOARD);
       assertTrue(inGameDeck.getCards(CardType.CHARACTER, CardLocation.BOARD).contains(c));
+      assertTrue(c.getAvailable());
 
       boardClearer.clearPlayerBoard(inGameDeck);
 
       assertFalse(inGameDeck.getCards(CardType.CHARACTER, CardLocation.BOARD).contains(c));
       // when player still has characters in hand
       if (index != maxCharacterrs)
-        assertTrue(inGameDeck.getCards(CardType.CHARACTER, CardLocation.DISCARD).contains(c));
+        assertFalse(c.getAvailable());
       // when all characters are in discard, they return in hand
       else {
-        assertTrue(inGameDeck.getCards(CardType.CHARACTER, CardLocation.HAND).contains(c));
+        assertTrue(c.getAvailable());
         assertEquals(maxCharacterrs, inGameDeck.getCards(CardType.CHARACTER, CardLocation.HAND)
             .size());
       }
@@ -110,8 +110,8 @@ public class BoardClearerTest extends TestCase {
     assertEquals(maxActions - 1, p1.getIngameDeck().getCards(CardType.ACTION, CardLocation.STOCK)
         .size());
 
-    p2.getIngameDeck().setCardLocation(
-        p2.getIngameDeck().getCards(CardType.CHARACTER).iterator().next(), CardLocation.BOARD);
+    Card playedCharacter = p2.getIngameDeck().getCards(CardType.CHARACTER).iterator().next();
+    p2.getIngameDeck().setCardLocation(playedCharacter, CardLocation.BOARD);
     assertEquals(1, p2.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.BOARD).size());
     assertEquals(maxCharacters - 1,
         p2.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND).size());
@@ -125,14 +125,14 @@ public class BoardClearerTest extends TestCase {
     assertEquals(1, p1.getIngameDeck().getCards(CardType.ACTION, CardLocation.DISCARD).size());
 
     assertEquals(0, p2.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.BOARD).size());
-    assertEquals(maxCharacters - 1,
-        p2.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND).size());
-    assertEquals(1, p2.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.DISCARD).size());
+    assertEquals(maxCharacters, p2.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND)
+        .size());
+    assertFalse(playedCharacter.getAvailable());
 
     // now invert and check again
     // player 1 has a character on board, player 2 has an action on board
-    p1.getIngameDeck().setCardLocation(
-        p1.getIngameDeck().getCards(CardType.CHARACTER).iterator().next(), CardLocation.BOARD);
+    playedCharacter = p1.getIngameDeck().getCards(CardType.CHARACTER).iterator().next();
+    p1.getIngameDeck().setCardLocation(playedCharacter, CardLocation.BOARD);
     assertEquals(1, p1.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.BOARD).size());
     assertEquals(maxCharacters - 1,
         p1.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND).size());
@@ -147,9 +147,9 @@ public class BoardClearerTest extends TestCase {
     boardClearer.clearBoard(context);
 
     assertEquals(0, p1.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.BOARD).size());
-    assertEquals(maxCharacters - 1,
-        p1.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND).size());
-    assertEquals(1, p1.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.DISCARD).size());
+    assertEquals(maxCharacters, p1.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.HAND)
+        .size());
+    assertFalse(playedCharacter.getAvailable());
 
 
     assertEquals(0, p2.getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD).size());

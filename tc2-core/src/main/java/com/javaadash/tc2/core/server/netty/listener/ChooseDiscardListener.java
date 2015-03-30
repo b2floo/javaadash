@@ -26,7 +26,7 @@ public class ChooseDiscardListener implements DataListener<ChooseDiscardMessage>
   @Override
   public void onData(SocketIOClient client, ChooseDiscardMessage msg, AckRequest ack)
       throws Exception {
-    log.debug("Received choose discard from " + client.get("username"));
+    log.debug("Received choose discard " + msg + " from " + client.get("username"));
 
     GameContext context = lobby.getCurrentGames().get(client.get("roomId"));
     if (context == null) {
