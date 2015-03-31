@@ -33,7 +33,7 @@
         <script src="js/moment.min.js"></script>
 		
 	
-		<!-- This will create a connection to socket.io, and print the user serverid that we sent from the server side. --> 
+	<!-- This will create a connection to socket.io --> 
         <script type="text/javascript">
 			
 			var STATE_PLAYER_CHOOSE_CHARACTER = 3;
@@ -129,7 +129,6 @@
               }    
             }
 
-			
         </script>
     </head>
  
@@ -148,31 +147,68 @@
             <div class="panel panel-default">
               <div class="panel-body">
                 <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
+                    <!-- My characters-->
+                    <div class="col-lg-2 col-md-2 col-sm-2">
                         <div class="panel panel-default">
-                            <div class="panel-heading">My cards</div>
+                            <div class="panel-heading">My characters</div>
                             <div class="panel-body">
-									<!-- image trigger modal -->
-									<a data-toggle="modal" data-target="#myModal">
-									  <img src="images/card1_small.png">
-									</a>
-									<a data-toggle="modal" data-target="#myModal">
-									  <img src="images/card1_small.png">
-									</a>
-									<a data-toggle="modal" data-target="#myModal">
-									  <img src="images/card1_small.png">
-									</a>
-									<button class="btn">Right</button>
-									<button class="btn btn-default">Button</button>
-							</div>
+			                    <!-- image trigger modal -->
+				                <a data-toggle="modal" data-target="#myModal">
+				                  <img src="images/card1_small.png">
+				                </a>
+				                <a data-toggle="modal" data-target="#myModal">
+				                  <img src="images/card1_small.png">
+				                </a>
+				                <a data-toggle="modal" data-target="#myModal">
+				                  <img src="images/card1_small.png">
+				                </a>
+			                </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
+                    <!-- My actions -->
+                    <div class="col-lg-2 col-md-2 col-sm-2">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Opponents cards</div>
-                            <div class="panel-body"></div>
+                            <div class="panel-heading">My actions</div>
+                                <div class="panel-body">
+                                    <!-- image trigger modal -->
+                                    <a data-toggle="modal" data-target="#myModal">
+                                      <img src="images/card1_small.png">
+                                    </a>
+                                    <a data-toggle="modal" data-target="#myModal">
+                                      <img src="images/card1_small.png">
+                                    </a>
+                                    <a data-toggle="modal" data-target="#myModal">
+                                      <img src="images/card1_small.png">
+                                    </a>
+                                    <a data-toggle="modal" data-target="#myModal">
+                                      <img src="images/card1_small.png">
+                                    </a>
+                                    <a data-toggle="modal" data-target="#myModal">
+                                      <img src="images/card1_small.png">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Opponents characters-->
+                        <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Opponents characters</div>
+                                <div class="panel-body">
+			                        <!-- image trigger modal -->
+				                    <a data-toggle="modal" data-target="#myModal">
+				                      <img src="images/card1_small.png">
+				                    </a>
+				                    <a data-toggle="modal" data-target="#myModal">
+				                      <img src="images/card1_small.png">
+				                    </a>
+				                    <a data-toggle="modal" data-target="#myModal">
+				                      <img src="images/card1_small.png">
+				                    </a>
+			                    </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
               </div>
             </div>
@@ -185,7 +221,7 @@
 		  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
 				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
 			  </div>
 			  <div class="modal-body">
