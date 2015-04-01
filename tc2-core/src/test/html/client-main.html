@@ -129,11 +129,28 @@
               }    
             }
 
+			$(document).ready(function() {
+				$('.tc2_myCharacterThumbnail').popover({
+						placement : 'right',
+						content: popoverCardImage, 
+						html:true
+				});
+				
+				$('.tc2_opponentCharacterThumbnail').popover({
+						placement : 'left',
+						content: popoverCardImage, 
+						html:true
+				});
+				
+				function popoverCardImage() {
+					var popoverImageSrc = $('img',this).attr("data-popover");
+					return '<img src="'+popoverImageSrc+'">';
+				}
+			});
         </script>
     </head>
  
      <body>
-        <!--<canvas id="canvas"> </canvas>  -->
         <h1>netty-socketio demo</h1>
 	
 		<br/>
@@ -152,15 +169,14 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">My characters</div>
                             <div class="panel-body">
-			                    <!-- image trigger modal -->
-				                <a data-toggle="modal" data-target="#myModal">
-				                  <img src="images/card1_small.png">
+								<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+									<img src="images/card1_small.png" data-popover="images/card1.png">
+								</a>
+				                <a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+				                  <img src="images/card1_small.png" data-popover="images/card1.png">
 				                </a>
-				                <a data-toggle="modal" data-target="#myModal">
-				                  <img src="images/card1_small.png">
-				                </a>
-				                <a data-toggle="modal" data-target="#myModal">
-				                  <img src="images/card1_small.png">
+				                <a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+				                  <img src="images/card1_small.png" data-popover="images/card1.png">
 				                </a>
 			                </div>
                         </div>
@@ -170,22 +186,21 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">My actions</div>
                                 <div class="panel-body">
-                                    <!-- image trigger modal -->
-                                    <a data-toggle="modal" data-target="#myModal">
-                                      <img src="images/card1_small.png">
-                                    </a>
-                                    <a data-toggle="modal" data-target="#myModal">
-                                      <img src="images/card1_small.png">
-                                    </a>
-                                    <a data-toggle="modal" data-target="#myModal">
-                                      <img src="images/card1_small.png">
-                                    </a>
-                                    <a data-toggle="modal" data-target="#myModal">
-                                      <img src="images/card1_small.png">
-                                    </a>
-                                    <a data-toggle="modal" data-target="#myModal">
-                                      <img src="images/card1_small.png">
-                                    </a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
                                 </div>
                             </div>
                         </div>
@@ -194,16 +209,15 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">Opponents characters</div>
                                 <div class="panel-body">
-			                        <!-- image trigger modal -->
-				                    <a data-toggle="modal" data-target="#myModal">
-				                      <img src="images/card1_small.png">
-				                    </a>
-				                    <a data-toggle="modal" data-target="#myModal">
-				                      <img src="images/card1_small.png">
-				                    </a>
-				                    <a data-toggle="modal" data-target="#myModal">
-				                      <img src="images/card1_small.png">
-				                    </a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_opponentCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_opponentCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
+									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_opponentCharacterThumbnail">
+									  <img src="images/card1_small.png" data-popover="images/card1.png">
+									</a>
 			                    </div>
                             </div>
                         </div>
@@ -215,25 +229,6 @@
         </div>
         
         <div id="console" class="well"></div>
-
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
-			  </div>
-			  <div class="modal-body">
-				...
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
-			  </div>
-			</div><!-- /.modal-content -->
-		  </div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
 		
     </body>
 </html>
