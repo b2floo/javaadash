@@ -3,21 +3,21 @@ package com.javaadash.tc2.core.card;
 import java.util.Map;
 
 public class CardDescription {
-  private Integer id;
+  private String id;
   private Map<String, String> settings;
   private Boolean available = true;
 
   public CardDescription() {}
 
-  public CardDescription(Integer id) {
+  public CardDescription(String id) {
     this.id = id;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

@@ -2,7 +2,7 @@ package com.javaadash.tc2.core.server.netty.listener;
 
 import java.util.Map;
 
-import main.DeckGenerator;
+import main.StaticDeckGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
 
       Player p1 = null;
       try {
-        Deck deck1 = DeckGenerator.getDeck(nbActions);
+        Deck deck1 = StaticDeckGenerator.getDeck(nbActions);
         p1 = new Player(msg.getUsername(), deck1, 5, new SocketIoPlayerInterface(client));
       } catch (TC2CoreException e) {
         // TODO Auto-generated catch block
@@ -63,7 +63,7 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
 
       Player p2 = null;
       try {
-        Deck deck2 = DeckGenerator.getDeck(nbActions);
+        Deck deck2 = StaticDeckGenerator.getDeck(nbActions);
         p2 = new Player(msg.getUsername(), deck2, 5, new SocketIoPlayerInterface(client));
       } catch (TC2CoreException e) {
         // TODO Auto-generated catch block

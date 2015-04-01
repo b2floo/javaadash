@@ -14,7 +14,7 @@ import com.javaadash.tc2.core.card.effect.Effect;
 public class Card implements Serializable {
   private static final long serialVersionUID = 3548312040504128825L;
 
-  protected Integer id;
+  protected String id;
   protected String description;
   protected Integer type;
   protected Collection<Effect> effects = new ArrayList<Effect>();
@@ -36,7 +36,7 @@ public class Card implements Serializable {
     this.description = description;
   }
 
-  public Card(Integer id, Integer type, String description, Collection<Effect> effects,
+  public Card(String id, Integer type, String description, Collection<Effect> effects,
       Collection<Condition> conditions, Map<String, String> settings) {
     this.id = id;
     this.type = type;
@@ -91,7 +91,7 @@ public class Card implements Serializable {
     this.type = type;
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 

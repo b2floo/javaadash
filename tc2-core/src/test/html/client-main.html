@@ -17,7 +17,7 @@
 				padding:20px;
 			}
 			#console { 
-				height: 400px; 
+				height: 100px; 
 				overflow: auto; 
 			}
 			.username-msg {color:orange;}
@@ -64,16 +64,25 @@
 
 				output('<span class="username-msg">Available characters: </span>');
 				outputCardList(data.myCharacters);
+                for(var i=0; i<data.myCharacters.length; ++i) {
+                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, 'right');
+                } 
+
 				output('<span class="username-msg">Available cards: </span>');
 				outputCardList(data.myHand);
+
 				output('<span class="username-msg">Opponent characters: </span>');
 				outputCardList(data.myOpponentCharacters);
-				var characterCard = { 'characterCard' : data.myCharacters[0].id, 
-				 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
-				socket.emit('choose_character', characterCard);
-				var actionCards = { 'actionCards' : [data.myHand[0]], 
-				 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
-				socket.emit('choose_action', actionCards);
+                for(var i=0; i<data.myOpponentCharacters.length; ++i) {
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, 'left');
+                } 
+
+				//var characterCard = { 'characterCard' : data.myCharacters[0].id, 
+				// '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
+				//socket.emit('choose_character', characterCard);
+				//var actionCards = { 'actionCards' : [data.myHand[0]], 
+				// '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
+				//socket.emit('choose_action', actionCards);
        		});
        		
        		socket.on('update_game', function(data) {
@@ -129,36 +138,44 @@
               }    
             }
 
+            function displayCard(elementId, cardId, popoverPlacement) {
+                $(elementId).attr("data-trigger", "hover");             
+                $(elementId).attr("data-toggle", "popover");
+                $('img',elementId).attr("src", "images/"+cardId+"_small.png") ;
+                $(elementId).popover({
+                    placement : popoverPlacement,
+                    content: '<img src="images/'+cardId+'.png">', 
+                    html:true
+                });
+            }
+
 			$(document).ready(function() {
+                output('Welcome!');
 				$('.tc2_myCharacterThumbnail').popover({
 						placement : 'right',
 						content: popoverCardImage, 
 						html:true
-				});
-				
-				$('.tc2_opponentCharacterThumbnail').popover({
-						placement : 'left',
-						content: popoverCardImage, 
-						html:true
-				});
-				
-				function popoverCardImage() {
-					var popoverImageSrc = $('img',this).attr("data-popover");
-					return '<img src="'+popoverImageSrc+'">';
-				}
+				});		
 			});
+
+			function popoverCardImage() {
+				var popoverImageSrc = $('img',this).attr("data-popover");
+				return '<img src="'+popoverImageSrc+'">';
+			}
         </script>
     </head>
  
      <body>
-        <h1>netty-socketio demo</h1>
-	
-		<br/>
-	
-	    <form class="well form-inline" onsubmit="return false;">
-	       <input id="username" class="input-xlarge" type="text" placeholder="Enter your name--"/>
-	       <button type="button" onClick="joinAnyGame()" class="btn">Join any game</button>
-	    </form>
+        <div class="container">
+            <div class="row">
+	            <form class="well form-inline col-lg-4 col-md-4 col-sm-4" onsubmit="return false;">
+	               <input id="username" class="input-xlarge" type="text" placeholder="Enter your name--"/>
+	               <button type="button" onClick="joinAnyGame()" class="btn">Join any game</button>
+	            </form>
+
+                <div id="console" class="well col-lg-7 col-md-7 col-sm-7 pull-right"></div>
+            </div>
+        </div>
 
         <div class="container">
             <div class="panel panel-default">
@@ -169,14 +186,14 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">My characters</div>
                             <div class="panel-body">
-								<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-									<img src="images/card1_small.png" data-popover="images/card1.png">
+								<a id="myCharacter1" href="#" class="thumbnail">
+									<img src="images/0000.png">
 								</a>
-				                <a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-				                  <img src="images/card1_small.png" data-popover="images/card1.png">
+				                <a id="myCharacter2" href="#" class="thumbnail">
+				                  <img src="images/0000.png">
 				                </a>
-				                <a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-				                  <img src="images/card1_small.png" data-popover="images/card1.png">
+				                <a id="myCharacter3" href="#" class="thumbnail">
+				                  <img src="images/0000.png">
 				                </a>
 			                </div>
                         </div>
@@ -212,11 +229,11 @@
 										<div class="panel-heading">Played characters</div>
 										<div class="panel-body">
 											<div class="row">
-												<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail pull-left">
-												  <img src="images/card1_small.png" data-popover="images/card1.png">
+												<a class="thumbnail pull-left">
+												  <img src="images/0000.png">
 												</a>
-												<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail pull-right">
-												  <img src="images/card1_small.png" data-popover="images/card1.png">
+												<a class="thumbnail pull-right">
+												  <img src="images/0000.png">
 												</a>
 											</div>
 										</div>
@@ -225,17 +242,17 @@
 										<div class="panel-heading">Played actions</div>
 										<div class="panel-body">
 											<div class="row">
-												<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail pull-left">
-												  <img src="images/card1_small.png" data-popover="images/card1.png">
+												<a class="thumbnail pull-left">
+												  <img src="images/0000.png">
 												</a>
-												<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail pull-left">
-												  <img src="images/card1_small.png" data-popover="images/card1.png">
+												<a class="thumbnail pull-left">
+												  <img src="images/0000.png">
 												</a>
-												<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail pull-right">
-												  <img src="images/card1_small.png" data-popover="images/card1.png">
+												<a class="thumbnail pull-right">
+												  <img src="images/0000.png">
 												</a>
-												<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail pull-right">
-												  <img src="images/card1_small.png" data-popover="images/card1.png">
+												<a class="thumbnail pull-right">
+												  <img src="images/0000.png">
 												</a>
 											</div>
 										</div>
@@ -248,15 +265,15 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">Opponents characters</div>
                                 <div class="panel-body">
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_opponentCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_opponentCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_opponentCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
+								    <a id="opponentCharacter1" href="#" class="thumbnail">
+									    <img src="images/0000.png">
+								    </a>
+				                    <a id="opponentCharacter2" href="#" class="thumbnail">
+				                      <img src="images/0000.png">
+				                    </a>
+				                    <a id="opponentCharacter3" href="#" class="thumbnail">
+				                      <img src="images/0000.png">
+				                    </a>
 			                    </div>
                             </div>
                         </div>
@@ -265,8 +282,6 @@
               </div>
             </div>
         </div>
-        
-        <div id="console" class="well"></div>
-		
+        		
     </body>
 </html>
