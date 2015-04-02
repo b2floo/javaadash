@@ -193,15 +193,19 @@
 					var selectedCharacterIndex = $('#mySelectedCharacter').attr("data-character-index");
 					if(typeof selectedCharacterIndex !== 'undefined') {
 						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter').attr("data-cardid"), 'right');
+                        $('#mySelectedCharacter').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
-					displayCard('#mySelectedCharacter', selectedCardId, 'right');
+                    // add a timeout as the popover.destroy is asynchronous
+                    setTimeout(function () {
+                        displayCard('#mySelectedCharacter', selectedCardId, 'right');
+                    ;}, 200);
 					$('#mySelectedCharacter').attr("data-character-index", $(linkElement).attr("id"));
-					// set clicked link to default
+					// set clicked link to no-card
 					$(linkElement).removeAttr("data-trigger"); 
 					$(linkElement).removeAttr("data-toggle");
 					$(linkElement).removeAttr("data-cardid") ;
-					$(linkElement).popover('disable');
+                    $(linkElement).popover('destroy');
 					$('img',linkElement).attr("src", "images/0000.png");
 				}
 			}
