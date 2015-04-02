@@ -163,6 +163,10 @@ public class PlayManager {
       case SECOND_PLAYER:
         winner = context.getSecondPlayer().getName();
         break;
+      case TIE:
+        break;
+      default:
+        throw new IllegalStateException("No winner defined when trying to send end_game message");
     }
 
     Integer player1Score = context.getFirstPlayer().getScore();
