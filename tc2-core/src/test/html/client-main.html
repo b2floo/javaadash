@@ -36,9 +36,11 @@
 	<!-- This will create a connection to socket.io --> 
         <script type="text/javascript">
 			
-			var STATE_PLAYER_CHOOSE_CHARACTER = 3;
-			var STATE_PLAYER_CHOOSE_ACTION = 4;
-			var STATE_PLAYER_CHOOSE_DISCARD = 6;
+			STATE_PLAYER_CHOOSE_CHARACTER = 3;
+			STATE_PLAYER_CHOOSE_ACTION = 4;
+			STATE_PLAYER_CHOOSE_DISCARD = 6;
+			
+			gameState = STATE_PLAYER_CHOOSE_CHARACTER;
 			
 			console.log( 'javascript -- start' );
 			
@@ -77,6 +79,7 @@
                     displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, 'left');
                 } 
 
+				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
 				//var characterCard = { 'characterCard' : data.myCharacters[0].id, 
 				// '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
 				//socket.emit('choose_character', characterCard);
@@ -162,6 +165,13 @@
 				var popoverImageSrc = $('img',this).attr("data-popover");
 				return '<img src="'+popoverImageSrc+'">';
 			}
+			
+			function selectCharacter(linkElement) {
+				if(gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
+					var selectedCardId = $('img',linkElement).attr("data-cardid") ;
+					displayCard('#myPlayedCharacter', selectedCardId, 'right');
+				}
+			}
         </script>
     </head>
  
@@ -186,13 +196,15 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">My characters</div>
                             <div class="panel-body">
-								<a id="myCharacter1" href="#" class="thumbnail">
-									<img src="images/0000.png">
+								<a id="myCharacter1" href="#" class="thumbnail" onclick="selectCharacter(this)">
+									<!--<img src="images/0000.png">-->
+									<img src="images/90001_small.png" data-cardid="90001">
 								</a>
-				                <a id="myCharacter2" href="#" class="thumbnail">
-				                  <img src="images/0000.png">
+				                <a id="myCharacter2" href="#" class="thumbnail" onclick="selectCharacter(this)">
+									<!--<img src="images/0000.png">-->
+								  <img src="images/90002_small.png" data-cardid="90002">
 				                </a>
-				                <a id="myCharacter3" href="#" class="thumbnail">
+				                <a id="myCharacter3" href="#" class="thumbnail" onclick="selectCharacter(this)">
 				                  <img src="images/0000.png">
 				                </a>
 			                </div>
@@ -223,16 +235,19 @@
                         </div>
 						<!-- Main game panel -->
 						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="well">
+								<button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-fast-forward"></span> Play</button>
+							</div>
 							<div class="panel panel-primary">
 								<div class="panel-body" style="height:600px">
 									<div class="panel panel-primary" style="border: 10px solid transparent;">
 										<div class="panel-heading">Played characters</div>
 										<div class="panel-body">
 											<div class="row">
-												<a class="thumbnail pull-left">
+												<a id="myPlayedCharacter" class="thumbnail pull-left">
 												  <img src="images/0000.png">
 												</a>
-												<a class="thumbnail pull-right">
+												<a id="opponentPlayedCharacter" class="thumbnail pull-right">
 												  <img src="images/0000.png">
 												</a>
 											</div>
