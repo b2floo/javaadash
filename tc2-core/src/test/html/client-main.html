@@ -118,11 +118,14 @@
                     displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, 'left');
                 } 
 				
+				output('<span class="username-msg">Opponent selected character: </span>');
+                outputCardList(data.myOpponentCharacterBoard);
+				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
+                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, 'left');
+                }
+				
                 output('<span class="username-msg">Opponent board: </span>');
                 outputCardList(data.myOpponentBoard);
-                for(var i=0; i<data.myOpponentBoard.length; ++i) {
-                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentBoard[i].id, 'left');
-                }
 				
                 output('<span class="username-msg">Opponent discard: </span>');
                 outputCardList(data.myOpponentDiscard);
@@ -201,17 +204,17 @@
 			function selectCharacter(linkElement) {
 				if(gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
 					// check existing card in place
-					var selectedCharacterIndex = $('#mySelectedCharacter').attr("data-character-index");
+					var selectedCharacterIndex = $('#mySelectedCharacter1').attr("data-character-index");
 					if(typeof selectedCharacterIndex !== 'undefined') {
-						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter').attr("data-cardid"), 'right');
-                        $('#mySelectedCharacter').popover('destroy');
+						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), 'right');
+                        $('#mySelectedCharacter1').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
                     // add a timeout as the popover.destroy is asynchronous
                     setTimeout(function () {
-                        displayCard('#mySelectedCharacter', selectedCardId, 'right');
+                        displayCard('#mySelectedCharacter1', selectedCardId, 'right');
                     ;}, 200);
-					$('#mySelectedCharacter').attr("data-character-index", $(linkElement).attr("id"));
+					$('#mySelectedCharacter1').attr("data-character-index", $(linkElement).attr("id"));
                     emptyCard(linkElement);
 				}
 			}
@@ -227,7 +230,7 @@
 			
 			function finishStep() {
 				if(gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
-					var selectedCardId = $('#mySelectedCharacter').attr("data-cardid");
+					var selectedCardId = $('#mySelectedCharacter1').attr("data-cardid");
 					if(typeof selectedCardId == 'undefined') {
 						output('<span class="disconnect-msg">You must select a character first!</span>');
 					} else {
@@ -308,10 +311,10 @@
 										<div class="panel-heading">Played characters</div>
 										<div class="panel-body">
 											<div class="row">
-												<a id="mySelectedCharacter" class="thumbnail pull-left">
+												<a id="mySelectedCharacter1" class="thumbnail pull-left">
 												  <img src="images/0000.png">
 												</a>
-												<a id="opponentSelectedCharacter" class="thumbnail pull-right">
+												<a id="opponentSelectedCharacter1" class="thumbnail pull-right">
 												  <img src="images/0000.png">
 												</a>
 											</div>

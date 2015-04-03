@@ -102,6 +102,9 @@ public class PlayManager {
       List<CardDescription> player1Board =
           CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
               .getCards(CardType.ACTION, CardLocation.BOARD));
+      List<CardDescription> player1CharacterBoard =
+          CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
+              .getCards(CardType.CHARACTER, CardLocation.BOARD));
       List<CardDescription> player1Discard =
           CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
               .getCards(CardType.ACTION, CardLocation.DISCARD));
@@ -115,6 +118,9 @@ public class PlayManager {
       List<CardDescription> player2Board =
           CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
               .getCards(CardType.ACTION, CardLocation.BOARD));
+      List<CardDescription> player2CharacterBoard =
+          CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
+              .getCards(CardType.CHARACTER, CardLocation.BOARD));
       List<CardDescription> player2Discard =
           CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
               .getCards(CardType.ACTION, CardLocation.DISCARD));
@@ -123,10 +129,12 @@ public class PlayManager {
       player1msg.setMyHand(player1Hand);
       player1msg.setMyCharacters(player1Characters);
       player1msg.setMyBoard(player1Board);
+      player1msg.setMyCharacterBoard(player1CharacterBoard);
       player1msg.setMyDiscard(player1Discard);
       player1msg.setMyOpponentCharacters(player2Characters);
       player1msg.setMyOpponentBoard(player2Board);
       player1msg.setMyOpponentDiscard(player2Discard);
+      player1msg.setMyOpponentCharacterBoard(player2CharacterBoard);
       player1msg.setGameState(context.getState());
       player1msg.setTurn(context.getTurn());
       context.getFirstPlayer().getPlayerInterface().updateGameStatus(player1msg);
@@ -136,9 +144,11 @@ public class PlayManager {
       player2msg.setMyHand(player2Hand);
       player2msg.setMyCharacters(player2Characters);
       player2msg.setMyBoard(player2Board);
+      player2msg.setMyCharacterBoard(player2CharacterBoard);
       player2msg.setMyDiscard(player2Discard);
       player2msg.setMyOpponentCharacters(player1Characters);
       player2msg.setMyOpponentBoard(player1Board);
+      player2msg.setMyOpponentCharacterBoard(player1CharacterBoard);
       player2msg.setMyOpponentDiscard(player1Discard);
       player2msg.setGameState(context.getState());
       player2msg.setTurn(context.getTurn());

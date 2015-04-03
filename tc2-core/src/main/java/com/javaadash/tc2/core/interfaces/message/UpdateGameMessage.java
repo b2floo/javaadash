@@ -10,9 +10,12 @@ public class UpdateGameMessage {
   private List<CardDescription> myHand;
   private List<CardDescription> myCharacters;
   private List<CardDescription> myBoard;
+  private List<CardDescription> myCharacterBoard;
   private List<CardDescription> myDiscard;
+
   private List<CardDescription> myOpponentCharacters;
   private List<CardDescription> myOpponentBoard;
+  private List<CardDescription> myOpponentCharacterBoard;
   private List<CardDescription> myOpponentDiscard;
 
   public Integer getTurn() {
@@ -87,11 +90,30 @@ public class UpdateGameMessage {
     this.myOpponentDiscard = myOpponentDiscard;
   }
 
+  public List<CardDescription> getMyCharacterBoard() {
+    return myCharacterBoard;
+  }
+
+  public void setMyCharacterBoard(List<CardDescription> myCharacterBoard) {
+    this.myCharacterBoard = myCharacterBoard;
+  }
+
+  public List<CardDescription> getMyOpponentCharacterBoard() {
+    return myOpponentCharacterBoard;
+  }
+
+  public void setMyOpponentCharacterBoard(List<CardDescription> myOpponentCharacterBoard) {
+    this.myOpponentCharacterBoard = myOpponentCharacterBoard;
+  }
+
   @Override
   public String toString() {
-    return "UpdateGameMessage [gameState=" + gameState + ", myHand=" + myHand + ", myCharacters="
-        + myCharacters + ", myBoard=" + myBoard + ", myDiscard=" + myDiscard
-        + ", myOpponentCharacters=" + myOpponentCharacters + ", myOpponentBoard=" + myOpponentBoard
-        + ", myOpponentDiscard=" + myOpponentDiscard + "]";
+    return "UpdateGameMessage [turn=" + turn + ", gameState=" + gameState + ", myHand=" + myHand
+        + ", myCharacters=" + myCharacters + ", myBoard=" + myBoard + ", myCharacterBoard="
+        + myCharacterBoard + ", myDiscard=" + myDiscard + ", myOpponentCharacters="
+        + myOpponentCharacters + ", myOpponentBoard=" + myOpponentBoard
+        + ", myOpponentCharacterBoard=" + myOpponentCharacterBoard + ", myOpponentDiscard="
+        + myOpponentDiscard + "]";
   }
+
 }
