@@ -68,23 +68,22 @@
 				output('<span class="username-msg">Available characters: </span>');
 				outputCardList(data.myCharacters);
                 for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, 'right');
+                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right');
                 } 
 
 				output('<span class="username-msg">Available cards: </span>');
 				outputCardList(data.myHand);
+				for(var i=0; i<data.myHand.length; ++i) {
+                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
+                } 
 
 				output('<span class="username-msg">Opponent characters: </span>');
 				outputCardList(data.myOpponentCharacters);
                 for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, 'left');
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
                 } 
 
 				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
-
-				//var actionCards = { 'actionCards' : [data.myHand[0]], 
-				// '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
-				//socket.emit('choose_action', actionCards);
        		});
        		
        		socket.on('update_game', function(data) {
@@ -92,19 +91,31 @@
 
                 output('<span class="username-msg">Available characters: </span>');
                 outputCardList(data.myCharacters);
-                // TODO do it at once? -- would be better to keep indexes in the table sent my message
                 emptyCard("#myCharacter1");
                 emptyCard("#myCharacter2");
                 emptyCard("#myCharacter3");
 				for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, 'right');
+                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right');
                 } 
 				
                 output('<span class="username-msg">Available cards: </span>');
                 outputCardList(data.myHand);
+				emptyCard("#myAction1");
+                emptyCard("#myAction2");
+                emptyCard("#myAction3");
+				emptyCard("#myAction4");
+				emptyCard("#myAction5");
+				for(var i=0; i<data.myHand.length; ++i) {
+                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
+                } 
 				
                 output('<span class="username-msg">My board: </span>');
                 outputCardList(data.myBoard);
+				emptyCard("#mySelectedAction1");
+                emptyCard("#mySelectedAction2");
+				for(var i=0; i<data.myBoard.length; ++i) {
+                    displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right');
+                } 
 				
                 output('<span class="username-msg">My discard: </span>');
                 outputCardList(data.myDiscard);
@@ -115,23 +126,30 @@
                 emptyCard("#opponentCharacter2");
                 emptyCard("#opponentCharacter3");
 				for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, 'left');
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
                 } 
 				
 				output('<span class="username-msg">Opponent selected character: </span>');
                 outputCardList(data.myOpponentCharacterBoard);
+				emptyCard("#opponentSelectedCharacter1");
 				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
-                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, 'left');
+                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left');
                 }
 				
                 output('<span class="username-msg">Opponent board: </span>');
                 outputCardList(data.myOpponentBoard);
+				emptyCard("#opponentSelectedAction1");
+                emptyCard("#opponentSelectedAction2");
+				for(var i=0; i<data.myOpponentBoard.length; ++i) {
+                    displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right');
+                } 
 				
                 output('<span class="username-msg">Opponent discard: </span>');
                 outputCardList(data.myOpponentDiscard);
 				
+				gameState = data.gameState;
                 // choose a card
-                if(data.gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
+                /*if(data.gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
 	                var characterCard = { 'characterCard' : data.myCharacters[0].id, 
 					 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
 					socket.emit('choose_character', characterCard);
@@ -143,7 +161,7 @@
 	                var discardCards = { 'discardCards' : [data.myHand[0]], 
 	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
 	                socket.emit('choose_discard', discardCards);
-                }
+                }*/
             });
             
             socket.on('end_game', function(data) {
@@ -167,14 +185,15 @@
               }    
             }
 
-            function displayCard(elementId, cardId, popoverPlacement) {
+            function displayCard(elementId, cardId, cardCode, popoverPlacement) {
                 $(elementId).attr("data-trigger", "hover");             
                 $(elementId).attr("data-toggle", "popover");
-                $('img',elementId).attr("src", "images/"+cardId+"_small.png") ;
+                $('img',elementId).attr("src", "images/"+cardCode+"_small.png") ;
 				$(elementId).attr("data-cardid", cardId) ;
+				$(elementId).attr("data-card-code", cardCode) ;
                 $(elementId).popover({
                     placement : popoverPlacement,
-                    content: '<img src="images/'+cardId+'.png">', 
+                    content: '<img src="images/'+cardCode+'.png">', 
                     html:true,
 					delay: {
 							 show: 700,
@@ -184,16 +203,7 @@
             }
 
 			$(document).ready(function() {
-                output('Welcome!');
-				$('.tc2_myCharacterThumbnail').popover({
-						placement : 'right',
-						content: popoverCardImage, 
-						html:true,
-						delay: { 
-							 show: 500, 
-							 hide: 100
-					}
-				});		
+                output('Welcome!');	
 			});
 
 			function popoverCardImage() {
@@ -204,17 +214,38 @@
 			function selectCharacter(linkElement) {
 				if(gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
 					// check existing card in place
-					var selectedCharacterIndex = $('#mySelectedCharacter1').attr("data-character-index");
+					var selectedCharacterIndex = $('#mySelectedCharacter1').attr("data-element-index");
 					if(typeof selectedCharacterIndex !== 'undefined') {
-						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), 'right');
+						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), $('#mySelectedCharacter1').attr("data-card-code"), 'right');
                         $('#mySelectedCharacter1').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
+					var selectedCardCode = $(linkElement).attr("data-card-code");
                     // add a timeout as the popover.destroy is asynchronous
                     setTimeout(function () {
-                        displayCard('#mySelectedCharacter1', selectedCardId, 'right');
+                        displayCard('#mySelectedCharacter1', selectedCardId, selectedCardCode, 'right');
                     ;}, 200);
-					$('#mySelectedCharacter1').attr("data-character-index", $(linkElement).attr("id"));
+					$('#mySelectedCharacter1').attr("data-element-index", $(linkElement).attr("id"));
+                    emptyCard(linkElement);
+				}
+			}
+			
+			function selectAction(linkElement) {
+				if(gameState == STATE_PLAYER_CHOOSE_ACTION) {
+					// check existing card in place
+					var selectedActionIndex = $('#mySelectedAction1').attr("data-element-index");
+					if(typeof selectedActionIndex !== 'undefined') {
+						displayCard('#'+selectedActionIndex, $('#mySelectedAction1').attr("data-cardid"), 
+							$('#mySelectedAction1').attr("data-card-code"),'right');
+                        $('#mySelectedAction1').popover('destroy');
+					}
+					var selectedCardId = $(linkElement).attr("data-cardid");
+					var selectedCardCode = $(linkElement).attr("data-card-code");
+                    // add a timeout as the popover.destroy is asynchronous
+                    setTimeout(function () {
+                        displayCard('#mySelectedAction1', selectedCardId, selectedCardCode, 'right');
+                    ;}, 200);
+					$('#mySelectedAction1').attr("data-element-index", $(linkElement).attr("id"));
                     emptyCard(linkElement);
 				}
 			}
@@ -224,6 +255,7 @@
 					$(linkElement).removeAttr("data-trigger"); 
 					$(linkElement).removeAttr("data-toggle");
 					$(linkElement).removeAttr("data-cardid") ;
+					$(linkElement).removeAttr("data-card-code") ;
                     $(linkElement).popover('destroy');
 					$('img',linkElement).attr("src", "images/0000.png");
             }
@@ -234,10 +266,19 @@
 					if(typeof selectedCardId == 'undefined') {
 						output('<span class="disconnect-msg">You must select a character first!</span>');
 					} else {
-						var characterCard = { 'characterCard' : selectedCardId, 
+						var characterCard = { 'characterCard' : parseInt(selectedCardId), 
 						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
 						socket.emit('choose_character', characterCard);
                         gameState = STATE_PLAYER_CHOOSE_ACTION;
+					}
+				} else if(gameState == STATE_PLAYER_CHOOSE_ACTION) {
+					var selectedCardId = $('#mySelectedAction1').attr("data-cardid");
+					if(typeof selectedCardId == 'undefined') {
+						output('<span class="disconnect-msg">You must select an action first!</span>');
+					} else {
+						var actionCards = { 'actionCards' : [parseInt(selectedCardId)],
+						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
+						socket.emit('choose_action', actionCards);
 					}
 				}
 			}
@@ -281,89 +322,87 @@
                     <div class="col-lg-2 col-md-2 col-sm-2">
                         <div class="panel panel-default">
                             <div class="panel-heading">My actions</div>
-                                <div class="panel-body">
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-									<a data-toggle="popover" data-trigger="hover" class="thumbnail tc2_myCharacterThumbnail">
-									  <img src="images/card1_small.png" data-popover="images/card1.png">
-									</a>
-                                </div>
-                            </div>
-                        </div>
-						<!-- Main game panel -->
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<div class="well">
-								<button type="button" onClick="finishStep()" class="btn btn-danger"><span class="glyphicon glyphicon-fast-forward"></span> Play</button>
+							<div class="panel-body">
+								<a id="myAction1" href="#" class="thumbnail" onclick="selectAction(this)">
+								  <img src="images/0000.png">
+								</a>
+								<a id="myAction2" href="#" class="thumbnail" onclick="selectAction(this)">
+								  <img src="images/0000.png">
+								</a>
+								<a id="myAction3" href="#" class="thumbnail" onclick="selectAction(this)">
+								  <img src="images/0000.png">
+								</a>
+								<a id="myAction4" href="#" class="thumbnail" onclick="selectAction(this)">
+								  <img src="images/0000.png">
+								</a>
+								<a id="myAction5" href="#" class="thumbnail" onclick="selectAction(this)">
+								  <img src="images/0000.png">
+								</a>
 							</div>
-							<div class="panel panel-primary">
-								<div class="panel-body" style="height:600px">
-									<div class="panel panel-primary" style="border: 10px solid transparent;">
-										<div class="panel-heading">Played characters</div>
-										<div class="panel-body">
-											<div class="row">
-												<a id="mySelectedCharacter1" class="thumbnail pull-left">
-												  <img src="images/0000.png">
-												</a>
-												<a id="opponentSelectedCharacter1" class="thumbnail pull-right">
-												  <img src="images/0000.png">
-												</a>
-											</div>
+						</div>
+					</div>
+					<!-- Main game panel -->
+					<div class="col-lg-6 col-md-6 col-sm-6">
+						<div class="well">
+							<button type="button" onClick="finishStep()" class="btn btn-danger"><span class="glyphicon glyphicon-fast-forward"></span> Play</button>
+						</div>
+						<div class="panel panel-primary">
+							<div class="panel-body" style="height:600px">
+								<div class="panel panel-primary" style="border: 10px solid transparent;">
+									<div class="panel-heading">Played characters</div>
+									<div class="panel-body">
+										<div class="row">
+											<a id="mySelectedCharacter1" class="thumbnail pull-left">
+											  <img src="images/0000.png">
+											</a>
+											<a id="opponentSelectedCharacter1" class="thumbnail pull-right">
+											  <img src="images/0000.png">
+											</a>
 										</div>
 									</div>
-									<div class="panel panel-primary" style="border: 10px solid transparent;">
-										<div class="panel-heading">Played actions</div>
-										<div class="panel-body">
-											<div class="row">
-												<a class="thumbnail pull-left">
-												  <img src="images/0000.png">
-												</a>
-												<a class="thumbnail pull-left">
-												  <img src="images/0000.png">
-												</a>
-												<a class="thumbnail pull-right">
-												  <img src="images/0000.png">
-												</a>
-												<a class="thumbnail pull-right">
-												  <img src="images/0000.png">
-												</a>
-											</div>
+								</div>
+								<div class="panel panel-primary" style="border: 10px solid transparent;">
+									<div class="panel-heading">Played actions</div>
+									<div class="panel-body">
+										<div class="row">
+											<a id="mySelectedAction1" class="thumbnail pull-left">
+											  <img src="images/0000.png">
+											</a>
+											<a id="mySelectedAction2" class="thumbnail pull-left">
+											  <img src="images/0000.png">
+											</a>
+											<a id="opponentSelectedAction1" class="thumbnail pull-right">
+											  <img src="images/0000.png">
+											</a>
+											<a id="opponentSelectedAction2" class="thumbnail pull-right">
+											  <img src="images/0000.png">
+											</a>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-                        <!-- Opponents characters -->
-                        <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Opponents characters</div>
-                                <div class="panel-body">
-								    <a id="opponentCharacter1" href="#" class="thumbnail">
-									    <img src="images/0000.png">
-								    </a>
-				                    <a id="opponentCharacter2" href="#" class="thumbnail">
-				                      <img src="images/0000.png">
-				                    </a>
-				                    <a id="opponentCharacter3" href="#" class="thumbnail">
-				                      <img src="images/0000.png">
-				                    </a>
-			                    </div>
-                            </div>
-                        </div>
-                    </div>
+					</div>
+					<!-- Opponents characters -->
+					<div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+						<div class="panel panel-default">
+							<div class="panel-heading">Opponents characters</div>
+							<div class="panel-body">
+								<a id="opponentCharacter1" href="#" class="thumbnail">
+									<img src="images/0000.png">
+								</a>
+								<a id="opponentCharacter2" href="#" class="thumbnail">
+								  <img src="images/0000.png">
+								</a>
+								<a id="opponentCharacter3" href="#" class="thumbnail">
+								  <img src="images/0000.png">
+								</a>
+							</div>
+						</div>
+					</div>
                 </div>
               </div>
             </div>
         </div>
-        		
     </body>
 </html>

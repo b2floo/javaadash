@@ -1,10 +1,10 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.card.Card;
@@ -12,11 +12,11 @@ import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.dictionnary.CardsGenerator;
 import com.javaadash.tc2.core.card.effect.Effect;
+import com.javaadash.tc2.core.card.effect.Target;
+import com.javaadash.tc2.core.card.effect.character.setting.modification.CharacterSettingModificationEffect;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 
 public class StaticDeckGenerator {
-
-  private static AtomicInteger idGenerator = new AtomicInteger();
 
   public static Deck getDeck(int nbActions) throws TC2CoreException {
     Deck deck = new Deck();
@@ -41,12 +41,17 @@ public class StaticDeckGenerator {
         new ArrayList<Condition>(), Card
             .createSettings("ATT:7 - DEF:2 - LIFE: 12 - CLASS: WARRIOR - GUILD: MERCENARY")));
 
+    Effect effect00041 = new CharacterSettingModificationEffect("DEF", -1, Target.OPPONENT);
+    Effect effect00042 = new CharacterSettingModificationEffect("ATT", -1, Target.OPPONENT);
+    // Effect effect00043 = new CharacterSettingModificationEffect("MANA", -1, Target.OPPONENT);
+
     for (int i = 0; i < nbActions; i++) {
-      effects = generator.getEffets(1);
-      Collection<Condition> conditions = generator.getConditions();
-      deck.addCard(new Card(Integer.toString(idGenerator.getAndIncrement()), CardType.ACTION,
-          "ACTION" + i, effects, conditions, new HashMap<String, String>()));
+      Card card0004 =
+          new Card("0004", CardType.ACTION, "BARRACUDA", Arrays.asList(new Effect[] {effect00041,
+              effect00042}), new ArrayList<Condition>(), new HashMap<String, String>());
+      deck.addCard(card0004);
     }
+
     return deck;
   }
 

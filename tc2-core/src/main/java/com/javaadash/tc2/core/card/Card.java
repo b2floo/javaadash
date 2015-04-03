@@ -7,14 +7,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
 
 public class Card implements Serializable {
   private static final long serialVersionUID = 3548312040504128825L;
+  protected static AtomicInteger ID_GENERATOR = new AtomicInteger();
 
-  protected String id;
+  protected Integer id;
+  protected String cardCode;
   protected String description;
   protected Integer type;
   protected Collection<Effect> effects = new ArrayList<Effect>();
@@ -28,17 +31,20 @@ public class Card implements Serializable {
   }
 
   public Card(Integer type) {
+    this.id = ID_GENERATOR.getAndIncrement();
     this.type = type;
   }
 
   public Card(Integer type, String description) {
+    this.id = ID_GENERATOR.getAndIncrement();
     this.type = type;
     this.description = description;
   }
 
-  public Card(String id, Integer type, String description, Collection<Effect> effects,
+  public Card(String cardCode, Integer type, String description, Collection<Effect> effects,
       Collection<Condition> conditions, Map<String, String> settings) {
-    this.id = id;
+    this.id = ID_GENERATOR.getAndIncrement();
+    this.cardCode = cardCode;
     this.type = type;
     this.description = description;
 
@@ -91,8 +97,12 @@ public class Card implements Serializable {
     this.type = type;
   }
 
-  public String getId() {
+  public Integer getId() {
     return id;
+  }
+
+  public String getCardCode() {
+    return cardCode;
   }
 
   public Boolean getAvailable() {
@@ -115,8 +125,33 @@ public class Card implements Serializable {
 
   @Override
   public String toString() {
-    return "Card [id=" + id + ", description=" + description + ", type=" + type + ", effects="
-        + effects + ", conditions=" + conditions + ", settings=" + settings + ", chain=" + chain
-        + ", available=" + available + "]";
+    return "Card [id=" + id + ", cardCode=" + cardCode + ", description=" + description + ", type="
+        + type + ", effects=" + effects + ", conditions=" + conditions + ", settings=" + settings
+        + ", chain=" + chain + ", available=" + available + "]";
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Card other = (Card) obj;
+    if (id == null) {
+      if (other.id != null)
+        return false;
+    } else if (!id.equals(other.id))
+      return false;
+    return true;
   }
 }

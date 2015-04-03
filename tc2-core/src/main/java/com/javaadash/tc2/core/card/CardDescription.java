@@ -3,22 +3,36 @@ package com.javaadash.tc2.core.card;
 import java.util.Map;
 
 public class CardDescription {
-  private String id;
+  private Integer id;
+  private String cardCode;
   private Map<String, String> settings;
   private Boolean available = true;
 
   public CardDescription() {}
 
-  public CardDescription(String id) {
+  public CardDescription(Integer id) {
     this.id = id;
   }
 
-  public String getId() {
+  public CardDescription(Integer id, String cardCode) {
+    this.id = id;
+    this.cardCode = cardCode;
+  }
+
+  public Integer getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
+  }
+
+  public String getCardCode() {
+    return cardCode;
+  }
+
+  public void setCardCode(String cardId) {
+    this.cardCode = cardId;
   }
 
   public Map<String, String> getSettings() {
@@ -65,7 +79,7 @@ public class CardDescription {
 
   @Override
   public String toString() {
-    return "CardDescription [id=" + id + ", settings=" + settings + ", available=" + available
-        + "]";
+    return "CardDescription [id=" + id + ", cardCode=" + cardCode + ", settings=" + settings
+        + ", available=" + available + "]";
   }
 }
