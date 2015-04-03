@@ -29,7 +29,7 @@ public class TC2AsynchronousGameManager {
   public void handleGame(GameContext context) {
 
     switch (context.getState()) {
-      // TODO dont do twice the deal send message
+    // TODO dont do twice the deal send message
       case GameState.BEGIN_GAME:
         log.debug("Handling game, current state [BEGIN_GAME]");
         whoStarts(context);
@@ -92,8 +92,8 @@ public class TC2AsynchronousGameManager {
             // update available actions
             context.setCurrentPlayer(data.getPlayer());
             updateAvailableActions(context);
-            playManager.updateGameStatus(context);
           }
+          playManager.updateGameStatus(context);
         }
         break;
       case GameState.PLAYER_CHOOSE_ACTION:
