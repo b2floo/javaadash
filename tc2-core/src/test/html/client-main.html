@@ -12,19 +12,18 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
         
-		<style>
-			body { 
-				padding:20px;
-			}
-			#console { 
-				height: 100px; 
-				overflow: auto; 
-			}
-			.username-msg {color:orange;}
-			.connect-msg {color:green;}
-			.disconnect-msg {color:red;}
-			.send-msg {color:#888}
-		</style>
+	    <style>
+		    body { 
+			    padding:20px;
+		    }
+		    #console { 
+			    height: 100px; 
+			    overflow: auto; 
+		    }
+		    .wait-msg {color:orange;}
+		    .play-msg {color:blue;}
+		    .important-msg {color:red;}
+	    </style>
 		
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -33,7 +32,7 @@
         <script src="js/moment.min.js"></script>
 		
 	
-	<!-- This will create a connection to socket.io --> 
+	    <!-- This will create a connection to socket.io --> 
         <script type="text/javascript">
 			
 			STATE_BEGIN_GAME = 0;
@@ -43,6 +42,7 @@
 			
 			gameState = STATE_BEGIN_GAME;
 			currentDiscardIndex = 1;
+            discardedCards = [];
 			
 			console.log( 'javascript -- start' );
 			
@@ -61,37 +61,47 @@
        		    var username = $('#username').val();
                 var jsonObject = {username: username};
             	socket.emit('join_any_game', jsonObject);
+                output('<span class="wait-msg">Game request sent, waiting for an opponent</span>');
 			};
 			
 			socket.on('start_game', function(data) {
-				output('<span class="username-msg">Starting a game with '+data.opponent+'!</span>');
+				output('<span class="play-msg">Starting a game with '+data.opponent+'!</span>');
 
-				output('<span class="username-msg">Available characters: </span>');
-				outputCardList(data.myCharacters);
+				console.log('Available characters:');
+				logCardList(data.myCharacters);
                 for(var i=0; i<data.myCharacters.length; ++i) {
                     displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', 'selectCharacter(this)');
                 } 
 
-				output('<span class="username-msg">Available cards: </span>');
-				outputCardList(data.myHand);
+				console.log('Available cards:');
+				logCardList(data.myHand);
 				for(var i=0; i<data.myHand.length; ++i) {
                     displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right','');
                 } 
 
-				output('<span class="username-msg">Opponent characters: </span>');
-				outputCardList(data.myOpponentCharacters);
+				console.log('Opponent characters:');
+				logCardList(data.myOpponentCharacters);
                 for(var i=0; i<data.myOpponentCharacters.length; ++i) {
                     displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left','');
                 } 
 
 				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
+                output('<span class="play-msg">Select a character, then click "Play"</span>');
        		});
        		
        		socket.on('update_game', function(data) {
-                output('<span class="username-msg">Update :: turn '+data.turn+'</span>');
-
-                output('<span class="username-msg">Available characters: </span>');
-                outputCardList(data.myCharacters);
+                console.log('Update :: turn '+data.turn);
+                switch(data.gameState) {
+                    case STATE_PLAYER_CHOOSE_CHARACTER: 
+                        output('<span class="play-msg">Select a character, then click "Play"</span>'); break;
+                    case STATE_PLAYER_CHOOSE_ACTION: 
+                        output('<span class="play-msg">Select an action, then click "Play"</span>'); break;
+                    case STATE_PLAYER_CHOOSE_DISCARD: 
+                        output('<span class="play-msg">Select actions to discard, then click "Play"</span>'); break;
+                }
+                
+                console.log('Available characters:');
+                logCardList(data.myCharacters);
                 emptyCard("#myCharacter1");
                 emptyCard("#myCharacter2");
                 emptyCard("#myCharacter3");
@@ -99,8 +109,8 @@
                     displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', 'selectCharacter(this)');
                 } 
 				
-                output('<span class="username-msg">Available cards: </span>');
-                outputCardList(data.myHand);
+                console.log('Available cards:');
+                logCardList(data.myHand);
 				emptyCard("#myAction1");
                 emptyCard("#myAction2");
                 emptyCard("#myAction3");
@@ -109,20 +119,27 @@
 				for(var i=0; i<data.myHand.length; ++i) {
                     displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right', 'selectAction(this)');
                 } 
+
+                console.log('My character board:');
+                logCardList(data.myCharacterBoard);
+				emptyCard("#mySelectedCharacter1");
+				for(var i=0; i<data.myCharacterBoard.length; ++i) {
+                    displayCard("#mySelectedCharacter"+(i+1), data.myCharacterBoard[i].id, data.myCharacterBoard[i].cardCode, 'right','');
+                } 
 				
-                output('<span class="username-msg">My board: </span>');
-                outputCardList(data.myBoard);
+                console.log('My board:');
+                logCardList(data.myBoard);
 				emptyCard("#mySelectedAction1");
                 emptyCard("#mySelectedAction2");
 				for(var i=0; i<data.myBoard.length; ++i) {
                     displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right','');
                 } 
 				
-                output('<span class="username-msg">My discard: </span>');
-                outputCardList(data.myDiscard);
+                console.log('My discard:');
+                logCardList(data.myDiscard);
 				
-                output('<span class="username-msg">Opponent characters: </span>');
-                outputCardList(data.myOpponentCharacters);
+                console.log('Opponent characters:');
+                logCardList(data.myOpponentCharacters);
                 emptyCard("#opponentCharacter1");
                 emptyCard("#opponentCharacter2");
                 emptyCard("#opponentCharacter3");
@@ -130,60 +147,47 @@
                     displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left', '');
                 } 
 				
-				output('<span class="username-msg">Opponent selected character: </span>');
-                outputCardList(data.myOpponentCharacterBoard);
+				console.log('Opponent selected character:');
+                logCardList(data.myOpponentCharacterBoard);
 				emptyCard("#opponentSelectedCharacter1");
 				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
                     displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left', '');
                 }
 				
-                output('<span class="username-msg">Opponent board: </span>');
-                outputCardList(data.myOpponentBoard);
+                console.log('Opponent board:');
+                logCardList(data.myOpponentBoard);
 				emptyCard("#opponentSelectedAction1");
                 emptyCard("#opponentSelectedAction2");
 				for(var i=0; i<data.myOpponentBoard.length; ++i) {
                     displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right', '');
                 } 
 				
-                output('<span class="username-msg">Opponent discard: </span>');
-                outputCardList(data.myOpponentDiscard);
+                console.log('Opponent discard:');
+                logCardList(data.myOpponentDiscard);
 				
-				gameState = data.gameState;
-                // choose a card
-                /*if(data.gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
-	                var characterCard = { 'characterCard' : data.myCharacters[0].id, 
-					 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
-					socket.emit('choose_character', characterCard);
-                } else if(data.gameState == STATE_PLAYER_CHOOSE_ACTION) {
-					var actionCards = { 'actionCards' : [data.myHand[0]], 
-				 	'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
-					socket.emit('choose_action', actionCards);
-                } else 
-				if(data.gameState == STATE_PLAYER_CHOOSE_DISCARD) {
-	                var discardCards = { 'discardCards' : [data.myHand[0]], 
-	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
-	                socket.emit('choose_discard', discardCards);
-                }*/
+                gameState = data.gameState;
             });
             
             socket.on('end_game', function(data) {
-                output('<span class="username-msg">GAME OVER</span>');
+                gameState = data.gameState;
+                output('<span class="important-msg">GAME OVER</span>');
 
                 output('<span>Winner is: '+data.winner+' </span>');
                 output('<span>Your score is: '+data.myScore+' </span>');
                 output('<span>Opponent score is: '+data.myOpponentScore+' </span>');
+                
             });
 
 
 			function output(message) {
 	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
 	            var element = $("<div>" + currentTime + " " + message + "</div>");
-				$('#console').append(element);
+				$('#console').prepend(element);
 			}
 
-            function outputCardList(cards) {
+            function logCardList(cards) {
               for(var i=0; i<cards.length; ++i) {
-                  output('Card ID: '+ cards[i].id + '; LIFE: '+ cards[i].settings['LIFE'] + '; Available: '+cards[i].available);
+                  console.log('Card ID: '+ cards[i].id + '; LIFE: '+ cards[i].settings['LIFE'] + '; Available: '+cards[i].available);
               }    
             }
 
@@ -259,6 +263,7 @@
 					$('#myDiscard'+currentDiscardIndex).attr("data-element-index", $(linkElement).attr("id"));
 					$('img','#myDiscardPreview').attr("src", "images/"+selectedCardCode+"_small.png");
 					currentDiscardIndex++;
+                    discardedCards.push(parseInt(selectedCardId));
 					// remove from hand
 					emptyCard(linkElement);
 					$(linkElement).attr('onclick', '');
@@ -271,6 +276,7 @@
 				$(linkElement).removeAttr("data-toggle");
 				$(linkElement).removeAttr("data-cardid") ;
 				$(linkElement).removeAttr("data-card-code");
+                $(linkElement).removeAttr("data-element-index");
 				$(linkElement).removeAttr("onclick");
 				$(linkElement).popover('destroy');
 				$('img',linkElement).attr("src", "images/0000.png");
@@ -278,10 +284,15 @@
 			
 			function removeDiscard(linkElement) {
 				var selectedActionIndex = $(linkElement).attr("data-element-index");
-				displayCard('#'+selectedActionIndex, $(linkElement).attr("data-cardid"), $(linkElement).attr("data-card-code"),'right', 'selectAction(this)');
+                var selectedActionId = $(linkElement).attr("data-cardid");
+				displayCard('#'+selectedActionIndex, selectedActionId, $(linkElement).attr("data-card-code"),'right', 'selectAction(this)');
 				// remove from discard list
 				$(linkElement).popover('destroy');
 				$(linkElement).remove();
+                var i = discardedCards.indexOf(parseInt(selectedActionId));
+                if(i != -1) {
+	                discardedCards.splice(i, 1);
+                }
 				// update preview
 				var discardLastElement = $('#myDiscardList a').last();
 				if(discardLastElement.length == 0) {
@@ -295,24 +306,30 @@
 				if(gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
 					var selectedCardId = $('#mySelectedCharacter1').attr("data-cardid");
 					if(typeof selectedCardId == 'undefined') {
-						output('<span class="disconnect-msg">You must select a character first!</span>');
+						output('<span class="important-msg">You must select a character first!</span>');
 					} else {
-						var characterCard = { 'characterCard' : parseInt(selectedCardId), 
+						var characterMsg = { 'characterCard' : parseInt(selectedCardId), 
 						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
-						socket.emit('choose_character', characterCard);
+						socket.emit('choose_character', characterMsg);
                         gameState = STATE_PLAYER_CHOOSE_ACTION;
+                        output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
 					}
 				} else if(gameState == STATE_PLAYER_CHOOSE_ACTION) {
 					var selectedCardId = $('#mySelectedAction1').attr("data-cardid");
 					if(typeof selectedCardId == 'undefined') {
-						output('<span class="disconnect-msg">You must select an action first!</span>');
+						output('<span class="important-msg">You must select an action first!</span>');
 					} else {
-						var actionCards = { 'actionCards' : [parseInt(selectedCardId)],
+						var actionMsg = { 'actionCards' : [parseInt(selectedCardId)],
 						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
-						socket.emit('choose_action', actionCards);
+						socket.emit('choose_action', actionMsg);
+                        output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
 					}
 				} else if(gameState == STATE_PLAYER_CHOOSE_DISCARD) {
-					// get selected discard
+	                var discardMsg = { 'discardCards' : discardedCards, 
+	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
+	                socket.emit('choose_discard', discardMsg);
+                    discardedCards = [];
+                    output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
 				}
 			}
         </script>
@@ -456,10 +473,10 @@
 						<h4 class="modal-title" id="myModalLabel">My Discard</h4>
 					</div>
 					<div class="modal-body">
-						<div class="row">
-							<div id="myDiscardList" class="col-xs-6 col-md-3">
-							</div>
-						</div>
+                        <div class="row">
+						    <div id="myDiscardList" class="col-xs-6 col-md-3 row">
+						    </div>
+                        </div>
 					</div>
 				</div>
 			</div>

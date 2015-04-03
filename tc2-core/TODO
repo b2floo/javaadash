@@ -1,12 +1,17 @@
 
-
-3/ disable cards when character chosen
-4/ add a box for player name
-4/ add choice by player instead of automatic game
 5/ add timer for each state
-6/ split cards location on screen
+7/ display discard as a line
+8/ take the boolean available in account to forbid click
+9/ show score on screen
+10/ add turn resolve steps messages
+
++ clean code!
 
 DONE:
 0/ more than 1 turn
 1/ alternate players
 2/ display all informations: turn, cards in hand, on board, in discard, out of game
+3/ disable cards when character chosen
+4/ add a box for player name
+4/ add choice by player instead of automatic game
+6/ split cards location on screen
