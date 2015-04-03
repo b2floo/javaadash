@@ -23,6 +23,10 @@
 		    .wait-msg {color:orange;}
 		    .play-msg {color:blue;}
 		    .important-msg {color:red;}
+            img.disabled {
+                opacity: 0.4;
+                filter: alpha(opacity=100); /* For IE8 and earlier */
+            }
 	    </style>
 		
         <!-- Latest compiled and minified JavaScript -->
@@ -65,33 +69,35 @@
 			};
 			
 			socket.on('start_game', function(data) {
+				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
 				output('<span class="play-msg">Starting a game with '+data.opponent+'!</span>');
 
 				console.log('Available characters:');
 				logCardList(data.myCharacters);
                 for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', 'selectCharacter(this)');
+                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', true, 'selectCharacter(this)');
                 } 
 
 				console.log('Available cards:');
 				logCardList(data.myHand);
 				for(var i=0; i<data.myHand.length; ++i) {
-                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right','');
+                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
                 } 
 
 				console.log('Opponent characters:');
 				logCardList(data.myOpponentCharacters);
                 for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left','');
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
                 } 
 
-				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
+
                 output('<span class="play-msg">Select a character, then click "Play"</span>');
        		});
        		
        		socket.on('update_game', function(data) {
+                gameState = data.gameState;
                 console.log('Update :: turn '+data.turn);
-                switch(data.gameState) {
+                switch(gameState) {
                     case STATE_PLAYER_CHOOSE_CHARACTER: 
                         output('<span class="play-msg">Select a character, then click "Play"</span>'); break;
                     case STATE_PLAYER_CHOOSE_ACTION: 
@@ -106,7 +112,11 @@
                 emptyCard("#myCharacter2");
                 emptyCard("#myCharacter3");
 				for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', 'selectCharacter(this)');
+                    if(data.myCharacters[i].available && gameState == STATE_PLAYER_CHOOSE_CHARACTER)  {
+                        displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', true, 'selectCharacter(this)');
+                    } else {
+                        displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right');
+                    }
                 } 
 				
                 console.log('Available cards:');
@@ -117,14 +127,18 @@
 				emptyCard("#myAction4");
 				emptyCard("#myAction5");
 				for(var i=0; i<data.myHand.length; ++i) {
-                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right', 'selectAction(this)');
+                    if(data.myHand[i].available && (gameState == STATE_PLAYER_CHOOSE_ACTION || gameState == STATE_PLAYER_CHOOSE_DISCARD))  {
+                        displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right', true, 'selectAction(this)');
+                    } else {
+                        displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
+                    }
                 } 
 
                 console.log('My character board:');
                 logCardList(data.myCharacterBoard);
 				emptyCard("#mySelectedCharacter1");
 				for(var i=0; i<data.myCharacterBoard.length; ++i) {
-                    displayCard("#mySelectedCharacter"+(i+1), data.myCharacterBoard[i].id, data.myCharacterBoard[i].cardCode, 'right','');
+                    displayCard("#mySelectedCharacter"+(i+1), data.myCharacterBoard[i].id, data.myCharacterBoard[i].cardCode, 'right', true, '');
                 } 
 				
                 console.log('My board:');
@@ -132,7 +146,7 @@
 				emptyCard("#mySelectedAction1");
                 emptyCard("#mySelectedAction2");
 				for(var i=0; i<data.myBoard.length; ++i) {
-                    displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right','');
+                    displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right', true, '');
                 } 
 				
                 console.log('My discard:');
@@ -144,14 +158,14 @@
                 emptyCard("#opponentCharacter2");
                 emptyCard("#opponentCharacter3");
 				for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left', '');
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
                 } 
 				
 				console.log('Opponent selected character:');
                 logCardList(data.myOpponentCharacterBoard);
 				emptyCard("#opponentSelectedCharacter1");
 				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
-                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left', '');
+                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left', true, '');
                 }
 				
                 console.log('Opponent board:');
@@ -159,13 +173,11 @@
 				emptyCard("#opponentSelectedAction1");
                 emptyCard("#opponentSelectedAction2");
 				for(var i=0; i<data.myOpponentBoard.length; ++i) {
-                    displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right', '');
+                    displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right', true, '');
                 } 
 				
                 console.log('Opponent discard:');
                 logCardList(data.myOpponentDiscard);
-				
-                gameState = data.gameState;
             });
             
             socket.on('end_game', function(data) {
@@ -175,7 +187,6 @@
                 output('<span>Winner is: '+data.winner+' </span>');
                 output('<span>Your score is: '+data.myScore+' </span>');
                 output('<span>Opponent score is: '+data.myOpponentScore+' </span>');
-                
             });
 
 
@@ -191,10 +202,15 @@
               }    
             }
 
-            function displayCard(elementId, cardId, cardCode, popoverPlacement, clickFunction) {
+            function displayCard(elementId, cardId, cardCode, popoverPlacement, available, clickFunction) {
                 $(elementId).attr("data-trigger", "hover");             
                 $(elementId).attr("data-toggle", "popover");
                 $('img',elementId).attr("src", "images/"+cardCode+"_small.png") ;
+                if(!available) {
+                    $('img',elementId).addClass("disabled");
+                } else {
+				    $(elementId).attr("onclick",clickFunction);
+                }
 				$(elementId).attr("data-cardid", cardId) ;
 				$(elementId).attr("data-card-code", cardCode) ;
                 $(elementId).popover({
@@ -206,7 +222,7 @@
 							 hide: 100
 					}
                 });
-				$(elementId).attr("onclick",clickFunction);
+
             }
 
 			$(document).ready(function() {
@@ -223,14 +239,14 @@
 					// check existing card in place
 					var selectedCharacterIndex = $('#mySelectedCharacter1').attr("data-element-index");
 					if(typeof selectedCharacterIndex !== 'undefined') {
-						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), $('#mySelectedCharacter1').attr("data-card-code"), 'right', 'selectCharacter(this)');
+						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), $('#mySelectedCharacter1').attr("data-card-code"), 'right', true, 'selectCharacter(this)');
                         $('#mySelectedCharacter1').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
 					var selectedCardCode = $(linkElement).attr("data-card-code");
                     // add a timeout as the popover.destroy is asynchronous
                     setTimeout(function () {
-                        displayCard('#mySelectedCharacter1', selectedCardId, selectedCardCode, 'right', '');
+                        displayCard('#mySelectedCharacter1', selectedCardId, selectedCardCode, 'right', true, '');
                     ;}, 200);
 					$('#mySelectedCharacter1').attr("data-element-index", $(linkElement).attr("id"));
                     emptyCard(linkElement);
@@ -243,14 +259,14 @@
 					var selectedActionIndex = $('#mySelectedAction1').attr("data-element-index");
 					if(typeof selectedActionIndex !== 'undefined') {
 						displayCard('#'+selectedActionIndex, $('#mySelectedAction1').attr("data-cardid"), 
-							$('#mySelectedAction1').attr("data-card-code"),'right', 'selectAction(this)');
+							$('#mySelectedAction1').attr("data-card-code"),'right', true, 'selectAction(this)');
                         $('#mySelectedAction1').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
 					var selectedCardCode = $(linkElement).attr("data-card-code");
                     // add a timeout as the popover.destroy is asynchronous
                     setTimeout(function () {
-                        displayCard('#mySelectedAction1', selectedCardId, selectedCardCode, 'right', '');
+                        displayCard('#mySelectedAction1', selectedCardId, selectedCardCode, 'right', true, '');
                     ;}, 200);
 					$('#mySelectedAction1').attr("data-element-index", $(linkElement).attr("id"));
                     emptyCard(linkElement);
@@ -259,7 +275,7 @@
 					var selectedCardCode = $(linkElement).attr("data-card-code");
 					// append the card to discard
 					$("#myDiscardList").append('<a id="myDiscard'+currentDiscardIndex+'" href="#" class="thumbnail"><img></a>');
-					displayCard('#myDiscard'+currentDiscardIndex, selectedCardId, selectedCardCode, 'bottom', 'removeDiscard(this)');
+					displayCard('#myDiscard'+currentDiscardIndex, selectedCardId, selectedCardCode, 'bottom', true, 'removeDiscard(this)');
 					$('#myDiscard'+currentDiscardIndex).attr("data-element-index", $(linkElement).attr("id"));
 					$('img','#myDiscardPreview').attr("src", "images/"+selectedCardCode+"_small.png");
 					currentDiscardIndex++;
@@ -280,26 +296,29 @@
 				$(linkElement).removeAttr("onclick");
 				$(linkElement).popover('destroy');
 				$('img',linkElement).attr("src", "images/0000.png");
+                $('img',linkElement).removeClass("disabled");
             }
 			
 			function removeDiscard(linkElement) {
-				var selectedActionIndex = $(linkElement).attr("data-element-index");
-                var selectedActionId = $(linkElement).attr("data-cardid");
-				displayCard('#'+selectedActionIndex, selectedActionId, $(linkElement).attr("data-card-code"),'right', 'selectAction(this)');
-				// remove from discard list
-				$(linkElement).popover('destroy');
-				$(linkElement).remove();
-                var i = discardedCards.indexOf(parseInt(selectedActionId));
-                if(i != -1) {
-	                discardedCards.splice(i, 1);
+                if(gameState == STATE_PLAYER_CHOOSE_DISCARD) {
+				    var selectedActionIndex = $(linkElement).attr("data-element-index");
+                    var selectedActionId = $(linkElement).attr("data-cardid");
+				    displayCard('#'+selectedActionIndex, selectedActionId, $(linkElement).attr("data-card-code"),'right', true, 'selectAction(this)');
+				    // remove from discard list
+				    $(linkElement).popover('destroy');
+				    $(linkElement).remove();
+                    var i = discardedCards.indexOf(parseInt(selectedActionId));
+                    if(i != -1) {
+	                    discardedCards.splice(i, 1);
+                    }
+				    // update preview
+				    var discardLastElement = $('#myDiscardList a').last();
+				    if(discardLastElement.length == 0) {
+					    $('img','#myDiscardPreview').attr("src", "images/0000.png");
+				    } else {
+					    $('img','#myDiscardPreview').attr("src", "images/"+$(discardLastElement).attr("data-card-code")+"_small.png");
+				    }
                 }
-				// update preview
-				var discardLastElement = $('#myDiscardList a').last();
-				if(discardLastElement.length == 0) {
-					$('img','#myDiscardPreview').attr("src", "images/0000.png");
-				} else {
-					$('img','#myDiscardPreview').attr("src", "images/"+$(discardLastElement).attr("data-card-code")+"_small.png");
-				}
             }
 			
 			function finishStep() {
