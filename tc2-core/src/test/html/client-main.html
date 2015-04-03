@@ -42,6 +42,7 @@
 			STATE_PLAYER_CHOOSE_DISCARD = 6;
 			
 			gameState = STATE_BEGIN_GAME;
+			currentDiscardIndex = 1;
 			
 			console.log( 'javascript -- start' );
 			
@@ -68,19 +69,19 @@
 				output('<span class="username-msg">Available characters: </span>');
 				outputCardList(data.myCharacters);
                 for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right');
+                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', 'selectCharacter(this)');
                 } 
 
 				output('<span class="username-msg">Available cards: </span>');
 				outputCardList(data.myHand);
 				for(var i=0; i<data.myHand.length; ++i) {
-                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
+                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right','');
                 } 
 
 				output('<span class="username-msg">Opponent characters: </span>');
 				outputCardList(data.myOpponentCharacters);
                 for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left','');
                 } 
 
 				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
@@ -95,7 +96,7 @@
                 emptyCard("#myCharacter2");
                 emptyCard("#myCharacter3");
 				for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right');
+                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', 'selectCharacter(this)');
                 } 
 				
                 output('<span class="username-msg">Available cards: </span>');
@@ -106,7 +107,7 @@
 				emptyCard("#myAction4");
 				emptyCard("#myAction5");
 				for(var i=0; i<data.myHand.length; ++i) {
-                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
+                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right', 'selectAction(this)');
                 } 
 				
                 output('<span class="username-msg">My board: </span>');
@@ -114,7 +115,7 @@
 				emptyCard("#mySelectedAction1");
                 emptyCard("#mySelectedAction2");
 				for(var i=0; i<data.myBoard.length; ++i) {
-                    displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right');
+                    displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right','');
                 } 
 				
                 output('<span class="username-msg">My discard: </span>');
@@ -126,14 +127,14 @@
                 emptyCard("#opponentCharacter2");
                 emptyCard("#opponentCharacter3");
 				for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
+                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left', '');
                 } 
 				
 				output('<span class="username-msg">Opponent selected character: </span>');
                 outputCardList(data.myOpponentCharacterBoard);
 				emptyCard("#opponentSelectedCharacter1");
 				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
-                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left');
+                    displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left', '');
                 }
 				
                 output('<span class="username-msg">Opponent board: </span>');
@@ -141,7 +142,7 @@
 				emptyCard("#opponentSelectedAction1");
                 emptyCard("#opponentSelectedAction2");
 				for(var i=0; i<data.myOpponentBoard.length; ++i) {
-                    displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right');
+                    displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right', '');
                 } 
 				
                 output('<span class="username-msg">Opponent discard: </span>');
@@ -157,7 +158,8 @@
 					var actionCards = { 'actionCards' : [data.myHand[0]], 
 				 	'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
 					socket.emit('choose_action', actionCards);
-                } else if(data.gameState == STATE_PLAYER_CHOOSE_DISCARD) {
+                } else 
+				if(data.gameState == STATE_PLAYER_CHOOSE_DISCARD) {
 	                var discardCards = { 'discardCards' : [data.myHand[0]], 
 	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
 	                socket.emit('choose_discard', discardCards);
@@ -185,7 +187,7 @@
               }    
             }
 
-            function displayCard(elementId, cardId, cardCode, popoverPlacement) {
+            function displayCard(elementId, cardId, cardCode, popoverPlacement, clickFunction) {
                 $(elementId).attr("data-trigger", "hover");             
                 $(elementId).attr("data-toggle", "popover");
                 $('img',elementId).attr("src", "images/"+cardCode+"_small.png") ;
@@ -200,6 +202,7 @@
 							 hide: 100
 					}
                 });
+				$(elementId).attr("onclick",clickFunction);
             }
 
 			$(document).ready(function() {
@@ -216,14 +219,14 @@
 					// check existing card in place
 					var selectedCharacterIndex = $('#mySelectedCharacter1').attr("data-element-index");
 					if(typeof selectedCharacterIndex !== 'undefined') {
-						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), $('#mySelectedCharacter1').attr("data-card-code"), 'right');
+						displayCard('#'+selectedCharacterIndex, $('#mySelectedCharacter1').attr("data-cardid"), $('#mySelectedCharacter1').attr("data-card-code"), 'right', 'selectCharacter(this)');
                         $('#mySelectedCharacter1').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
 					var selectedCardCode = $(linkElement).attr("data-card-code");
                     // add a timeout as the popover.destroy is asynchronous
                     setTimeout(function () {
-                        displayCard('#mySelectedCharacter1', selectedCardId, selectedCardCode, 'right');
+                        displayCard('#mySelectedCharacter1', selectedCardId, selectedCardCode, 'right', '');
                     ;}, 200);
 					$('#mySelectedCharacter1').attr("data-element-index", $(linkElement).attr("id"));
                     emptyCard(linkElement);
@@ -236,28 +239,56 @@
 					var selectedActionIndex = $('#mySelectedAction1').attr("data-element-index");
 					if(typeof selectedActionIndex !== 'undefined') {
 						displayCard('#'+selectedActionIndex, $('#mySelectedAction1').attr("data-cardid"), 
-							$('#mySelectedAction1').attr("data-card-code"),'right');
+							$('#mySelectedAction1').attr("data-card-code"),'right', 'selectAction(this)');
                         $('#mySelectedAction1').popover('destroy');
 					}
 					var selectedCardId = $(linkElement).attr("data-cardid");
 					var selectedCardCode = $(linkElement).attr("data-card-code");
                     // add a timeout as the popover.destroy is asynchronous
                     setTimeout(function () {
-                        displayCard('#mySelectedAction1', selectedCardId, selectedCardCode, 'right');
+                        displayCard('#mySelectedAction1', selectedCardId, selectedCardCode, 'right', '');
                     ;}, 200);
 					$('#mySelectedAction1').attr("data-element-index", $(linkElement).attr("id"));
                     emptyCard(linkElement);
+				} else if(gameState == STATE_PLAYER_CHOOSE_DISCARD) {
+					var selectedCardId = $(linkElement).attr("data-cardid");
+					var selectedCardCode = $(linkElement).attr("data-card-code");
+					// append the card to discard
+					$("#myDiscardList").append('<a id="myDiscard'+currentDiscardIndex+'" href="#" class="thumbnail"><img></a>');
+					displayCard('#myDiscard'+currentDiscardIndex, selectedCardId, selectedCardCode, 'bottom', 'removeDiscard(this)');
+					$('#myDiscard'+currentDiscardIndex).attr("data-element-index", $(linkElement).attr("id"));
+					$('img','#myDiscardPreview').attr("src", "images/"+selectedCardCode+"_small.png");
+					currentDiscardIndex++;
+					// remove from hand
+					emptyCard(linkElement);
+					$(linkElement).attr('onclick', '');
 				}
 			}
 
             function emptyCard(linkElement) {
-					// set clicked link to no-card
-					$(linkElement).removeAttr("data-trigger"); 
-					$(linkElement).removeAttr("data-toggle");
-					$(linkElement).removeAttr("data-cardid") ;
-					$(linkElement).removeAttr("data-card-code") ;
-                    $(linkElement).popover('destroy');
-					$('img',linkElement).attr("src", "images/0000.png");
+				// set clicked link to no-card
+				$(linkElement).removeAttr("data-trigger"); 
+				$(linkElement).removeAttr("data-toggle");
+				$(linkElement).removeAttr("data-cardid") ;
+				$(linkElement).removeAttr("data-card-code");
+				$(linkElement).removeAttr("onclick");
+				$(linkElement).popover('destroy');
+				$('img',linkElement).attr("src", "images/0000.png");
+            }
+			
+			function removeDiscard(linkElement) {
+				var selectedActionIndex = $(linkElement).attr("data-element-index");
+				displayCard('#'+selectedActionIndex, $(linkElement).attr("data-cardid"), $(linkElement).attr("data-card-code"),'right', 'selectAction(this)');
+				// remove from discard list
+				$(linkElement).popover('destroy');
+				$(linkElement).remove();
+				// update preview
+				var discardLastElement = $('#myDiscardList a').last();
+				if(discardLastElement.length == 0) {
+					$('img','#myDiscardPreview').attr("src", "images/0000.png");
+				} else {
+					$('img','#myDiscardPreview').attr("src", "images/"+$(discardLastElement).attr("data-card-code")+"_small.png");
+				}
             }
 			
 			function finishStep() {
@@ -280,6 +311,8 @@
 						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
 						socket.emit('choose_action', actionCards);
 					}
+				} else if(gameState == STATE_PLAYER_CHOOSE_DISCARD) {
+					// get selected discard
 				}
 			}
         </script>
@@ -315,6 +348,16 @@
 				                <a id="myCharacter3" href="#" class="thumbnail" onclick="selectCharacter(this)">
 				                  <img src="images/0000.png">
 				                </a>
+			                </div>
+                        </div>
+						<div class="panel panel-default pull-bottom">
+							<div class="panel-heading">
+								<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myDiscard"><span class="glyphicon glyphicon-new-window"></span> My discard</button>
+							</div>
+							<div class="panel-body">
+								<a id="myDiscardPreview" class="thumbnail">
+									<img src="images/0000.png">
+								</a>
 			                </div>
                         </div>
                     </div>
@@ -401,8 +444,25 @@
 						</div>
 					</div>
                 </div>
-              </div>
             </div>
         </div>
+		
+		<!-- Modal -->
+		<div class="modal fade" id="myDiscard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+						<h4 class="modal-title" id="myModalLabel">My Discard</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div id="myDiscardList" class="col-xs-6 col-md-3">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
     </body>
 </html>
