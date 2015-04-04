@@ -48,6 +48,7 @@
 			gameState = STATE_BEGIN_GAME;
 			currentDiscardIndex = 1;
             discardedCards = [];
+            myCharacterSettings = [];
 			
 			console.log( 'javascript -- start' );
 
@@ -78,6 +79,10 @@
                     'myOpponentCharacterBoard': [],
                     'myOpponentBoard': []
                     };
+                myCharacterSettings = {
+                    '1': {'LIFE': '12', 'ATT': '6/9', 'DEF': '2', 'MANA': '0'},
+                    '2': {'LIFE': '11', 'ATT': '4/6', 'DEF': '2', 'MANA': '0'}
+                };
                 display(data);
             }
 
@@ -194,7 +199,13 @@
 							 hide: 100
 					}
                 });
+            }
 
+            function displaySettings(elementId, settings) {
+                $(elementId+'Life').text(settings['LIFE']);
+                $(elementId+'Att').text(settings['ATT']);
+                $(elementId+'Def').text(settings['DEF']);
+                $(elementId+'Mana').text(settings['MANA']);
             }
 
 			function popoverCardImage() {
@@ -217,6 +228,9 @@
                         displayCard('#mySelectedCharacter1', selectedCardId, selectedCardCode, 'right', true, '');
                     ;}, 200);
 					$('#mySelectedCharacter1').attr("data-element-index", $(linkElement).attr("id"));
+                    // update settings
+                    var characterSettings = myCharacterSettings[selectedCardId];
+                    displaySettings('#myCharacterSetting', characterSettings);
                     emptyCard(linkElement);
 				}
 			}
@@ -303,7 +317,7 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
               <div class="panel-body">
                 <div class="row">
@@ -373,19 +387,19 @@
                                                         <tbody>
                                                             <tr>
                                                               <td><span class="label label-danger">Life</span></td>
-                                                              <td><span class="label label-default">12</span></td>
+                                                              <td><span id="myCharacterSettingLife" class="label label-default">--</span></td>
                                                             </tr>
                                                             <tr>
-                                                              <td> <span class="label label-warning" contenteditable="false">Attack</span></td>
-                                                              <td><span class="label label-default">12</span></td>
+                                                              <td> <span class="label label-warning">Attack</span></td>
+                                                              <td><span id="myCharacterSettingAtt" class="label label-default">--</span></td>
                                                             </tr>
                                                             <tr>
                                                               <td><span class="label label-info">Defense</span></td>
-                                                              <td><span class="label label-default">12</span></td>
+                                                              <td><span id="myCharacterSettingDef" class="label label-default">--</span></td>
                                                             </tr>
                                                             <tr>
                                                               <td><span class="label label-primary">Mana</span></td>
-                                                              <td><span class="label label-default">12</span></td>
+                                                              <td><span id="myCharacterSettingMana" class="label label-default">--</span></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -435,34 +449,33 @@
                                                             
                                                           </td>
                                                         </tr>
-                                                      </tbody>
-                                                    </table>
-                                                 </div>
+                                                   </tbody>
+                                                </table>
                                             </div>
-										</div>
-									</div>
-								</div>
-								<div class="panel panel-primary" style="border: 10px solid transparent;">
-									<div class="panel-heading">Played actions</div>
-									<div class="panel-body">
-										<div class="row">
-											<a id="mySelectedAction1" class="thumbnail pull-left">
-											  <img src="images/0000.png">
-											</a>
-											<a id="mySelectedAction2" class="thumbnail pull-left">
-											  <img src="images/0000.png">
-											</a>
-											<a id="opponentSelectedAction1" class="thumbnail pull-right">
-											  <img src="images/0000.png">
-											</a>
-											<a id="opponentSelectedAction2" class="thumbnail pull-right">
-											  <img src="images/0000.png">
-											</a>
-										</div>
+                                        </div>
 									</div>
 								</div>
 							</div>
-						</div>
+						<div class="panel panel-primary" style="border: 10px solid transparent;">
+							<div class="panel-heading">Played actions</div>
+								<div class="panel-body">
+									<div class="row">
+										<a id="mySelectedAction1" class="thumbnail pull-left">
+										  <img src="images/0000.png">
+										</a>
+										<a id="mySelectedAction2" class="thumbnail pull-left">
+										  <img src="images/0000.png">
+										</a>
+										<a id="opponentSelectedAction1" class="thumbnail pull-right">
+										  <img src="images/0000.png">
+										</a>
+										<a id="opponentSelectedAction2" class="thumbnail pull-right">
+										  <img src="images/0000.png">
+										</a>
+					    			</div>
+					    		</div>
+					    	</div>
+					    </div>
 					</div>
 					<!-- Opponents characters -->
 					<div class="col-lg-2 col-md-2 col-sm-2 pull-right">
