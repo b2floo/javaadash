@@ -49,52 +49,53 @@
             discardedCards = [];
 			
 			console.log( 'javascript -- start' );
-			
-           //This is all that needs
-           var socket = io.connect('http://localhost:9092', {
-             'reconnection delay' : 2000,
-             'force new connection' : true
-           });
-           
-           socket.on('connect', function() {
-       		    console.log( 'Connected...' );
-                // connection established, now we can send an objects
-       		});
-       		
-       		function joinAnyGame() {
-       		    var username = $('#username').val();
-                var jsonObject = {username: username};
-            	socket.emit('join_any_game', jsonObject);
-                output('<span class="wait-msg">Game request sent, waiting for an opponent</span>');
-			};
-			
-			socket.on('start_game', function(data) {
-				gameState = STATE_PLAYER_CHOOSE_CHARACTER;
-				output('<span class="play-msg">Starting a game with '+data.opponent+'!</span>');
 
-				console.log('Available characters:');
-				logCardList(data.myCharacters);
-                for(var i=0; i<data.myCharacters.length; ++i) {
-                    displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', true, 'selectCharacter(this)');
-                } 
+			$(document).ready(function() {
+                output('Welcome!');	
+                init();
+			});
 
-				console.log('Available cards:');
-				logCardList(data.myHand);
-				for(var i=0; i<data.myHand.length; ++i) {
-                    displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right');
-                } 
+            // static setup  to avoid launching games in order to debug
+            function init() {
+                var data = { 
+                    'gameState': getUrlParameter('gameState'),
+                    'turn': 1,
+                    'myCharacters': [ 
+                        { 'id': 1, 'cardCode' : '90001', available: true}, 
+                        { 'id': 2, 'cardCode' : '90002', available: true}
+                    ],
+                    'myHand': [
+                        { 'id': 4, 'cardCode' : '00021', available: true}, 
+                        { 'id': 5, 'cardCode' : '00022', available: true}, 
+                        { 'id': 6, 'cardCode' : '00025', available: true},
+                        { 'id': 7, 'cardCode' : '00026', available: true}
+                     ],
+                    'myCharacterBoard': [],
+                    'myBoard': [],
+                    'myDiscard': [],
+                    'myOpponentCharacters': [],
+                    'myOpponentCharacterBoard': [],
+                    'myOpponentBoard': []
+                    };
+                display(data);
+            }
 
-				console.log('Opponent characters:');
-				logCardList(data.myOpponentCharacters);
-                for(var i=0; i<data.myOpponentCharacters.length; ++i) {
-                    displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
-                } 
+            function getUrlParameter(sParam)
+            {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&');
+                for (var i = 0; i < sURLVariables.length; i++) 
+                {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) 
+                    {
+                        return sParameterName[1];
+                    }
+                }
+                return 3;
+            } 
 
-
-                output('<span class="play-msg">Select a character, then click "Play"</span>');
-       		});
-       		
-       		socket.on('update_game', function(data) {
+            function display(data) {
                 gameState = data.gameState;
                 console.log('Update :: turn '+data.turn);
                 switch(gameState) {
@@ -105,9 +106,7 @@
                     case STATE_PLAYER_CHOOSE_DISCARD: 
                         output('<span class="play-msg">Select actions to discard, then click "Play"</span>'); break;
                 }
-                
-                console.log('Available characters:');
-                logCardList(data.myCharacters);
+ 
                 emptyCard("#myCharacter1");
                 emptyCard("#myCharacter2");
                 emptyCard("#myCharacter3");
@@ -119,8 +118,6 @@
                     }
                 } 
 				
-                console.log('Available cards:');
-                logCardList(data.myHand);
 				emptyCard("#myAction1");
                 emptyCard("#myAction2");
                 emptyCard("#myAction3");
@@ -134,26 +131,17 @@
                     }
                 } 
 
-                console.log('My character board:');
-                logCardList(data.myCharacterBoard);
 				emptyCard("#mySelectedCharacter1");
 				for(var i=0; i<data.myCharacterBoard.length; ++i) {
                     displayCard("#mySelectedCharacter"+(i+1), data.myCharacterBoard[i].id, data.myCharacterBoard[i].cardCode, 'right', true, '');
                 } 
 				
-                console.log('My board:');
-                logCardList(data.myBoard);
 				emptyCard("#mySelectedAction1");
                 emptyCard("#mySelectedAction2");
 				for(var i=0; i<data.myBoard.length; ++i) {
                     displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right', true, '');
                 } 
 				
-                console.log('My discard:');
-                logCardList(data.myDiscard);
-				
-                console.log('Opponent characters:');
-                logCardList(data.myOpponentCharacters);
                 emptyCard("#opponentCharacter1");
                 emptyCard("#opponentCharacter2");
                 emptyCard("#opponentCharacter3");
@@ -161,34 +149,17 @@
                     displayCard("#opponentCharacter"+(i+1), data.myOpponentCharacters[i].id, data.myOpponentCharacters[i].cardCode, 'left');
                 } 
 				
-				console.log('Opponent selected character:');
-                logCardList(data.myOpponentCharacterBoard);
 				emptyCard("#opponentSelectedCharacter1");
 				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
                     displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left', true, '');
                 }
 				
-                console.log('Opponent board:');
-                logCardList(data.myOpponentBoard);
 				emptyCard("#opponentSelectedAction1");
                 emptyCard("#opponentSelectedAction2");
 				for(var i=0; i<data.myOpponentBoard.length; ++i) {
                     displayCard("#opponentSelectedAction"+(i+1), data.myOpponentBoard[i].id, data.myOpponentBoard[i].cardCode, 'right', true, '');
                 } 
-				
-                console.log('Opponent discard:');
-                logCardList(data.myOpponentDiscard);
-            });
-            
-            socket.on('end_game', function(data) {
-                gameState = data.gameState;
-                output('<span class="important-msg">GAME OVER</span>');
-
-                output('<span>Winner is: '+data.winner+' </span>');
-                output('<span>Your score is: '+data.myScore+' </span>');
-                output('<span>Opponent score is: '+data.myOpponentScore+' </span>');
-            });
-
+            }
 
 			function output(message) {
 	            var currentTime = "<span class='time'>" +  moment().format('HH:mm:ss.SSS') + "</span>";
@@ -224,10 +195,6 @@
                 });
 
             }
-
-			$(document).ready(function() {
-                output('Welcome!');	
-			});
 
 			function popoverCardImage() {
 				var popoverImageSrc = $('img',this).attr("data-popover");
@@ -320,37 +287,6 @@
 				    }
                 }
             }
-			
-			function finishStep() {
-				if(gameState == STATE_PLAYER_CHOOSE_CHARACTER) {
-					var selectedCardId = $('#mySelectedCharacter1').attr("data-cardid");
-					if(typeof selectedCardId == 'undefined') {
-						output('<span class="important-msg">You must select a character first!</span>');
-					} else {
-						var characterMsg = { 'characterCard' : parseInt(selectedCardId), 
-						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseCharacterMessage'};
-						socket.emit('choose_character', characterMsg);
-                        gameState = STATE_PLAYER_CHOOSE_ACTION;
-                        output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
-					}
-				} else if(gameState == STATE_PLAYER_CHOOSE_ACTION) {
-					var selectedCardId = $('#mySelectedAction1').attr("data-cardid");
-					if(typeof selectedCardId == 'undefined') {
-						output('<span class="important-msg">You must select an action first!</span>');
-					} else {
-						var actionMsg = { 'actionCards' : [parseInt(selectedCardId)],
-						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
-						socket.emit('choose_action', actionMsg);
-                        output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
-					}
-				} else if(gameState == STATE_PLAYER_CHOOSE_DISCARD) {
-	                var discardMsg = { 'discardCards' : discardedCards, 
-	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
-	                socket.emit('choose_discard', discardMsg);
-                    discardedCards = [];
-                    output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
-				}
-			}
         </script>
     </head>
  
@@ -483,7 +419,7 @@
             </div>
         </div>
 		
-        <!-- Modal -->
+		<!-- Modal -->
 		<div class="modal fade" id="myDiscard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
