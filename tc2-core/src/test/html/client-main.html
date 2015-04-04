@@ -49,7 +49,8 @@
 			currentDiscardIndex = 1;
             discardedCards = [];
             myCharacterSettings = [];
-			
+			defaultSettings = {'LIFE': '--', 'ATT': '--', 'DEF': '--', 'MANA': '--'};
+
 			console.log( 'javascript -- start' );
 			
            //This is all that needs
@@ -118,11 +119,13 @@
 				for(var i=0; i<data.myCharacters.length; ++i) {
                     if(data.myCharacters[i].available && gameState == STATE_PLAYER_CHOOSE_CHARACTER)  {
                         displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', true, 'selectCharacter(this)');
+                        myCharacterSettings[data.myCharacters[i].id] = data.myCharacters[i].settings;
                     } else {
                         displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right');
-                    }
+                    }              
                 } 
 				
+                
                 console.log('Available cards:');
                 logCardList(data.myHand);
 				emptyCard("#myAction1");
@@ -141,9 +144,11 @@
                 console.log('My character board:');
                 logCardList(data.myCharacterBoard);
 				emptyCard("#mySelectedCharacter1");
+                displaySettings('#myCharacterSetting', defaultSettings);
 				for(var i=0; i<data.myCharacterBoard.length; ++i) {
                     displayCard("#mySelectedCharacter"+(i+1), data.myCharacterBoard[i].id, data.myCharacterBoard[i].cardCode, 'right', true, '');
-                } 
+                    displaySettings( '#myCharacterSetting', data.myCharacterBoard[i].settings);
+                }
 				
                 console.log('My board:');
                 logCardList(data.myBoard);
@@ -168,8 +173,10 @@
 				console.log('Opponent selected character:');
                 logCardList(data.myOpponentCharacterBoard);
 				emptyCard("#opponentSelectedCharacter1");
+                displaySettings('#opponentCharacterSetting', defaultSettings);
 				for(var i=0; i<data.myOpponentCharacterBoard.length; ++i) {
                     displayCard("#opponentSelectedCharacter"+(i+1), data.myOpponentCharacterBoard[i].id, data.myOpponentCharacterBoard[i].cardCode, 'left', true, '');
+                    displaySettings( '#opponentCharacterSetting', data.myOpponentCharacterBoard[i].settings);
                 }
 				
                 console.log('Opponent board:');
@@ -479,37 +486,21 @@
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                                     <table class="table-condensed pull-right">
                                                       <tbody>
-                                                        <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td><span class="label label-danger">Life</span>
-                                                            
-                                                          </td>
+                                                         <tr>
+                                                          <td><span class="label label-danger">Life</span></td>
+                                                          <td><span id="opponentCharacterSettingLife" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td> <span class="label label-warning" contenteditable="false">Attack</span>
-                                                            
-                                                          </td>
+                                                          <td> <span class="label label-warning">Attack</span></td>
+                                                          <td><span id="opponentCharacterSettingAtt" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td><span class="label label-info">Defense</span>
-                                                            
-                                                          </td>
+                                                          <td><span class="label label-info">Defense</span></td>
+                                                          <td><span id="opponentCharacterSettingDef" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td><span class="label label-primary">Mana</span>
-                                                            
-                                                          </td>
+                                                          <td><span class="label label-primary">Mana</span></td>
+                                                          <td><span id="opponentCharacterSettingMana" class="label label-default">--</span></td>
                                                         </tr>
                                                    </tbody>
                                                 </table>
