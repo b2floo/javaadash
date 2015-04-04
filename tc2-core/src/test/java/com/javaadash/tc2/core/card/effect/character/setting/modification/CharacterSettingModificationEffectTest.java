@@ -19,8 +19,6 @@ public class CharacterSettingModificationEffectTest extends TestCase {
   public void testResolve() throws Exception {
     Effect effect = new CharacterSettingModificationEffect(setting, modifier, Target.SELF);
 
-
-
     // set the characters setting and put it on board
     Player startPlayer = GameUtils.getPlayer("junit1", 1, 0, 0);
     Card targetCharacter =

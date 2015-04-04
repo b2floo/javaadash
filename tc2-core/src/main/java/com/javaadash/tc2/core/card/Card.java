@@ -113,6 +113,10 @@ public class Card implements Serializable {
     this.available = available;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
   // TODO in a factory and throw exceptions
   public static Map<String, String> createSettings(String desc) {
     Map<String, String> settings = new HashMap<String, String>();

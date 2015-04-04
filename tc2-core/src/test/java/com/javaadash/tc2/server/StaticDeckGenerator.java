@@ -10,7 +10,6 @@ import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.card.condition.Condition;
-import com.javaadash.tc2.core.card.dictionnary.CardsGenerator;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.character.setting.modification.CharacterSettingModificationEffect;
@@ -20,7 +19,6 @@ public class StaticDeckGenerator {
 
   public static Deck getDeck(int nbActions) throws TC2CoreException {
     Deck deck = new Deck();
-    CardsGenerator generator = new CardsGenerator();
 
     Map<Integer, Integer> limits = new HashMap<Integer, Integer>();
     limits.put(CardType.CHARACTER, 3);
@@ -28,18 +26,24 @@ public class StaticDeckGenerator {
 
     deck = new Deck(limits);
 
-    Collection<Effect> effects = generator.getEffets(1);
+    Collection<Effect> effects = new ArrayList<Effect>();
     deck.addCard(new Card("90001", CardType.CHARACTER, "ANASH", effects,
         new ArrayList<Condition>(), Card
-            .createSettings("ATT:7 - DEF:2 - LIFE: 12 - CLASS: THIEF - GUILD: MERCENARY")));
-    effects = generator.getEffets(1);
-    deck.addCard(new Card("90002", CardType.CHARACTER, "NAYCUL", effects,
-        new ArrayList<Condition>(), Card
-            .createSettings("ATT:5 - DEF:2 - LIFE: 11 - CLASS: WARRIOR - GUILD: MERCENARY")));
-    effects = generator.getEffets(1);
-    deck.addCard(new Card("90003", CardType.CHARACTER, "TACOTSIRC", effects,
-        new ArrayList<Condition>(), Card
-            .createSettings("ATT:7 - DEF:2 - LIFE: 12 - CLASS: WARRIOR - GUILD: MERCENARY")));
+            .createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: THIEF - GUILD: MERCENARY")));
+    deck.addCard(new Card(
+        "90002",
+        CardType.CHARACTER,
+        "NAYCUL",
+        effects,
+        new ArrayList<Condition>(),
+        Card.createSettings("ATT:5 - DEF:2 - LIFE: 11 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY")));
+    deck.addCard(new Card(
+        "90003",
+        CardType.CHARACTER,
+        "TACOTSIRC",
+        effects,
+        new ArrayList<Condition>(),
+        Card.createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY")));
 
     Effect effect00041 = new CharacterSettingModificationEffect("DEF", -1, Target.OPPONENT);
     Effect effect00042 = new CharacterSettingModificationEffect("ATT", -1, Target.OPPONENT);

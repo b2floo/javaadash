@@ -7,6 +7,7 @@ import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.message.EndGameMessage;
 import com.javaadash.tc2.core.interfaces.message.StartGameMessage;
 import com.javaadash.tc2.core.interfaces.message.UpdateGameMessage;
+import com.javaadash.tc2.core.interfaces.message.UpdateSettingsMessage;
 
 public interface TC2PlayerInterface extends Serializable {
   /**
@@ -23,4 +24,9 @@ public interface TC2PlayerInterface extends Serializable {
    * Notify end of game
    */
   void endGame(EndGameMessage msg);
+
+  /**
+   * Update settings and score
+   */
+  void updateSettings(UpdateSettingsMessage msg);
 }

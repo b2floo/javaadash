@@ -43,6 +43,7 @@
 			STATE_BEGIN_GAME = 0;
 			STATE_PLAYER_CHOOSE_CHARACTER = 3;
 			STATE_PLAYER_CHOOSE_ACTION = 4;
+            STATE_TURN_RESOLUTION = 4;
 			STATE_PLAYER_CHOOSE_DISCARD = 6;
 			
 			gameState = STATE_BEGIN_GAME;
@@ -193,6 +194,22 @@
                 // update scores
                 $('#myScore').html(data.myScore);
                 $('#opponentScore').html(data.opponentScore);
+            });
+
+            socket.on('update_settings', function(data) {
+                if(gameState == STATE_TURN_RESOLUTION) {
+                    output('<span>'+data.message+'</span>');
+
+			        for(var i=0; i<data.myCharacterSettings.length; ++i) {
+                        displaySettings( '#myCharacterSetting', data.myCharacterSettings[i].settings);
+                    }
+			        for(var i=0; i<data.opponentCharacterSettings.length; ++i) {
+                        displaySettings( '#opponentCharacterSetting', data.opponentCharacterSettings[i].settings);
+                    }
+                    // update scores
+                    $('#myScore').html(data.myScore);
+                    $('#opponentScore').html(data.opponentScore);
+                }                      
             });
             
             socket.on('end_game', function(data) {
@@ -365,6 +382,7 @@
 						var actionMsg = { 'actionCards' : [parseInt(selectedCardId)],
 						'@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseActionMessage'};
 						socket.emit('choose_action', actionMsg);
+                        gameState = STATE_TURN_RESOLUTION;
                         output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
 					}
 				} else if(gameState == STATE_PLAYER_CHOOSE_DISCARD) {

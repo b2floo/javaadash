@@ -7,6 +7,7 @@ import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.message.EndGameMessage;
 import com.javaadash.tc2.core.interfaces.message.StartGameMessage;
 import com.javaadash.tc2.core.interfaces.message.UpdateGameMessage;
+import com.javaadash.tc2.core.interfaces.message.UpdateSettingsMessage;
 import com.javaadash.tc2.core.interfaces.player.TC2PlayerInterface;
 
 public class SocketIoPlayerInterface implements TC2PlayerInterface {
@@ -31,5 +32,10 @@ public class SocketIoPlayerInterface implements TC2PlayerInterface {
   @Override
   public void endGame(EndGameMessage msg) {
     client.sendEvent("end_game", msg);
+  }
+
+  @Override
+  public void updateSettings(UpdateSettingsMessage msg) {
+    client.sendEvent("update_settings", msg);
   }
 }

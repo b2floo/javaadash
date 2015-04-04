@@ -24,18 +24,18 @@ import com.javaadash.tc2.core.interfaces.player.PlayerData;
 public class TC2AsynchronousGameManager {
 
   private Logger log = LoggerFactory.getLogger(TC2AsynchronousGameManager.class);
-  private PlayManager playManager = new PlayManager();
+  private TurnResolver turnResolver = new TurnResolver();
   private Dealer dealer = new Dealer();
 
   public void handleGame(GameContext context) {
 
     switch (context.getState()) {
-    // TODO dont do twice the deal send message
+      // TODO dont do twice the deal send message
       case GameState.BEGIN_GAME:
         log.debug("Handling game, current state [BEGIN_GAME]");
         whoStarts(context);
         dealer.dealCards(context);
-        playManager.startGame(context);
+        PlayManager.startGame(context);
         context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
         break;
       case GameState.BEGIN_TURN:
@@ -46,7 +46,7 @@ public class TC2AsynchronousGameManager {
         for (PlayerData data : context.getPlayerDatas()) {
           data.setPlayerState(GameState.BEGIN_TURN);
         }
-        playManager.updateGameStatus(context);
+        PlayManager.updateGameStatus(context);
         break;
       case GameState.PLAYER_CHOOSE_CHARACTER:
         log.debug("Handling game, current state [PLAYER_CHOOSE_CHARACTER]");
@@ -94,7 +94,7 @@ public class TC2AsynchronousGameManager {
             context.setCurrentPlayer(data.getPlayer());
             updateAvailableActions(context);
           }
-          playManager.updateGameStatus(context);
+          PlayManager.updateGameStatus(context);
         }
         break;
       case GameState.PLAYER_CHOOSE_ACTION:
@@ -145,12 +145,12 @@ public class TC2AsynchronousGameManager {
           log.info("All cards on board, can start resolution");
           // after cards are decided, now we resolve the turn
           context.setState(GameState.TURN_RESOLUTION);
-          new TurnResolver().resolveTurn(context);
+          turnResolver.resolveTurn(context);
           log.info("Turn resolved!!");
 
           // TODO check if game is over and send appropriate message
           context.setState(GameState.PLAYER_CHOOSE_DISCARD);
-          playManager.updateGameStatus(context);
+          PlayManager.updateGameStatus(context);
         }
         break;
       case GameState.PLAYER_CHOOSE_DISCARD:
@@ -207,7 +207,7 @@ public class TC2AsynchronousGameManager {
             case FIRST_PLAYER:
             case SECOND_PLAYER:
             case TIE:
-              playManager.endGame(context);
+              PlayManager.endGame(context);
               break;
             case NOT_YET:
               new BoardClearer().clearBoard(context);
