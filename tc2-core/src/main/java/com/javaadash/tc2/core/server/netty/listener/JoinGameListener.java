@@ -2,7 +2,6 @@ package com.javaadash.tc2.core.server.netty.listener;
 
 import java.util.Map;
 
-import main.StaticDeckGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.message.JoinGameMessage;
 import com.javaadash.tc2.core.interfaces.player.Player;
 import com.javaadash.tc2.server.SocketIoPlayerInterface;
+import com.javaadash.tc2.server.StaticDeckGenerator;
 import com.javaadash.tc2.server.TC2Lobby;
 
 public class JoinGameListener implements DataListener<JoinGameMessage> {

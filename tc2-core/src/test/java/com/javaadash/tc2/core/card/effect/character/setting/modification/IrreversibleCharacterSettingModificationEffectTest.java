@@ -2,10 +2,10 @@ package com.javaadash.tc2.core.card.effect.character.setting.modification;
 
 import junit.framework.TestCase;
 
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.GameUtils;
 import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.context.GameContext;

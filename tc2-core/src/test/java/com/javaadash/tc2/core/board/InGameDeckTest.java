@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.javaadash.tc2.core.MockCardLocation;
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.board.InGameDeck;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.Deck;
 
 

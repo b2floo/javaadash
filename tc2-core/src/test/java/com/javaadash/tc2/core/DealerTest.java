@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.board.InGameDeck;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.interfaces.player.Player;
 

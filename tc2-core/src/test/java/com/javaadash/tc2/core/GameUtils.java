@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.javaadash.tc2.core.board.InGameDeck;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.player.Player;

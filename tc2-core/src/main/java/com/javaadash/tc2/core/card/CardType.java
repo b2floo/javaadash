@@ -1,4 +1,4 @@
-package com.javaadash.tc2.core;
+package com.javaadash.tc2.core.card;
 
 public class CardType 
 {

@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.interfaces.player.Player;
 

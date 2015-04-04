@@ -5,8 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.context.GameContext;
 
 /**

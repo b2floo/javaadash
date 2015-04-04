@@ -1,10 +1,8 @@
-package com.javaadash.tc2.core.board;
+package com.javaadash.tc2.core.card;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.javaadash.tc2.core.card.Card;
-import com.javaadash.tc2.core.card.CardDescription;
 
 public class CardsToDescriptionHelper {
   public static List<CardDescription> toCardsDescription(List<Card> cards) {

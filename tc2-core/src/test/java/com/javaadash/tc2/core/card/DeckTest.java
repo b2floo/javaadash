@@ -6,7 +6,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 
 public class DeckTest extends TestCase

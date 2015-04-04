@@ -1,4 +1,4 @@
-package main;
+package com.javaadash.tc2.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.javaadash.tc2.core.CardType;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.dictionnary.CardsGenerator;

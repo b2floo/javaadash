@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.context.GameContext;
 
 public class TurnResolver 

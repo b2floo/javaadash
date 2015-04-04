@@ -7,6 +7,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.MockEffect;
