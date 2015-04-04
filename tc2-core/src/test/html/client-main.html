@@ -189,6 +189,10 @@
 				
                 console.log('Opponent discard:');
                 logCardList(data.myOpponentDiscard);
+
+                // update scores
+                $('#myScore').html(data.myScore);
+                $('#opponentScore').html(data.opponentScore);
             });
             
             socket.on('end_game', function(data) {
@@ -444,6 +448,11 @@
 					<div class="col-lg-6 col-md-6 col-sm-6">
 						<div class="well">
 							<button type="button" onClick="finishStep()" class="btn btn-danger"><span class="glyphicon glyphicon-fast-forward"></span> Play</button>
+                        <div class="btn-group pull-right">
+                            <button id="myScore" type="button" class="btn btn-default">0</button>
+                            <button type="button" class="btn btn-info">Score</button>
+                            <button id="opponentScore" type="button" class="btn btn-default">0</button>
+                        </div>
 						</div>
 						<div class="panel panel-primary">
 							<div class="panel-body">

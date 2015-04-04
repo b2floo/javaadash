@@ -18,6 +18,9 @@ public class UpdateGameMessage {
   private List<CardDescription> myOpponentCharacterBoard;
   private List<CardDescription> myOpponentDiscard;
 
+  private Integer myScore;
+  private Integer opponentScore;
+
   public Integer getTurn() {
     return turn;
   }
@@ -106,6 +109,22 @@ public class UpdateGameMessage {
     this.myOpponentCharacterBoard = myOpponentCharacterBoard;
   }
 
+  public Integer getMyScore() {
+    return myScore;
+  }
+
+  public void setMyScore(Integer myScore) {
+    this.myScore = myScore;
+  }
+
+  public Integer getOpponentScore() {
+    return opponentScore;
+  }
+
+  public void setOpponentScore(Integer opponentScore) {
+    this.opponentScore = opponentScore;
+  }
+
   @Override
   public String toString() {
     return "UpdateGameMessage [turn=" + turn + ", gameState=" + gameState + ", myHand=" + myHand
@@ -113,7 +132,6 @@ public class UpdateGameMessage {
         + myCharacterBoard + ", myDiscard=" + myDiscard + ", myOpponentCharacters="
         + myOpponentCharacters + ", myOpponentBoard=" + myOpponentBoard
         + ", myOpponentCharacterBoard=" + myOpponentCharacterBoard + ", myOpponentDiscard="
-        + myOpponentDiscard + "]";
+        + myOpponentDiscard + ", myScore=" + myScore + ", opponentScore=" + opponentScore + "]";
   }
-
 }

@@ -125,6 +125,9 @@ public class PlayManager {
           CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
               .getCards(CardType.ACTION, CardLocation.DISCARD));
 
+      Integer player1score = context.getFirstPlayer().getScore();
+      Integer player2score = context.getFirstPlayer().getScore();
+
       UpdateGameMessage player1msg = new UpdateGameMessage();
       player1msg.setMyHand(player1Hand);
       player1msg.setMyCharacters(player1Characters);
@@ -137,6 +140,8 @@ public class PlayManager {
       player1msg.setMyOpponentCharacterBoard(player2CharacterBoard);
       player1msg.setGameState(context.getState());
       player1msg.setTurn(context.getTurn());
+      player1msg.setMyScore(player1score);
+      player1msg.setOpponentScore(player2score);
       context.getFirstPlayer().getPlayerInterface().updateGameStatus(player1msg);
       log.debug(player1msg + " sent to user " + context.getFirstPlayer().getName());
 
@@ -152,6 +157,8 @@ public class PlayManager {
       player2msg.setMyOpponentDiscard(player1Discard);
       player2msg.setGameState(context.getState());
       player2msg.setTurn(context.getTurn());
+      player2msg.setMyScore(player2score);
+      player2msg.setOpponentScore(player1score);
       context.getSecondPlayer().getPlayerInterface().updateGameStatus(player2msg);
       log.debug(player2msg + " sent to user " + context.getSecondPlayer().getName());
     } catch (IOException e) {
