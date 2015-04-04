@@ -27,6 +27,7 @@
                 opacity: 0.4;
                 filter: alpha(opacity=100); /* For IE8 and earlier */
             }
+            td span{float:left; width:100%; min-width:100%; text-align:left;}
 	    </style>
 		
         <!-- Latest compiled and minified JavaScript -->
@@ -362,17 +363,82 @@
 							<button type="button" onClick="finishStep()" class="btn btn-danger"><span class="glyphicon glyphicon-fast-forward"></span> Play</button>
 						</div>
 						<div class="panel panel-primary">
-							<div class="panel-body" style="height:600px">
+							<div class="panel-body">
 								<div class="panel panel-primary" style="border: 10px solid transparent;">
 									<div class="panel-heading">Played characters</div>
-									<div class="panel-body">
-										<div class="row">
-											<a id="mySelectedCharacter1" class="thumbnail pull-left">
-											  <img src="images/0000.png">
-											</a>
-											<a id="opponentSelectedCharacter1" class="thumbnail pull-right">
-											  <img src="images/0000.png">
-											</a>
+									    <div class="panel-body">
+										    <div class="row">
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <table class="table-condensed">
+                                                        <tbody>
+                                                            <tr>
+                                                              <td><span class="label label-danger">Life</span></td>
+                                                              <td><span class="label label-default">12</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                              <td> <span class="label label-warning" contenteditable="false">Attack</span></td>
+                                                              <td><span class="label label-default">12</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                              <td><span class="label label-info">Defense</span></td>
+                                                              <td><span class="label label-default">12</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                              <td><span class="label label-primary">Mana</span></td>
+                                                              <td><span class="label label-default">12</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+											        <a id="mySelectedCharacter1" class="thumbnail pull-left">
+											            <img src="images/0000.png">
+											        </a>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+											        <a id="opponentSelectedCharacter1" class="thumbnail pull-right">
+											            <img src="images/0000.png">
+											        </a>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <table class="table-condensed pull-right">
+                                                      <tbody>
+                                                        <tr>
+                                                          <td><span class="label label-default">12</span>
+                                                            
+                                                          </td>
+                                                          <td><span class="label label-danger">Life</span>
+                                                            
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><span class="label label-default">12</span>
+                                                            
+                                                          </td>
+                                                          <td> <span class="label label-warning" contenteditable="false">Attack</span>
+                                                            
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><span class="label label-default">12</span>
+                                                            
+                                                          </td>
+                                                          <td><span class="label label-info">Defense</span>
+                                                            
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><span class="label label-default">12</span>
+                                                            
+                                                          </td>
+                                                          <td><span class="label label-primary">Mana</span>
+                                                            
+                                                          </td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                 </div>
+                                            </div>
 										</div>
 									</div>
 								</div>
@@ -419,7 +485,7 @@
             </div>
         </div>
 		
-		<!-- Modal -->
+        <!-- Modal -->
 		<div class="modal fade" id="myDiscard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
