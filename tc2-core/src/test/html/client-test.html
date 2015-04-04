@@ -53,6 +53,7 @@
 			console.log( 'javascript -- start' );
 
 			$(document).ready(function() {
+                $('body').load('playboard.html');
                 output('Welcome!');	
                 init();
 			});
@@ -417,37 +418,21 @@
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                                     <table class="table-condensed pull-right">
                                                       <tbody>
-                                                        <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td><span class="label label-danger">Life</span>
-                                                            
-                                                          </td>
+                                                         <tr>
+                                                          <td><span class="label label-danger">Life</span></td>
+                                                          <td><span id="opponentCharacterSettingLife" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td> <span class="label label-warning" contenteditable="false">Attack</span>
-                                                            
-                                                          </td>
+                                                          <td> <span class="label label-warning">Attack</span></td>
+                                                          <td><span id="opponentCharacterSettingAtt" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td><span class="label label-info">Defense</span>
-                                                            
-                                                          </td>
+                                                          <td><span class="label label-info">Defense</span></td>
+                                                          <td><span id="opponentCharacterSettingDef" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-default">12</span>
-                                                            
-                                                          </td>
-                                                          <td><span class="label label-primary">Mana</span>
-                                                            
-                                                          </td>
+                                                          <td><span class="label label-primary">Mana</span></td>
+                                                          <td><span id="opponentCharacterSettingMana" class="label label-default">--</span></td>
                                                         </tr>
                                                    </tbody>
                                                 </table>
