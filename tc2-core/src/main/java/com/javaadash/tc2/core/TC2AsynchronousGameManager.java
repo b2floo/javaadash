@@ -24,7 +24,8 @@ import com.javaadash.tc2.core.interfaces.player.PlayerData;
 public class TC2AsynchronousGameManager {
 
   private Logger log = LoggerFactory.getLogger(TC2AsynchronousGameManager.class);
-  private TurnResolver turnResolver = new TurnResolver();
+  private PlayManager playManager = new PlayManager();
+  private TurnResolver turnResolver = new TurnResolver(playManager);
   private Dealer dealer = new Dealer();
 
   public void handleGame(GameContext context) {
@@ -35,7 +36,7 @@ public class TC2AsynchronousGameManager {
         log.debug("Handling game, current state [BEGIN_GAME]");
         whoStarts(context);
         dealer.dealCards(context);
-        PlayManager.startGame(context);
+        playManager.startGame(context);
         context.setState(GameState.PLAYER_CHOOSE_CHARACTER);
         break;
       case GameState.BEGIN_TURN:
@@ -46,7 +47,7 @@ public class TC2AsynchronousGameManager {
         for (PlayerData data : context.getPlayerDatas()) {
           data.setPlayerState(GameState.BEGIN_TURN);
         }
-        PlayManager.updateGameStatus(context);
+        playManager.updateGameStatus(context);
         break;
       case GameState.PLAYER_CHOOSE_CHARACTER:
         log.debug("Handling game, current state [PLAYER_CHOOSE_CHARACTER]");
@@ -94,7 +95,7 @@ public class TC2AsynchronousGameManager {
             context.setCurrentPlayer(data.getPlayer());
             updateAvailableActions(context);
           }
-          PlayManager.updateGameStatus(context);
+          playManager.updateGameStatus(context);
         }
         break;
       case GameState.PLAYER_CHOOSE_ACTION:
@@ -150,7 +151,7 @@ public class TC2AsynchronousGameManager {
 
           // TODO check if game is over and send appropriate message
           context.setState(GameState.PLAYER_CHOOSE_DISCARD);
-          PlayManager.updateGameStatus(context);
+          playManager.updateGameStatus(context);
         }
         break;
       case GameState.PLAYER_CHOOSE_DISCARD:
@@ -207,7 +208,7 @@ public class TC2AsynchronousGameManager {
             case FIRST_PLAYER:
             case SECOND_PLAYER:
             case TIE:
-              PlayManager.endGame(context);
+              playManager.endGame(context);
               break;
             case NOT_YET:
               new BoardClearer().clearBoard(context);

@@ -28,6 +28,38 @@
                 filter: alpha(opacity=100); /* For IE8 and earlier */
             }
             td span{float:left; width:100%; min-width:100%; text-align:left;}
+
+            @-webkit-keyframes fadeIt {
+              0%   { font-size: 15px; color: red; }
+              50%  { font-size: 12px; color: orange; }
+              100% { font-size: 8px; color: white; }
+            }
+            @-moz-keyframes fadeIt {
+              0%   { font-size: 15px; color: red; }
+              50%  { font-size: 12px; color: orange; }
+              100% { font-size: 8px; color: white; }
+            }
+            @-o-keyframes fadeIt {
+              0%   { font-size: 15px; color: red; }
+              50%  { font-size: 12px; color: orange; }
+              100% { font-size: 8px; color: white; }
+            }
+            @keyframes fadeIt {
+              0%   { font-size: 15px; color: red; }
+              50%  { font-size: 12px; color: orange; }
+              100% { font-size: 8px; color: white; }
+            }
+
+            .life-diff{    
+                -webkit-animation: fadeIt 1s ease-in; 
+                   -moz-animation: fadeIt 1s ease-in; 
+                     -o-animation: fadeIt 1s ease-in; 
+                        animation: fadeIt 1s ease-in;
+                font-size: 14px;
+                color: #fff;
+                overflow: hidden; 
+                font-weight: bold;
+            }
 	    </style>
 		
         <!-- Latest compiled and minified JavaScript -->
@@ -198,7 +230,7 @@
 
             socket.on('update_settings', function(data) {
                 if(gameState == STATE_TURN_RESOLUTION) {
-                    output('<span>'+data.message+'</span>');
+                    /*output('<span>'+data.message+'</span>');
 
 			        for(var i=0; i<data.myCharacterSettings.length; ++i) {
                         displaySettings( '#myCharacterSetting', data.myCharacterSettings[i].settings);
@@ -208,7 +240,15 @@
                     }
                     // update scores
                     $('#myScore').html(data.myScore);
-                    $('#opponentScore').html(data.opponentScore);
+                    $('#opponentScore').html(data.opponentScore);*/
+			        for(var i=0; i<data.cardEffectLogs.length; ++i) {
+                        output('<span> '+data.cardEffectLogs[i].msg+'</span>');
+                        for(var j=0; j<data.cardEffectLogs[i].settingChanges.length; ++j) {
+                            var settingChange = data.cardEffectLogs[i].settingChanges[j];
+                            output('<span> '+settingChange.characterName+' setting '+settingChange.setting+' '+settingChange.diff+': new value = '+ settingChange.newValue+'</span>');
+                        }
+                        //displaySettings( '#myCharacterSetting', data.myCharacterSettings[i].settings);
+                    }
                 }                      
             });
             
@@ -486,24 +526,40 @@
 										    <div class="row">
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                                     <table class="table-condensed">
-                                                        <tbody>
-                                                            <tr>
-                                                              <td><span class="label label-danger">Life</span></td>
-                                                              <td><span id="myCharacterSettingLife" class="label label-default">--</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                              <td> <span class="label label-warning">Attack</span></td>
-                                                              <td><span id="myCharacterSettingAtt" class="label label-default">--</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                              <td><span class="label label-info">Defense</span></td>
-                                                              <td><span id="myCharacterSettingDef" class="label label-default">--</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                              <td><span class="label label-primary">Mana</span></td>
-                                                              <td><span id="myCharacterSettingMana" class="label label-default">--</span></td>
-                                                            </tr>
-                                                        </tbody>
+                                                      <tbody>
+                                                        <tr>
+                                                          <td><span class="label label-danger">Life</span>
+                                                          </td>
+                                                          <td><span id="myCharacterSettingLife" class="label label-default">--</span>
+                                                          </td>
+                                                          <td id="myCharacterSettingDiffLife">
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td> <span class="label label-warning">Attack</span>
+                                                          </td>
+                                                          <td><span id="myCharacterSettingAtt" class="label label-default">--</span>
+                                                          </td>
+                                                          <td id="myCharacterSettingDiffAtt">
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><span class="label label-info">Defense</span>
+                                                          </td>
+                                                          <td><span id="myCharacterSettingDef" class="label label-default">--</span>
+                                                          </td>
+                                                          <td id="myCharacterSettingDiffDef">
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><span class="label label-primary">Mana</span>
+                                                          </td>
+                                                          <td><span id="myCharacterSettingMana" class="label label-default">--</span>
+                                                          </td>
+                                                          <td id="myCharacterSettingDiffMana">
+                                                          </td>
+                                                        </tr>
+                                                      </tbody>
                                                     </table>
                                                 </div>
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
@@ -519,24 +575,35 @@
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                                     <table class="table-condensed pull-right">
                                                       <tbody>
-                                                         <tr>
+                                                        <tr>              <td id="opponentCharacterSettingDiffLife">
+                                                          </td>
                                                           <td><span class="label label-danger">Life</span></td>
                                                           <td><span id="opponentCharacterSettingLife" class="label label-default">--</span></td>
+
                                                         </tr>
                                                         <tr>
+                                                                        <td id="opponentCharacterSettingDiffAtt">
+                                                          </td>
                                                           <td> <span class="label label-warning">Attack</span></td>
                                                           <td><span id="opponentCharacterSettingAtt" class="label label-default">--</span></td>
+
                                                         </tr>
                                                         <tr>
+                                                          <td id="opponentCharacterSettingDiffDef">
+                                                          </td>
                                                           <td><span class="label label-info">Defense</span></td>
                                                           <td><span id="opponentCharacterSettingDef" class="label label-default">--</span></td>
+
                                                         </tr>
                                                         <tr>
+                                                                       <td id="opponentCharacterSettingDiffMana">
+                                                          </td>
                                                           <td><span class="label label-primary">Mana</span></td>
                                                           <td><span id="opponentCharacterSettingMana" class="label label-default">--</span></td>
+                                             
                                                         </tr>
-                                                   </tbody>
-                                                </table>
+                                                      </tbody>
+                                                    </table>
                                             </div>
                                         </div>
 									</div>

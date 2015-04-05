@@ -10,6 +10,7 @@ import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.CardDescription;
 import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.CardsToDescriptionHelper;
+import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.message.EndGameMessage;
@@ -27,7 +28,7 @@ import com.javaadash.tc2.core.interfaces.player.Player;
 public class PlayManager {
   private static Logger log = LoggerFactory.getLogger(Player.class);
 
-  public static void startGame(GameContext context) {
+  public void startGame(GameContext context) {
     log.debug("Sending a start_game message");
     try {
       // create list to be sent
@@ -66,7 +67,7 @@ public class PlayManager {
     }
   }
 
-  public static void updateGameStatus(GameContext context) {
+  public void updateGameStatus(GameContext context) {
     log.debug("Sending a update_game message");
     try {
       // TODO creation of description might be very time consuming, remove this
@@ -147,39 +148,19 @@ public class PlayManager {
     }
   }
 
-  public static void updateSettings(GameContext context, String msg) {
+  public void updateSettings(GameContext context, List<CardEffectLog> cardEffectLogs) {
     log.debug("Sending a update_settings message");
-    List<CardDescription> player1CharacterBoard =
-        CardsToDescriptionHelper.toCardsDescription(context.getFirstPlayer().getIngameDeck()
-            .getCards(CardType.CHARACTER, CardLocation.BOARD));
+    UpdateSettingsMessage msg = new UpdateSettingsMessage();
+    msg.setCardEffectLogs(cardEffectLogs);
 
-    List<CardDescription> player2CharacterBoard =
-        CardsToDescriptionHelper.toCardsDescription(context.getSecondPlayer().getIngameDeck()
-            .getCards(CardType.CHARACTER, CardLocation.BOARD));
+    context.getFirstPlayer().getPlayerInterface().updateSettings(msg);
+    log.debug(msg + " sent to user " + context.getFirstPlayer().getName());
 
-    Integer player1score = context.getFirstPlayer().getScore();
-    Integer player2score = context.getSecondPlayer().getScore();
-
-    UpdateSettingsMessage player1msg = new UpdateSettingsMessage();
-    player1msg.setMyCharacterSettings(player1CharacterBoard);
-    player1msg.setOpponentCharacterSettings(player2CharacterBoard);
-    player1msg.setMessage(msg);
-    player1msg.setMyScore(player1score);
-    player1msg.setOpponentScore(player2score);
-    context.getFirstPlayer().getPlayerInterface().updateSettings(player1msg);
-    log.debug(player1msg + " sent to user " + context.getFirstPlayer().getName());
-
-    UpdateSettingsMessage player2msg = new UpdateSettingsMessage();
-    player2msg.setMyCharacterSettings(player2CharacterBoard);
-    player2msg.setOpponentCharacterSettings(player1CharacterBoard);
-    player2msg.setMessage(msg);
-    player2msg.setMyScore(player2score);
-    player2msg.setOpponentScore(player1score);
-    context.getSecondPlayer().getPlayerInterface().updateSettings(player2msg);
-    log.debug(player2msg + " sent to user " + context.getSecondPlayer().getName());
+    context.getSecondPlayer().getPlayerInterface().updateSettings(msg);
+    log.debug(msg + " sent to user " + context.getSecondPlayer().getName());
   }
 
-  public static void endGame(GameContext context) {
+  public void endGame(GameContext context) {
     log.debug("Sending an end_game message");
     String winner = "_TIE_";
     switch (context.getWinner()) {

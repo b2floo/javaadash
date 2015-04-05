@@ -1,11 +1,13 @@
 package com.javaadash.tc2.core;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.context.GameContext;
 
@@ -25,18 +27,16 @@ public class CardEffectResolver {
    * @param cards
    * @param context
    */
-  public void resolveCardEffect(Collection<Card> cards, GameContext context) {
+  public void resolveCardEffect(Collection<Card> cards, GameContext context,
+      List<CardEffectLog> cardEffectLogs) {
     for (Card card : cards) {
       log.debug("Resolving card {} effects", card);
-      PlayManager.updateSettings(context, "Applying " + card.getDescription() + " effects");
+      CardEffectLog cardEffectLog =
+          new CardEffectLog(card.getId(), "Activating " + card.getDescription() + " effects");
+      cardEffectLogs.add(cardEffectLog);
       for (Effect effect : card.getEffects()) {
         log.info("Effect : {}", effect);
-        effect.resolve(context);
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
+        effect.resolve(context, cardEffectLog);
       }
     }
   }

@@ -3,9 +3,10 @@ package com.javaadash.tc2.core.card.effect.character.setting.modification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.javaadash.tc2.core.PlayManager;
 import com.javaadash.tc2.core.card.Card;
+import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.Effect;
+import com.javaadash.tc2.core.card.effect.SettingChange;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
 import com.javaadash.tc2.core.context.GameContext;
@@ -26,12 +27,18 @@ public class CharacterSettingModificationEffect implements Effect {
     this.target = target;
   }
 
-  public void resolve(GameContext context) {
+  public void resolve(GameContext context, CardEffectLog cardEffectLog) {
     for (Card charr : targetResolver.getCharactersFromTarget(target, context)) {
-      charr.setIntSetting(setting, charr.getIntSetting(setting) + modifier);
+      Integer newValue = charr.getIntSetting(setting) + modifier;
+      charr.setIntSetting(setting, newValue);
       log.debug("New settings : {}", charr);
-      PlayManager.updateSettings(context, charr.getDescription() + " " + setting + " "
-          + (modifier > 0 ? "+" : "") + modifier);
+      SettingChange settingChange = new SettingChange();
+      settingChange.setCharacterId(charr.getId());
+      settingChange.setCharacterName(charr.getDescription());
+      settingChange.setSetting(setting);
+      settingChange.setNewValue(Integer.toString(newValue));
+      settingChange.setDiff((modifier > 0 ? "+" + modifier : "" + modifier));
+      cardEffectLog.getSettingChanges().add(settingChange);
     }
   }
 

@@ -1,21 +1,11 @@
 package com.javaadash.tc2.core.card.effect;
 
-public class ResolutionDescription {
-
-  private String message;
+public class SettingChange {
   private Integer characterId;
+  private String characterName;
   private String setting;
-  private String oldValue;
   private String newValue;
-  private Integer diff;
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
+  private String diff;
 
   public Integer getCharacterId() {
     return characterId;
@@ -33,14 +23,6 @@ public class ResolutionDescription {
     this.setting = setting;
   }
 
-  public String getOldValue() {
-    return oldValue;
-  }
-
-  public void setOldValue(String oldValue) {
-    this.oldValue = oldValue;
-  }
-
   public String getNewValue() {
     return newValue;
   }
@@ -49,12 +31,25 @@ public class ResolutionDescription {
     this.newValue = newValue;
   }
 
-  public Integer getDiff() {
+  public String getDiff() {
     return diff;
   }
 
-  public void setDiff(Integer diff) {
+  public void setDiff(String diff) {
     this.diff = diff;
   }
 
+  public String getCharacterName() {
+    return characterName;
+  }
+
+  public void setCharacterName(String characterName) {
+    this.characterName = characterName;
+  }
+
+  @Override
+  public String toString() {
+    return "SettingChange [characterId=" + characterId + ", characterName=" + characterName
+        + ", setting=" + setting + ", newValue=" + newValue + ", diff=" + diff + "]";
+  }
 }

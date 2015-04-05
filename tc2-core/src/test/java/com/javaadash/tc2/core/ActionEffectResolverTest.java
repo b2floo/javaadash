@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.condition.Condition;
+import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.MockEffect;
 import com.javaadash.tc2.core.context.GameContext;
@@ -32,10 +33,18 @@ public class ActionEffectResolverTest extends TestCase {
           new ArrayList<Condition>(), new HashMap<String, String>()));
     }
 
-    effectResolver.resolveCardEffect(cards, new GameContext());
+    List<CardEffectLog> cardEffectDesc = new ArrayList<CardEffectLog>();
+    effectResolver.resolveCardEffect(cards, new GameContext(), cardEffectDesc);
 
     for (Effect effect : allEffects)
       assertTrue(((MockEffect) effect).isResolved());
+
+    // check one CardEffectLog has been added for each card resolved
+    assertEquals(cards.size(), cardEffectDesc.size());
+    for (CardEffectLog desc : cardEffectDesc) {
+      // check one SettingChange has been added for each effect resolved
+      assertEquals(5, desc.getSettingChanges().size());
+    }
   }
 
   public void testEndResolve() {
