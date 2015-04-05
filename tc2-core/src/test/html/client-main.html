@@ -75,7 +75,7 @@
 			STATE_BEGIN_GAME = 0;
 			STATE_PLAYER_CHOOSE_CHARACTER = 3;
 			STATE_PLAYER_CHOOSE_ACTION = 4;
-            STATE_TURN_RESOLUTION = 4;
+            STATE_TURN_RESOLUTION = 5;
 			STATE_PLAYER_CHOOSE_DISCARD = 6;
 			
 			gameState = STATE_BEGIN_GAME;
@@ -241,16 +241,42 @@
                     // update scores
                     $('#myScore').html(data.myScore);
                     $('#opponentScore').html(data.opponentScore);*/
+                    // calculate when to animate
+                    var displayMsgTimeout = 0;
 			        for(var i=0; i<data.cardEffectLogs.length; ++i) {
-                        output('<span> '+data.cardEffectLogs[i].msg+'</span>');
+                        if(i>0) {
+                            // count 2s per settingChange animation
+                            displayMsgTimeout = displayMsgTimeout + 4500 + (data.cardEffectLogs[i-1].settingChanges.length * 3000); 
+                        }
+                        timeoutDisplayMsg(data.cardEffectLogs[i].msg, displayMsgTimeout);
+                        
                         for(var j=0; j<data.cardEffectLogs[i].settingChanges.length; ++j) {
                             var settingChange = data.cardEffectLogs[i].settingChanges[j];
-                            output('<span> '+settingChange.characterName+' setting '+settingChange.setting+' '+settingChange.diff+': new value = '+ settingChange.newValue+'</span>');
+                            // fancy animation in order to make it visual
+                            if(settingChange.characterId == $('#mySelectedCharacter1').attr("data-cardid")) {
+                                timeoutUpdateSettings('#myCharacterSetting', settingChange, displayMsgTimeout + 1500+ (j*3000));
+                            } else if(settingChange.characterId == $('#opponentSelectedCharacter1').attr("data-cardid")) {
+                                timeoutUpdateSettings('#opponentCharacterSetting', settingChange, displayMsgTimeout + 1500+ (j*3000));
+                            }                           
                         }
-                        //displaySettings( '#myCharacterSetting', data.myCharacterSettings[i].settings);
                     }
                 }                      
             });
+
+            function timeoutDisplayMsg(msg, timeout) {
+                setTimeout(function () {
+                    output('<span> '+msg+'</span>');
+                }, timeout);
+            }
+
+            function timeoutUpdateSettings(elementPrefix, settingChange, timeout) {
+                setTimeout(function () {
+                    output('<span> '+settingChange.characterName+' setting '+settingChange.setting+' '+settingChange.diff+': new value = '+ settingChange.newValue+'</span>');
+                    var tdParentHeight = $(elementPrefix+'Diff'+settingChange.setting).height();
+                    $(elementPrefix+'Diff'+settingChange.setting).html('<div class="life-diff" style="height:'+tdParentHeight+'px;">'+settingChange.diff+'</div>');
+                    $(elementPrefix+''+settingChange.setting).text(settingChange.newValue);
+                }, timeout);
+            }
             
             socket.on('end_game', function(data) {
                 gameState = data.gameState;
@@ -297,10 +323,9 @@
             }
 
             function displaySettings(elementId, settings) {
-                $(elementId+'Life').text(settings['LIFE']);
-                $(elementId+'Att').text(settings['ATT']);
-                $(elementId+'Def').text(settings['DEF']);
-                $(elementId+'Mana').text(settings['MANA']);
+                for (var key in settings) {
+                    $(elementId+''+key).text(settings[key]);
+                }
             }
 
 			$(document).ready(function() {
@@ -528,36 +553,24 @@
                                                     <table class="table-condensed">
                                                       <tbody>
                                                         <tr>
-                                                          <td><span class="label label-danger">Life</span>
-                                                          </td>
-                                                          <td><span id="myCharacterSettingLife" class="label label-default">--</span>
-                                                          </td>
-                                                          <td id="myCharacterSettingDiffLife">
-                                                          </td>
+                                                          <td><span class="label label-danger">Life</span></td>
+                                                          <td><span id="myCharacterSettingLIFE" class="label label-default">--</span></td>
+                                                          <td id="myCharacterSettingDiffLIFE"></td>
                                                         </tr>
                                                         <tr>
-                                                          <td> <span class="label label-warning">Attack</span>
-                                                          </td>
-                                                          <td><span id="myCharacterSettingAtt" class="label label-default">--</span>
-                                                          </td>
-                                                          <td id="myCharacterSettingDiffAtt">
-                                                          </td>
+                                                          <td> <span class="label label-warning">Attack</span></td>
+                                                          <td><span id="myCharacterSettingATT" class="label label-default">--</span></td>
+                                                          <td id="myCharacterSettingDiffATT"> </td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-info">Defense</span>
-                                                          </td>
-                                                          <td><span id="myCharacterSettingDef" class="label label-default">--</span>
-                                                          </td>
-                                                          <td id="myCharacterSettingDiffDef">
-                                                          </td>
+                                                          <td><span class="label label-info">Defense</span></td>
+                                                          <td><span id="myCharacterSettingDEF" class="label label-default">--</span></td>
+                                                          <td id="myCharacterSettingDiffDEF"></td>
                                                         </tr>
                                                         <tr>
-                                                          <td><span class="label label-primary">Mana</span>
-                                                          </td>
-                                                          <td><span id="myCharacterSettingMana" class="label label-default">--</span>
-                                                          </td>
-                                                          <td id="myCharacterSettingDiffMana">
-                                                          </td>
+                                                          <td><span class="label label-primary">Mana</span></td>
+                                                          <td><span id="myCharacterSettingMANA" class="label label-default">--</span></td>
+                                                          <td id="myCharacterSettingDiffMANA"></td>
                                                         </tr>
                                                       </tbody>
                                                     </table>
@@ -575,31 +588,27 @@
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                                     <table class="table-condensed pull-right">
                                                       <tbody>
-                                                        <tr>              <td id="opponentCharacterSettingDiffLife">
-                                                          </td>
-                                                          <td><span class="label label-danger">Life</span></td>
-                                                          <td><span id="opponentCharacterSettingLife" class="label label-default">--</span></td>
-
+                                                        <tr> 
+                                                            <td id="opponentCharacterSettingDiffLIFE"></td>
+                                                            <td><span class="label label-danger">Life</span></td>
+                                                            <td><span id="opponentCharacterSettingLIFE" class="label label-default">--</span></td>
                                                         </tr>
                                                         <tr>
-                                                                        <td id="opponentCharacterSettingDiffAtt">
-                                                          </td>
+                                                          <td id="opponentCharacterSettingDiffATT"></td>
                                                           <td> <span class="label label-warning">Attack</span></td>
-                                                          <td><span id="opponentCharacterSettingAtt" class="label label-default">--</span></td>
+                                                          <td><span id="opponentCharacterSettingATT" class="label label-default">--</span></td>
 
                                                         </tr>
                                                         <tr>
-                                                          <td id="opponentCharacterSettingDiffDef">
-                                                          </td>
+                                                          <td id="opponentCharacterSettingDiffDEF"></td>
                                                           <td><span class="label label-info">Defense</span></td>
-                                                          <td><span id="opponentCharacterSettingDef" class="label label-default">--</span></td>
+                                                          <td><span id="opponentCharacterSettingDEF" class="label label-default">--</span></td>
 
                                                         </tr>
                                                         <tr>
-                                                                       <td id="opponentCharacterSettingDiffMana">
-                                                          </td>
+                                                            <td id="opponentCharacterSettingDiffMANA"></td>
                                                           <td><span class="label label-primary">Mana</span></td>
-                                                          <td><span id="opponentCharacterSettingMana" class="label label-default">--</span></td>
+                                                          <td><span id="opponentCharacterSettingMANA" class="label label-default">--</span></td>
                                              
                                                         </tr>
                                                       </tbody>
