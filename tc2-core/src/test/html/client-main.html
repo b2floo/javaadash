@@ -390,6 +390,12 @@
 	                 '@class' : 'com.javaadash.tc2.core.interfaces.message.ChooseDiscardMessage'};
 	                socket.emit('choose_discard', discardMsg);
                     discardedCards = [];
+                    // disable all cards in discard
+                    var allDiscardedCards = $('#myDiscardList div a');
+                    for(var i=0; i<allDiscardedCards.length; ++i) {
+                        $('img',allDiscardedCards[i]).addClass("disabled");
+                        $(allDiscardedCards[i]).removeAttr("onclick");
+                    } 
                     output('<span class="wait-msg">Waiting for opponent to make his choice...</span>');
 				}
 			}
