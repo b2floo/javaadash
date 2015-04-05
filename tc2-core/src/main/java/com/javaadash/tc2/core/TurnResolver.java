@@ -74,12 +74,6 @@ public class TurnResolver {
 
     // now send a message with all logged actions
     playManager.updateSettings(context, cardEffectLogs);
-    try {
-      Thread.sleep(cardEffectLogs.size() * 2000);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
   }
 
   private Logger log = LoggerFactory.getLogger(TurnResolver.class);

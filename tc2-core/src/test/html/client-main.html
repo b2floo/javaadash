@@ -83,6 +83,7 @@
             discardedCards = [];
             myCharacterSettings = [];
 			defaultSettings = {'LIFE': '--', 'ATT': '--', 'DEF': '--', 'MANA': '--'};
+            updateSettingsEnd = 0;
 
 			console.log( 'javascript -- start' );
 			
@@ -131,8 +132,9 @@
 
                 output('<span class="play-msg">Select a character, then click "Play"</span>');
        		});
-       		
-       		socket.on('update_game', function(data) {
+            
+            function updateGame(data) {
+                console.log('new Date()='+new Date());
                 gameState = data.gameState;
                 console.log('Update :: turn '+data.turn);
                 switch(gameState) {
@@ -226,40 +228,63 @@
                 // update scores
                 $('#myScore').html(data.myScore);
                 $('#opponentScore').html(data.opponentScore);
+            }
+
+       		socket.on('update_game', function(data) {
+                // special case for TURN_RESOLUTION, wait for the end
+                if(gameState == STATE_TURN_RESOLUTION || updateSettingsEnd != 0) {
+                    setTimeout(function() {
+                        checkEndUpdateSettings(data);
+                    }, 500);
+                } else {
+                    updateGame(data);
+                }
             });
+
+            function checkEndUpdateSettings(data) {
+                console.log('new Date()='+new Date());
+                var timeDiff = updateSettingsEnd.getTime() - new Date().getTime();
+                console.log('timeDiff='+timeDiff);
+                updateSettingsEnd = 0;
+                if(timeDiff > 0) {
+                    setTimeout(function() {
+                        updateGame(data);
+                    }, timeDiff);
+                } else {
+                    updateGame(data)
+                }
+            }
 
             socket.on('update_settings', function(data) {
                 if(gameState == STATE_TURN_RESOLUTION) {
-                    /*output('<span>'+data.message+'</span>');
-
-			        for(var i=0; i<data.myCharacterSettings.length; ++i) {
-                        displaySettings( '#myCharacterSetting', data.myCharacterSettings[i].settings);
-                    }
-			        for(var i=0; i<data.opponentCharacterSettings.length; ++i) {
-                        displaySettings( '#opponentCharacterSetting', data.opponentCharacterSettings[i].settings);
-                    }
-                    // update scores
-                    $('#myScore').html(data.myScore);
-                    $('#opponentScore').html(data.opponentScore);*/
                     // calculate when to animate
                     var displayMsgTimeout = 0;
 			        for(var i=0; i<data.cardEffectLogs.length; ++i) {
                         if(i>0) {
                             // count 2s per settingChange animation
-                            displayMsgTimeout = displayMsgTimeout + 4500 + (data.cardEffectLogs[i-1].settingChanges.length * 3000); 
+                            displayMsgTimeout = displayMsgTimeout + 3000; 
                         }
                         timeoutDisplayMsg(data.cardEffectLogs[i].msg, displayMsgTimeout);
                         
                         for(var j=0; j<data.cardEffectLogs[i].settingChanges.length; ++j) {
                             var settingChange = data.cardEffectLogs[i].settingChanges[j];
+                            if(j==0) {
+                                displayMsgTimeout = displayMsgTimeout + 1500;
+                            } else {
+                                displayMsgTimeout = displayMsgTimeout + 3000;
+                            }
                             // fancy animation in order to make it visual
                             if(settingChange.characterId == $('#mySelectedCharacter1').attr("data-cardid")) {
-                                timeoutUpdateSettings('#myCharacterSetting', settingChange, displayMsgTimeout + 1500+ (j*3000));
+                                timeoutUpdateSettings('#myCharacterSetting', settingChange, displayMsgTimeout);
                             } else if(settingChange.characterId == $('#opponentSelectedCharacter1').attr("data-cardid")) {
-                                timeoutUpdateSettings('#opponentCharacterSetting', settingChange, displayMsgTimeout + 1500+ (j*3000));
+                                timeoutUpdateSettings('#opponentCharacterSetting', settingChange, displayMsgTimeout);
                             }                           
                         }
                     }
+                    console.log('displayMsgTimeout='+displayMsgTimeout);
+                    updateSettingsEnd = new Date(new Date().getTime() + displayMsgTimeout + 3000);
+                    console.log('updateSettingsEnd='+updateSettingsEnd);
+                    gameState = STATE_PLAYER_CHOOSE_DISCARD;
                 }                      
             });
 
