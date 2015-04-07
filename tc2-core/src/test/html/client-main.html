@@ -232,7 +232,7 @@
 
        		socket.on('update_game', function(data) {
                 // special case for TURN_RESOLUTION, wait for the end
-                if(gameState == STATE_TURN_RESOLUTION || updateSettingsEnd != 0) {
+                if(data.gameState == STATE_PLAYER_CHOOSE_DISCARD && (gameState == STATE_TURN_RESOLUTION || updateSettingsEnd != 0)) {
                     setTimeout(function() {
                         checkEndUpdateSettings(data);
                     }, 500);

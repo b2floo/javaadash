@@ -112,10 +112,13 @@ public class PlayManager {
       player1msg.setMyBoard(player1Board);
       player1msg.setMyCharacterBoard(player1CharacterBoard);
       player1msg.setMyDiscard(player1Discard);
-      player1msg.setMyOpponentCharacters(player2Characters);
-      player1msg.setMyOpponentBoard(player2Board);
+      if (context.getState() != GameState.PLAYER_CHOOSE_ACTION) {
+        player1msg.setMyOpponentCharacters(player2Characters);
+        player1msg.setMyOpponentBoard(player2Board);
+        player1msg.setMyOpponentCharacterBoard(player2CharacterBoard);
+      }
       player1msg.setMyOpponentDiscard(player2Discard);
-      player1msg.setMyOpponentCharacterBoard(player2CharacterBoard);
+
       player1msg.setGameState(context.getState());
       player1msg.setTurn(context.getTurn());
       player1msg.setMyScore(player1score);
@@ -129,9 +132,12 @@ public class PlayManager {
       player2msg.setMyBoard(player2Board);
       player2msg.setMyCharacterBoard(player2CharacterBoard);
       player2msg.setMyDiscard(player2Discard);
-      player2msg.setMyOpponentCharacters(player1Characters);
-      player2msg.setMyOpponentBoard(player1Board);
-      player2msg.setMyOpponentCharacterBoard(player1CharacterBoard);
+      if (context.getState() != GameState.PLAYER_CHOOSE_ACTION) {
+        player2msg.setMyOpponentCharacters(player1Characters);
+        player2msg.setMyOpponentBoard(player1Board);
+        player2msg.setMyOpponentCharacterBoard(player1CharacterBoard);
+      }
+
       player2msg.setMyOpponentDiscard(player1Discard);
       player2msg.setGameState(context.getState());
       player2msg.setTurn(context.getTurn());

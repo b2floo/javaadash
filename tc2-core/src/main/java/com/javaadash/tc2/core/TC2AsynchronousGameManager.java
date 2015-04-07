@@ -146,6 +146,8 @@ public class TC2AsynchronousGameManager {
           log.info("All cards on board, can start resolution");
           // after cards are decided, now we resolve the turn
           context.setState(GameState.TURN_RESOLUTION);
+          playManager.updateGameStatus(context);
+
           turnResolver.resolveTurn(context);
           log.info("Turn resolved!!");
 
