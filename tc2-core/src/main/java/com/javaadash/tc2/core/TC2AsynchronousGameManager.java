@@ -185,6 +185,7 @@ public class TC2AsynchronousGameManager {
                 if (inHandAction.getAvailable()) {
                   data.getPlayer().getIngameDeck()
                       .setCardLocation(inHandAction, CardLocation.DISCARD);
+                  inHandAction.setAvailable(false);
                 } else {
                   throw new IllegalStateException("Selected discard [" + discardCard.getId()
                       + "] match an action but is not available for " + data.getPlayer().getName());

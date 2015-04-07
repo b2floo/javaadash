@@ -152,6 +152,7 @@
                 emptyCard("#myCharacter2");
                 emptyCard("#myCharacter3");
 				for(var i=0; i<data.myCharacters.length; ++i) {
+                    
                     if(data.myCharacters[i].available && gameState == STATE_PLAYER_CHOOSE_CHARACTER)  {
                         displayCard("#myCharacter"+(i+1), data.myCharacters[i].id, data.myCharacters[i].cardCode, 'right', true, 'selectCharacter(this)');
                         myCharacterSettings[data.myCharacters[i].id] = data.myCharacters[i].settings;
@@ -163,12 +164,13 @@
                 
                 console.log('Available cards:');
                 logCardList(data.myHand);
-				emptyCard("#myAction1");
+                emptyCard("#myAction1");
                 emptyCard("#myAction2");
                 emptyCard("#myAction3");
-				emptyCard("#myAction4");
-				emptyCard("#myAction5");
+                emptyCard("#myAction4");
+                emptyCard("#myAction5");
 				for(var i=0; i<data.myHand.length; ++i) {
+
                     if(data.myHand[i].available && (gameState == STATE_PLAYER_CHOOSE_ACTION || gameState == STATE_PLAYER_CHOOSE_DISCARD))  {
                         displayCard("#myAction"+(i+1), data.myHand[i].id, data.myHand[i].cardCode, 'right', true, 'selectAction(this)');
                     } else {
@@ -178,7 +180,7 @@
 
                 console.log('My character board:');
                 logCardList(data.myCharacterBoard);
-				emptyCard("#mySelectedCharacter1");
+                emptyCard("#mySelectedCharacter1");
                 displaySettings('#myCharacterSetting', defaultSettings);
 				for(var i=0; i<data.myCharacterBoard.length; ++i) {
                     displayCard("#mySelectedCharacter"+(i+1), data.myCharacterBoard[i].id, data.myCharacterBoard[i].cardCode, 'right', true, '');
@@ -187,14 +189,22 @@
 				
                 console.log('My board:');
                 logCardList(data.myBoard);
-				emptyCard("#mySelectedAction1");
-                emptyCard("#mySelectedAction2");
+                emptyCard("#mySelectedAction1");
 				for(var i=0; i<data.myBoard.length; ++i) {
                     displayCard("#mySelectedAction"+(i+1), data.myBoard[i].id, data.myBoard[i].cardCode, 'right', true, '');
                 } 
 				
                 console.log('My discard:');
                 logCardList(data.myDiscard);
+                $("#myDiscardList").empty();
+				for(var i=0; i<data.myDiscard.length; ++i) {
+                    $("#myDiscardList").append('<div class="col-lg-2 col-md-3 col-xs-4 thumb"><a id="myDiscard'+currentDiscardIndex+'"  class="thumbnail"><img></a></div>');
+                    displayCard('#myDiscard'+currentDiscardIndex, data.myDiscard[i].id, data.myDiscard[i].cardCode, 'bottom');
+                    if(i == data.myDiscard.length-1) {
+                        $('img','#myDiscardPreview').attr("src", "images/"+data.myDiscard[i].cardCode+"_small.png");
+                    }
+                    currentDiscardIndex++;
+                }
 				
                 console.log('Opponent characters:');
                 logCardList(data.myOpponentCharacters);

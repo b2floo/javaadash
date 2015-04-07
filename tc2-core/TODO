@@ -1,9 +1,11 @@
 
 5/ add timer for each state
-7/ display discard as a line
-8/ take the boolean available in account to forbid click
-9/ show score on screen
-10/ add turn resolve steps messages
+
+14/ out of game character should be seen but not available
+15/ BUG DISPLAY: screen sometimes shift to right when hovering some cards
+16/ BUG DISPLAY: column for character's settings changes size depending on content
+17/ add characters settings on screen even when not selected
+18/ show opponent discard
 
 + clean code!
 
@@ -15,3 +17,10 @@ DONE:
 4/ add a box for player name
 4/ add choice by player instead of automatic game
 6/ split cards location on screen
+7/ display discard as a line
+8/ take the boolean available in account to forbid click
+9/ show score on screen
+10/ add turn resolve steps messages
+11/ BUG: action played by opponent is not shown before starting update settings
+12/ BUG: played actions are not shown in discard
+13/ BUG: opponent character is displayed before choosing actions
