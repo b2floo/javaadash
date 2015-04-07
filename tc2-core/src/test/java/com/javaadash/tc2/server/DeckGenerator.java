@@ -1,8 +1,8 @@
 package com.javaadash.tc2.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,7 +27,7 @@ public class DeckGenerator {
 
     deck = new Deck(limits);
 
-    Collection<Effect> effects = generator.getEffets(1);
+    List<Effect> effects = generator.getEffets(1);
     deck.addCard(new Card(Integer.toString(idGenerator.getAndIncrement()), CardType.CHARACTER,
         "ABI", effects, new ArrayList<Condition>(), Card
             .createSettings("ATT:5 - DEF:3 - LIFE: 8 - CLASS: WIZARD - GUILD: ZIL")));
@@ -39,7 +39,7 @@ public class DeckGenerator {
     // Card.createSettings("ATT:5 - DEF:1 - LIFE: 7 - CLASS: THIEF - GUILD: ZIL")));
     for (int i = 0; i < nbActions; i++) {
       effects = generator.getEffets(1);
-      Collection<Condition> conditions = generator.getConditions();
+      List<Condition> conditions = generator.getConditions();
       deck.addCard(new Card(Integer.toString(idGenerator.getAndIncrement()), CardType.ACTION,
           "ACTION" + i, effects, conditions, new HashMap<String, String>()));
     }

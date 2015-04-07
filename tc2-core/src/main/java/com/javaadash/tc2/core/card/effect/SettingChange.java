@@ -7,44 +7,45 @@ public class SettingChange {
   private String newValue;
   private String diff;
 
-  public Integer getCharacterId() {
-    return characterId;
+  public SettingChange(Integer characterId, String characterName, String setting) {
+    this(characterId, characterName, setting, null, null);
   }
 
-  public void setCharacterId(Integer characterId) {
+  public SettingChange(Integer characterId, String characterName, String setting, String newValue,
+      String diff) {
     this.characterId = characterId;
+    this.characterName = characterName;
+    this.setting = setting;
+    this.newValue = newValue;
+    this.diff = diff;
+  }
+
+  public Integer getCharacterId() {
+    return characterId;
   }
 
   public String getSetting() {
     return setting;
   }
 
-  public void setSetting(String setting) {
-    this.setting = setting;
-  }
-
   public String getNewValue() {
     return newValue;
-  }
-
-  public void setNewValue(String newValue) {
-    this.newValue = newValue;
   }
 
   public String getDiff() {
     return diff;
   }
 
-  public void setDiff(String diff) {
-    this.diff = diff;
-  }
-
   public String getCharacterName() {
     return characterName;
   }
 
-  public void setCharacterName(String characterName) {
-    this.characterName = characterName;
+  public void setNewValue(String newValue) {
+    this.newValue = newValue;
+  }
+
+  public void setDiff(String diff) {
+    this.diff = diff;
   }
 
   @Override

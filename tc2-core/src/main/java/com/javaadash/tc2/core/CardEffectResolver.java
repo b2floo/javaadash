@@ -1,7 +1,7 @@
 package com.javaadash.tc2.core;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class CardEffectResolver {
    * @param cards
    * @param context
    */
-  public void resolveCardEffect(Collection<Card> cards, GameContext context,
+  public void resolveCardEffect(List<Card> cards, GameContext context,
       List<CardEffectLog> cardEffectLogs) {
     for (Card card : cards) {
       log.debug("Resolving card {} effects", card);
@@ -47,14 +47,16 @@ public class CardEffectResolver {
    * @param cards
    * @param context
    */
-  public void resolveEndCardEffect(Collection<Card> cards, GameContext context) {
+  public void resolveEndCardEffect(List<Card> cards, GameContext context) {
+
     for (Card card : cards) {
       log.debug("Resolving card {} end effects", card);
-      for (Effect effect : card.getEffects()) {
+      ListIterator<Effect> effectIt = card.getEffects().listIterator(card.getEffects().size());
+      while (effectIt.hasPrevious()) {
+        Effect effect = effectIt.previous();
         log.info("End Effect : {}", effect);
         effect.resolveEnd(context);
       }
     }
   }
-
 }

@@ -14,7 +14,7 @@ public class GameContext {
   private LinkedMap<String, PlayerData> playersData = new LinkedMap<String, PlayerData>();
   private boolean alternate = false;
 
-  private int turn = 0;
+  private int turn = 1;
   private Player currentPlayer = null;
   private int state = 0;
   private Winner winner = null;

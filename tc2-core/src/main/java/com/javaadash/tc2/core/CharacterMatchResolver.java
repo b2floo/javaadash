@@ -27,10 +27,7 @@ public class CharacterMatchResolver {
     CardEffectLog desc =
         new CardEffectLog(char1.getId(), "Fight: " + char1.getDescription() + " attacks "
             + char2.getDescription());
-    SettingChange settingChange = new SettingChange();
-    settingChange.setSetting("LIFE");
-    settingChange.setCharacterId(char2.getId());
-    settingChange.setCharacterName(char2.getDescription());
+    SettingChange settingChange = new SettingChange(char2.getId(), char2.getDescription(), "LIFE");
     desc.getSettingChanges().add(settingChange);
     cardEffectLogs.add(desc);
 

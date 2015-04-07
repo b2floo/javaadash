@@ -2,7 +2,6 @@ package com.javaadash.tc2.core.server.netty.listener;
 
 import java.util.Map;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +71,7 @@ public class JoinGameListener implements DataListener<JoinGameMessage> {
 
       GameContext gameContext = new GameContext(pendingGameRequest.getValue(), p2);
       gameContext.setState(GameState.BEGIN_GAME);
-      gameContext.setTurn(0);
+      gameContext.setTurn(1);
 
       lobby.removePendingGameRequest(roomId);
       lobby.getCurrentGames().put(roomId, gameContext);

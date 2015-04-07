@@ -1,7 +1,6 @@
 package com.javaadash.tc2.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,9 +41,9 @@ public class TurnResolver {
     effectResolver.resolveCardEffect(Collections.singletonList(char2), context, cardEffectLogs);
 
     // then resolve actions effects
-    Collection<Card> actions1 =
+    List<Card> actions1 =
         context.getFirstPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD);
-    Collection<Card> actions2 =
+    List<Card> actions2 =
         context.getSecondPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD);
 
     context.setCurrentPlayer(context.getFirstPlayer());

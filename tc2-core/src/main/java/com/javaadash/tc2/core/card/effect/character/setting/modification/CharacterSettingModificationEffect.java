@@ -19,7 +19,6 @@ public class CharacterSettingModificationEffect implements Effect {
   protected String setting = null;
   protected int modifier = 0;
   protected Target target;
-  protected TargetResolver targetResolver = new TargetResolver();
 
   public CharacterSettingModificationEffect(String setting, int modifier, Target target) {
     this.setting = setting;
@@ -28,14 +27,12 @@ public class CharacterSettingModificationEffect implements Effect {
   }
 
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
-    for (Card charr : targetResolver.getCharactersFromTarget(target, context)) {
+    for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
       Integer newValue = charr.getIntSetting(setting) + modifier;
       charr.setIntSetting(setting, newValue);
       log.debug("New settings : {}", charr);
-      SettingChange settingChange = new SettingChange();
-      settingChange.setCharacterId(charr.getId());
-      settingChange.setCharacterName(charr.getDescription());
-      settingChange.setSetting(setting);
+      SettingChange settingChange =
+          new SettingChange(charr.getId(), charr.getDescription(), setting);
       settingChange.setNewValue(Integer.toString(newValue));
       settingChange.setDiff((modifier > 0 ? "+" + modifier : "" + modifier));
       cardEffectLog.getSettingChanges().add(settingChange);
@@ -43,11 +40,9 @@ public class CharacterSettingModificationEffect implements Effect {
   }
 
   public void resolveEnd(GameContext context) {
-    for (Card charr : targetResolver.getCharactersFromTarget(target, context)) {
+    for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
       charr.setIntSetting(setting, charr.getIntSetting(setting) - modifier);
       log.debug("New settings : {}", charr);
-      // PlayManager.updateSettings(context, charr.getDescription() + " " + setting + " "
-      // + (modifier < 0 ? "+" + (-modifier) : "-" + modifier));
     }
   }
 

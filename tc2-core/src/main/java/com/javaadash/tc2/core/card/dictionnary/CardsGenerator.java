@@ -1,10 +1,11 @@
 package com.javaadash.tc2.core.card.dictionnary;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import com.javaadash.tc2.core.card.condition.CharacterSettingCondition;
-import com.javaadash.tc2.core.card.condition.CharacterSettingCondition.Sign;
+import com.javaadash.tc2.core.card.condition.CharacterSettingCondition.Operator;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
@@ -14,7 +15,7 @@ import com.javaadash.tc2.core.card.effect.turn.TurnActiveEffect;
 
 public class CardsGenerator {
 
-  public Collection<Effect> getEffets(int number) {
+  public List<Effect> getEffets(int number) {
     HashSet<Effect> effects = new HashSet<Effect>();
     for (int i = 0; i < number; i++) {
       int random = (int) (Math.random() * 11);
@@ -67,10 +68,10 @@ public class CardsGenerator {
           break;
       }
     }
-    return effects;
+    return new ArrayList<Effect>(effects);
   }
 
-  public Collection<Condition> getConditions() {
+  public List<Condition> getConditions() {
     HashSet<Condition> conditions = new HashSet<Condition>();
 
     if (Math.random() > 0.5) {
@@ -78,28 +79,30 @@ public class CardsGenerator {
 
       switch (random) {
         case 0:
-          conditions.add(new CharacterSettingCondition("DEF", Sign.GREATER, "2", Target.SELF));
+          conditions.add(new CharacterSettingCondition("DEF", Operator.GREATER, "2", Target.SELF));
           break;
         case 1:
-          conditions.add(new CharacterSettingCondition("LIFE", Sign.GREATER, "4", Target.SELF));
+          conditions.add(new CharacterSettingCondition("LIFE", Operator.GREATER, "4", Target.SELF));
           break;
         case 2:
-          conditions.add(new CharacterSettingCondition("LIFE", Sign.LESS_EQUALS, "3", Target.SELF));
+          conditions.add(new CharacterSettingCondition("LIFE", Operator.LESS_EQUALS, "3",
+              Target.SELF));
           break;
         case 3:
-          conditions.add(new CharacterSettingCondition("GUILD", Sign.EQUALS, "NOZ", Target.SELF));
+          conditions
+              .add(new CharacterSettingCondition("GUILD", Operator.EQUALS, "NOZ", Target.SELF));
           break;
         case 4:
-          conditions
-              .add(new CharacterSettingCondition("CLASS", Sign.EQUALS, "WARRIOR", Target.SELF));
+          conditions.add(new CharacterSettingCondition("CLASS", Operator.EQUALS, "WARRIOR",
+              Target.SELF));
           break;
         case 5:
-          conditions
-              .add(new CharacterSettingCondition("CLASS", Sign.EQUALS, "PRIEST", Target.SELF));
+          conditions.add(new CharacterSettingCondition("CLASS", Operator.EQUALS, "PRIEST",
+              Target.SELF));
           break;
       }
     }
 
-    return conditions;
+    return new ArrayList<Condition>(conditions);
   }
 }

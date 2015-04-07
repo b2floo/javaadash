@@ -26,13 +26,13 @@ public class TargetResolverTest extends TestCase {
 
     // current player= p1
     context.setCurrentPlayer(p1);
-    List<Card> targets = targetResolver.getCharactersFromTarget(Target.SELF, context);
+    List<Card> targets = TargetResolver.getCharactersFromTarget(Target.SELF, context);
     assertEquals(1, targets.size());
     assertEquals(char1, targets.get(0));
 
     // current player= p2
     context.setCurrentPlayer(p2);
-    targets = targetResolver.getCharactersFromTarget(Target.SELF, context);
+    targets = TargetResolver.getCharactersFromTarget(Target.SELF, context);
     assertEquals(1, targets.size());
     assertEquals(char2, targets.get(0));
   }
@@ -50,16 +50,15 @@ public class TargetResolverTest extends TestCase {
 
     // current player= p1
     context.setCurrentPlayer(p1);
-    List<Card> targets = targetResolver.getCharactersFromTarget(Target.OPPONENT, context);
+    List<Card> targets = TargetResolver.getCharactersFromTarget(Target.OPPONENT, context);
     assertEquals(1, targets.size());
     assertEquals(char2, targets.get(0));
 
     // current player= p2
     context.setCurrentPlayer(p2);
-    targets = targetResolver.getCharactersFromTarget(Target.OPPONENT, context);
+    targets = TargetResolver.getCharactersFromTarget(Target.OPPONENT, context);
     assertEquals(1, targets.size());
     assertEquals(char1, targets.get(0));
   }
 
-  protected TargetResolver targetResolver = new TargetResolver();
 }

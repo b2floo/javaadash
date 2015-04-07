@@ -17,7 +17,7 @@ public class MockEffect implements Effect {
   @Override
   public void resolve(GameContext context, CardEffectLog desc) {
     resolved = true;
-    desc.getSettingChanges().add(new SettingChange());
+    desc.getSettingChanges().add(new SettingChange(null, null, null));
   }
 
   @Override

@@ -3,9 +3,9 @@ package com.javaadash.tc2.core.card;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,8 +20,8 @@ public class Card implements Serializable {
   protected String cardCode;
   protected String description;
   protected Integer type;
-  protected Collection<Effect> effects = new ArrayList<Effect>();
-  protected Collection<Condition> conditions = new ArrayList<Condition>();
+  protected List<Effect> effects = new ArrayList<Effect>();
+  protected List<Condition> conditions = new ArrayList<Condition>();
   protected Map<String, String> settings = new HashMap<String, String>();
   protected Chain chain;
   protected Boolean available = true;
@@ -41,8 +41,8 @@ public class Card implements Serializable {
     this.description = description;
   }
 
-  public Card(String cardCode, Integer type, String description, Collection<Effect> effects,
-      Collection<Condition> conditions, Map<String, String> settings) {
+  public Card(String cardCode, Integer type, String description, List<Effect> effects,
+      List<Condition> conditions, Map<String, String> settings) {
     this.id = ID_GENERATOR.getAndIncrement();
     this.cardCode = cardCode;
     this.type = type;
@@ -61,12 +61,12 @@ public class Card implements Serializable {
     this.chain = chain;
   }
 
-  public Collection<Effect> getEffects() {
-    return Collections.unmodifiableCollection(effects);
+  public List<Effect> getEffects() {
+    return Collections.unmodifiableList(effects);
   }
 
-  public Collection<Condition> getConditions() {
-    return Collections.unmodifiableCollection(conditions);
+  public List<Condition> getConditions() {
+    return Collections.unmodifiableList(conditions);
   }
 
   public int getIntSetting(String setting) {

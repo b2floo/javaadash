@@ -22,6 +22,13 @@ public class TurnActiveEffect implements Effect {
     this.turns = turns;
   }
 
+  public TurnActiveEffect(Effect effect, int[] turns) {
+    this.effect = effect;
+    for (int t : turns) {
+      this.turns.add(t);
+    }
+  }
+
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
     if (!turns.contains(context.getTurn())) {
       log.debug("Effect {} is not effective", this);

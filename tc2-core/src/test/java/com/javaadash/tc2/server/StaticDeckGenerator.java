@@ -2,7 +2,6 @@ package com.javaadash.tc2.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.card.condition.Condition;
+import com.javaadash.tc2.core.card.dictionnary.CardDictionary;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.character.setting.modification.CharacterSettingModificationEffect;
@@ -26,24 +26,21 @@ public class StaticDeckGenerator {
 
     deck = new Deck(limits);
 
-    Collection<Effect> effects = new ArrayList<Effect>();
-    deck.addCard(new Card("90001", CardType.CHARACTER, "ANASH", effects,
-        new ArrayList<Condition>(), Card
-            .createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: THIEF - GUILD: MERCENARY")));
-    deck.addCard(new Card(
-        "90002",
-        CardType.CHARACTER,
-        "NAYCUL",
-        effects,
-        new ArrayList<Condition>(),
-        Card.createSettings("ATT:5 - DEF:2 - LIFE: 11 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY")));
-    deck.addCard(new Card(
-        "90003",
-        CardType.CHARACTER,
-        "TACOTSIRC",
-        effects,
-        new ArrayList<Condition>(),
-        Card.createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY")));
+    // Collection<Effect> effects = new ArrayList<Effect>();
+    // deck.addCard(new Card("90001", CardType.CHARACTER, "ANASH", effects, new
+    // ArrayList<Condition>(), Card
+    // .createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: THIEF - GUILD: MERCENARY")));
+    // deck.addCard(new Card( "90002", CardType.CHARACTER, "NAYCUL", effects, new
+    // ArrayList<Condition>(),
+    // Card.createSettings("ATT:5 - DEF:2 - LIFE: 11 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY"
+    // ))); deck.addCard(new Card( "90003", CardType.CHARACTER, "TACOTSIRC", effects, new
+    // ArrayList<Condition>(),
+    // Card.createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY"
+    // )));
+
+    deck.addCard(CardDictionary.getCard("90004"));
+    deck.addCard(CardDictionary.getCard("90005"));
+    deck.addCard(CardDictionary.getCard("90006"));
 
     Effect effect00041 = new CharacterSettingModificationEffect("DEF", -1, Target.OPPONENT);
     Effect effect00042 = new CharacterSettingModificationEffect("ATT", -1, Target.OPPONENT);
@@ -75,5 +72,4 @@ public class StaticDeckGenerator {
 
     return deck;
   }
-
 }
