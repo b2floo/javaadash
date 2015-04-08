@@ -23,8 +23,8 @@ public class SettingActiveEffectTest extends TestCase {
   @Override
   protected void setUp() throws Exception {
     settingActiveEffect =
-        new SettingActiveEffect(mockEffect, new CharacterSettingCondition("LIFE", Operator.EQUALS, "3",
-            Target.SELF));
+        new SettingActiveEffect(mockEffect, new CharacterSettingCondition("LIFE", Operator.EQUALS,
+            "3", Target.SELF));
   }
 
   public void testResolve() throws TC2CoreException {
@@ -54,8 +54,12 @@ public class SettingActiveEffectTest extends TestCase {
     context.setCurrentPlayer(p1);
 
     settingActiveEffect.resolveEnd(context);
-    assertTrue(mockEffect.isEndResolved());
+    assertFalse(mockEffect.isEndResolved());
 
+    // only launched when effect was active
+    settingActiveEffect.resolve(context, new CardEffectLog(0, ""));
+    settingActiveEffect.resolveEnd(context);
+    assertTrue(mockEffect.isEndResolved());
   }
 
 
