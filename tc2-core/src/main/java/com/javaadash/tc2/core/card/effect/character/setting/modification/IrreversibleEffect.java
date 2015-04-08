@@ -29,6 +29,6 @@ public class IrreversibleEffect implements Effect {
 
   @Override
   public String toString() {
-    return new StringBuilder().append(super.toString()).append(" IRREVERSIBLE").toString();
+    return "IrreversibleEffect [effect=" + effect + "]";
   }
 }

@@ -122,7 +122,9 @@ public class Card implements Serializable {
     Map<String, String> settings = new HashMap<String, String>();
     for (String set : desc.split("-")) {
       String[] s = set.trim().split(":");
-      settings.put(s[0].trim(), s[1].trim());
+      if (s.length > 1) {
+        settings.put(s[0].trim(), s[1].trim());
+      }
     }
     return settings;
   }
