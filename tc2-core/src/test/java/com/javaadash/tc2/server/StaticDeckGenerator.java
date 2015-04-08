@@ -26,18 +26,6 @@ public class StaticDeckGenerator {
 
     deck = new Deck(limits);
 
-    // Collection<Effect> effects = new ArrayList<Effect>();
-    // deck.addCard(new Card("90001", CardType.CHARACTER, "ANASH", effects, new
-    // ArrayList<Condition>(), Card
-    // .createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: THIEF - GUILD: MERCENARY")));
-    // deck.addCard(new Card( "90002", CardType.CHARACTER, "NAYCUL", effects, new
-    // ArrayList<Condition>(),
-    // Card.createSettings("ATT:5 - DEF:2 - LIFE: 11 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY"
-    // ))); deck.addCard(new Card( "90003", CardType.CHARACTER, "TACOTSIRC", effects, new
-    // ArrayList<Condition>(),
-    // Card.createSettings("ATT:7 - DEF:2 - LIFE: 12 - MANA: 0 - CLASS: WARRIOR - GUILD: MERCENARY"
-    // )));
-
     deck.addCard(CardDictionary.getCard("90004"));
     deck.addCard(CardDictionary.getCard("90005"));
     deck.addCard(CardDictionary.getCard("90006"));

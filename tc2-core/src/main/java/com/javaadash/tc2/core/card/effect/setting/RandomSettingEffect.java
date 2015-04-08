@@ -13,9 +13,16 @@ import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
 import com.javaadash.tc2.core.context.GameContext;
 
+/**
+ * Effect that is linked to a setting which has a min and a max value. When resolving effect a value
+ * is randomly determined between min and max, and is applied to the setting.
+ * 
+ * @author b2floo
+ *
+ */
 public class RandomSettingEffect implements Effect {
-  private static final long serialVersionUID = 8132787058089852159L;
-  private static final Logger log = LoggerFactory.getLogger(SettingActiveEffect.class);
+  private static final long serialVersionUID = 376345004963828057L;
+  private static final Logger log = LoggerFactory.getLogger(RandomSettingEffect.class);
 
   private String setting;
   private Target target;
@@ -26,6 +33,7 @@ public class RandomSettingEffect implements Effect {
     this.target = target;
   }
 
+  @Override
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
       storedValue = charr.getSetting(setting);
@@ -46,8 +54,8 @@ public class RandomSettingEffect implements Effect {
     }
   }
 
+  @Override
   public void resolveEnd(GameContext context) {
-    // TODO sometimes might not be activated!!!
     log.debug("Effect {} need to be deactivated", this);
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
       charr.setSetting(setting, storedValue);
