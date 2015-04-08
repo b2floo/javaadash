@@ -50,10 +50,10 @@ public class SettingTransferEffect implements Effect {
 
     for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
       Integer newValue = charr.getIntSetting(firstSetting) - modifierValue;
+      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
+          firstSetting, newValue});
       charr.setIntSetting(firstSetting, newValue);
       modifierValues.put(charr.getId() + firstSetting, modifierValue);
-      log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
-          + " setting value to " + newValue);
 
       SettingChange settingChange =
           new SettingChange(charr.getId(), charr.getDescription(), firstSetting);
@@ -63,10 +63,10 @@ public class SettingTransferEffect implements Effect {
     }
     for (Card charr : TargetResolver.getCharactersFromTarget(secondSettingTarget, context)) {
       Integer newValue = charr.getIntSetting(secondSetting) + modifierValue;
+      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
+          secondSetting, newValue});
       charr.setIntSetting(secondSetting, newValue);
       modifierValues.put(charr.getId() + secondSetting, modifierValue);
-      log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
-          + " setting value to " + newValue);
 
       SettingChange settingChange =
           new SettingChange(charr.getId(), charr.getDescription(), secondSetting);
@@ -81,16 +81,16 @@ public class SettingTransferEffect implements Effect {
     for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
       Integer modifierValue = modifierValues.get(charr.getId() + firstSetting);
       Integer newValue = charr.getIntSetting(firstSetting) + modifierValue;
+      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
+          firstSetting, newValue});
       charr.setIntSetting(firstSetting, newValue);
-      log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
-          + " setting value to " + newValue);
     }
     for (Card charr : TargetResolver.getCharactersFromTarget(secondSettingTarget, context)) {
       Integer modifierValue = modifierValues.get(charr.getId() + secondSetting);
       Integer newValue = charr.getIntSetting(secondSetting) - modifierValue;
+      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
+          secondSetting, newValue});
       charr.setIntSetting(secondSetting, newValue);
-      log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
-          + " setting value to " + newValue);
     }
   }
 
