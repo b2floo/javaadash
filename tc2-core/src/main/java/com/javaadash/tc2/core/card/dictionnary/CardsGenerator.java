@@ -10,7 +10,7 @@ import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.character.setting.modification.CharacterSettingModificationEffect;
-import com.javaadash.tc2.core.card.effect.character.setting.modification.IrreversibleCharacterSettingModificationEffect;
+import com.javaadash.tc2.core.card.effect.character.setting.modification.IrreversibleEffect;
 import com.javaadash.tc2.core.card.effect.turn.TurnActiveEffect;
 
 public class CardsGenerator {
@@ -55,16 +55,16 @@ public class CardsGenerator {
               Target.OPPONENT), turns));
           break;
         case 9:
-          effects.add(new IrreversibleCharacterSettingModificationEffect("LIFE", -2,
-              Target.OPPONENT));
+          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", -2,
+              Target.OPPONENT)));
           break;
         case 10:
-          effects.add(new IrreversibleCharacterSettingModificationEffect("LIFE", -2,
-              Target.OPPONENT));
+          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", -2,
+              Target.OPPONENT)));
           break;
         case 11:
-          effects.add(new IrreversibleCharacterSettingModificationEffect("LIFE", -2,
-              Target.OPPONENT));
+          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", -2,
+              Target.OPPONENT)));
           break;
       }
     }

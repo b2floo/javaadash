@@ -34,7 +34,7 @@ public class CharacterSettingModificationEffect implements Effect {
       SettingChange settingChange =
           new SettingChange(charr.getId(), charr.getDescription(), setting);
       settingChange.setNewValue(Integer.toString(newValue));
-      settingChange.setDiff((modifier > 0 ? "+" + modifier : "" + modifier));
+      settingChange.setDiff((modifier > 0 ? "-" + modifier : "" + (-modifier)));
       cardEffectLog.getSettingChanges().add(settingChange);
     }
   }

@@ -1,6 +1,7 @@
 package com.javaadash.tc2.core.card.effect.setting;
 
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class RandomSettingEffect implements Effect {
 
   private String setting;
   private Target target;
-  private String storedValue;
+  private Map<Card, RandomRangeValue> storedValues = new HashMap<Card, RandomRangeValue>();
 
   public RandomSettingEffect(String setting, Target target) {
     this.setting = setting;
@@ -35,16 +36,15 @@ public class RandomSettingEffect implements Effect {
 
   @Override
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
+    storedValues.clear();
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
-      storedValue = charr.getSetting(setting);
-      Integer min = Integer.parseInt(storedValue.substring(0, storedValue.indexOf("/")));
-      Integer max = Integer.parseInt(storedValue.substring(storedValue.indexOf("/") + 1));
 
-      Random rand = new Random();
-      int randomValue = rand.nextInt((max - min) + 1) + min;
+      RandomRangeValue val = new RandomRangeValue(charr.getSetting(setting));
+      storedValues.put(charr, val);
+      int randomValue = val.getRandom();
 
-      log.debug("Effect " + this + " has calculated setting value " + storedValue + " to "
-          + randomValue);
+      log.debug("Effect " + this + " has calculated setting value " + charr.getSetting(setting)
+          + " to " + randomValue);
       charr.setIntSetting(setting, randomValue);
 
       SettingChange settingChange =
@@ -57,8 +57,8 @@ public class RandomSettingEffect implements Effect {
   @Override
   public void resolveEnd(GameContext context) {
     log.debug("Effect {} need to be deactivated", this);
-    for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
-      charr.setSetting(setting, storedValue);
+    for (Card charr : storedValues.keySet()) {
+      charr.setSetting(setting, storedValues.get(charr).getDescription());
     }
   }
 

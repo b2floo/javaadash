@@ -21,7 +21,8 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
 
   public void testResolve() throws Exception {
     Effect effect =
-        new IrreversibleCharacterSettingModificationEffect(setting, modifier, Target.SELF);
+        new IrreversibleEffect(new CharacterSettingModificationEffect(setting, modifier,
+            Target.SELF));
 
     // set the characters setting and put it on board
     Player startPlayer = GameUtils.getPlayer("junit1", 1, 0, 0);
@@ -49,7 +50,8 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
 
   public void testResolveEnd() throws Exception {
     Effect effect =
-        new IrreversibleCharacterSettingModificationEffect(setting, modifier, Target.SELF);
+        new IrreversibleEffect(new CharacterSettingModificationEffect(setting, modifier,
+            Target.SELF));
 
     // set the characters setting and put it on board
     Player startPlayer = GameUtils.getPlayer("junit1", 1, 0, 0);

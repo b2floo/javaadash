@@ -1,11 +1,15 @@
 package com.javaadash.tc2.core.card.effect.setting;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.Effect;
+import com.javaadash.tc2.core.card.effect.SettingChange;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
 import com.javaadash.tc2.core.context.GameContext;
@@ -23,46 +27,67 @@ public class SettingTransferEffect implements Effect {
 
   private String firstSetting;
   private Target firstSettingTarget;
-  private Integer valueModifier;
+  private RandomRangeValue modifier;
   private String secondSetting;
   private Target secondSettingTarget;
 
-  public SettingTransferEffect(String firstSetting, Target firstSettingTarget,
-      Integer valueModifier, String secondSetting, Target secondSettingTarget) {
+  private Map<String, Integer> modifierValues = new HashMap<String, Integer>();
+
+  public SettingTransferEffect(String firstSetting, Target firstSettingTarget, String modifier,
+      String secondSetting, Target secondSettingTarget) {
     super();
     this.firstSetting = firstSetting;
     this.firstSettingTarget = firstSettingTarget;
-    this.valueModifier = valueModifier;
+    this.modifier = new RandomRangeValue(modifier);
     this.secondSetting = secondSetting;
     this.secondSettingTarget = secondSettingTarget;
   }
 
   @Override
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
+    modifierValues.clear();
+    Integer modifierValue = modifier.getRandom();
+
     for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
-      Integer newValue = charr.getIntSetting(firstSetting) - valueModifier;
+      Integer newValue = charr.getIntSetting(firstSetting) - modifierValue;
       charr.setIntSetting(firstSetting, newValue);
+      modifierValues.put(charr.getId() + firstSetting, modifierValue);
       log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
           + " setting value to " + newValue);
+
+      SettingChange settingChange =
+          new SettingChange(charr.getId(), charr.getDescription(), firstSetting);
+      settingChange.setNewValue(Integer.toString(newValue));
+      settingChange.setDiff(modifierValue > 0 ? "-" + modifierValue : "+" + (-modifierValue));
+      cardEffectLog.getSettingChanges().add(settingChange);
     }
     for (Card charr : TargetResolver.getCharactersFromTarget(secondSettingTarget, context)) {
-      Integer newValue = charr.getIntSetting(secondSetting) + valueModifier;
+      Integer newValue = charr.getIntSetting(secondSetting) + modifierValue;
       charr.setIntSetting(secondSetting, newValue);
+      modifierValues.put(charr.getId() + secondSetting, modifierValue);
       log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
           + " setting value to " + newValue);
+
+      SettingChange settingChange =
+          new SettingChange(charr.getId(), charr.getDescription(), secondSetting);
+      settingChange.setNewValue(Integer.toString(newValue));
+      settingChange.setDiff(modifierValue < 0 ? "" + modifierValue + "" : "+" + modifierValue);
+      cardEffectLog.getSettingChanges().add(settingChange);
     }
   }
 
   @Override
   public void resolveEnd(GameContext context) {
     for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
-      Integer newValue = charr.getIntSetting(firstSetting) + valueModifier;
+      Integer modifierValue = modifierValues.get(charr.getId() + firstSetting);
+      Integer newValue = charr.getIntSetting(firstSetting) + modifierValue;
       charr.setIntSetting(firstSetting, newValue);
       log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
           + " setting value to " + newValue);
     }
     for (Card charr : TargetResolver.getCharactersFromTarget(secondSettingTarget, context)) {
-      Integer newValue = charr.getIntSetting(secondSetting) - valueModifier;
+      Integer modifierValue = modifierValues.get(charr.getId() + secondSetting);
+      Integer newValue = charr.getIntSetting(secondSetting) - modifierValue;
       charr.setIntSetting(secondSetting, newValue);
       log.debug("Effect " + this.toString() + " has calculated " + charr.getDescription()
           + " setting value to " + newValue);
@@ -72,7 +97,7 @@ public class SettingTransferEffect implements Effect {
   @Override
   public String toString() {
     return "SettingTransferEffect [firstSetting=" + firstSetting + ", firstSettingTarget="
-        + firstSettingTarget + ", valueModifier=" + valueModifier + ", secondSetting="
-        + secondSetting + ", secondSettingTarget=" + secondSettingTarget + "]";
+        + firstSettingTarget + ", modifier=" + modifier + ", secondSetting=" + secondSetting
+        + ", secondSettingTarget=" + secondSettingTarget + "]";
   }
 }
