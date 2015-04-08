@@ -35,7 +35,7 @@ public class CardEffectResolver {
           new CardEffectLog(card.getId(), "Activating " + card.getDescription() + " effects");
       cardEffectLogs.add(cardEffectLog);
       for (Effect effect : card.getEffects()) {
-        log.info("Effect : {}", effect);
+        log.debug("Resolving effect : {}", effect);
         effect.resolve(context, cardEffectLog);
       }
     }

@@ -33,28 +33,32 @@ public class StaticDeckGenerator {
     Effect effect00041 = new CharacterSettingModificationEffect("DEF", "-1", Target.OPPONENT);
     Effect effect00042 = new CharacterSettingModificationEffect("ATT", "-1", Target.OPPONENT);
 
-    Effect effect00071 = new CharacterSettingModificationEffect("DEF", "+1", Target.SELF);
-    Effect effect00072 = new CharacterSettingModificationEffect("ATT", "+1", Target.SELF);
+    Effect effect00071 = new CharacterSettingModificationEffect("DEF", "1", Target.SELF);
+    Effect effect00072 = new CharacterSettingModificationEffect("ATT", "1", Target.SELF);
 
-    Effect effect000261 = new CharacterSettingModificationEffect("ATT", "+2", Target.SELF);
+    Effect effect000261 = new CharacterSettingModificationEffect("ATT", "2", Target.SELF);
 
     for (int i = 0; i < nbActions; i++) {
-      if (i % 3 == 0) {
+      if (i % 5 == 0) {
         Card card0004 =
             new Card("0004", CardType.ACTION, "BARRACUDA", Arrays.asList(new Effect[] {effect00041,
                 effect00042}), new ArrayList<Condition>(), new HashMap<String, String>());
         deck.addCard(card0004);
-      } else if (i % 3 == 1) {
+      } else if (i % 5 == 1) {
         Card card0007 =
             new Card("0007", CardType.ACTION, "KUBI", Arrays.asList(new Effect[] {effect00071,
                 effect00072}), new ArrayList<Condition>(), new HashMap<String, String>());
         deck.addCard(card0007);
-      } else if (i % 3 == 2) {
+      } else if (i % 5 == 2) {
         Card card00026 =
             new Card("00026", CardType.ACTION, "BRUDAL",
                 Arrays.asList(new Effect[] {effect000261}), new ArrayList<Condition>(),
                 new HashMap<String, String>());
         deck.addCard(card00026);
+      } else if (i % 5 == 3) {
+        deck.addCard(CardDictionary.getCard("00027"));
+      } else if (i % 5 == 4) {
+        deck.addCard(CardDictionary.getCard("00028"));
       }
     }
 

@@ -14,6 +14,7 @@ public class SettingActiveEffect implements Effect {
 
   private Effect effect = null;
   private CharacterSettingCondition condition;
+  private boolean conditionFulfilled;
 
   public SettingActiveEffect(Effect effect, CharacterSettingCondition condition) {
     this.effect = effect;
@@ -24,16 +25,22 @@ public class SettingActiveEffect implements Effect {
     // check if setting comparison is fulfilled
     if (condition.isFulfilled(context)) {
       log.debug("Effect {} is effective", this);
+      conditionFulfilled = true;
       effect.resolve(context, cardEffectLog);
     } else {
       log.debug("Effect {} is NOT effective", this);
+      conditionFulfilled = false;
     }
   }
 
   public void resolveEnd(GameContext context) {
-    // TODO sometimes might not be activated!!!
-    log.debug("Effect {} need to be deactivated", this);
-    effect.resolveEnd(context);
+    if (conditionFulfilled) {
+      log.debug("Effect {} need to be deactivated", this);
+      effect.resolveEnd(context);
+    } else {
+      log.debug("Effect {} is NOT effective", this);
+    }
+    conditionFulfilled = false;
   }
 
   @Override
