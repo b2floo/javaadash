@@ -30,13 +30,13 @@ public class StaticDeckGenerator {
     deck.addCard(CardDictionary.getCard("90005"));
     deck.addCard(CardDictionary.getCard("90006"));
 
-    Effect effect00041 = new CharacterSettingModificationEffect("DEF", -1, Target.OPPONENT);
-    Effect effect00042 = new CharacterSettingModificationEffect("ATT", -1, Target.OPPONENT);
+    Effect effect00041 = new CharacterSettingModificationEffect("DEF", "-1", Target.OPPONENT);
+    Effect effect00042 = new CharacterSettingModificationEffect("ATT", "-1", Target.OPPONENT);
 
-    Effect effect00071 = new CharacterSettingModificationEffect("DEF", +1, Target.SELF);
-    Effect effect00072 = new CharacterSettingModificationEffect("ATT", +1, Target.SELF);
+    Effect effect00071 = new CharacterSettingModificationEffect("DEF", "+1", Target.SELF);
+    Effect effect00072 = new CharacterSettingModificationEffect("ATT", "+1", Target.SELF);
 
-    Effect effect000261 = new CharacterSettingModificationEffect("ATT", +2, Target.SELF);
+    Effect effect000261 = new CharacterSettingModificationEffect("ATT", "+2", Target.SELF);
 
     for (int i = 0; i < nbActions; i++) {
       if (i % 3 == 0) {

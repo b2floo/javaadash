@@ -25,45 +25,45 @@ public class CardsGenerator {
 
       switch (random) {
         case 0:
-          effects.add(new CharacterSettingModificationEffect("DEF", 1, Target.SELF));
+          effects.add(new CharacterSettingModificationEffect("DEF", "1", Target.SELF));
           break;
         case 1:
-          effects.add(new CharacterSettingModificationEffect("ATT", 1, Target.SELF));
+          effects.add(new CharacterSettingModificationEffect("ATT", "1", Target.SELF));
           break;
         case 2:
-          effects.add(new CharacterSettingModificationEffect("DEF", -1, Target.OPPONENT));
+          effects.add(new CharacterSettingModificationEffect("DEF", "-1", Target.OPPONENT));
           break;
         case 3:
-          effects.add(new CharacterSettingModificationEffect("ATT", -1, Target.OPPONENT));
+          effects.add(new CharacterSettingModificationEffect("ATT", "-1", Target.OPPONENT));
           break;
         case 4:
-          effects.add(new CharacterSettingModificationEffect("DEF", 1, Target.SELF));
+          effects.add(new CharacterSettingModificationEffect("DEF", "1", Target.SELF));
           break;
         case 5:
-          effects.add(new CharacterSettingModificationEffect("DEF", 2, Target.SELF));
+          effects.add(new CharacterSettingModificationEffect("DEF", "2", Target.SELF));
           break;
         case 6:
-          effects.add(new TurnActiveEffect(new CharacterSettingModificationEffect("DEF", 1,
+          effects.add(new TurnActiveEffect(new CharacterSettingModificationEffect("DEF", "1",
               Target.SELF), turns));
           break;
         case 7:
-          effects.add(new TurnActiveEffect(new CharacterSettingModificationEffect("ATT", 1,
+          effects.add(new TurnActiveEffect(new CharacterSettingModificationEffect("ATT", "1",
               Target.SELF), turns));
           break;
         case 8:
-          effects.add(new TurnActiveEffect(new CharacterSettingModificationEffect("DEF", -2,
+          effects.add(new TurnActiveEffect(new CharacterSettingModificationEffect("DEF", "-2",
               Target.OPPONENT), turns));
           break;
         case 9:
-          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", -2,
+          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", "-2",
               Target.OPPONENT)));
           break;
         case 10:
-          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", -2,
+          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", "-2",
               Target.OPPONENT)));
           break;
         case 11:
-          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", -2,
+          effects.add(new IrreversibleEffect(new CharacterSettingModificationEffect("LIFE", "-2",
               Target.OPPONENT)));
           break;
       }

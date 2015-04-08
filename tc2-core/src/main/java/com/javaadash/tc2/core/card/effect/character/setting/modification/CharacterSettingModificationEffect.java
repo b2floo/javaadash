@@ -1,5 +1,8 @@
 package com.javaadash.tc2.core.card.effect.character.setting.modification;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +12,7 @@ import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.SettingChange;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
+import com.javaadash.tc2.core.card.effect.setting.RandomRangeValue;
 import com.javaadash.tc2.core.context.GameContext;
 
 public class CharacterSettingModificationEffect implements Effect {
@@ -17,42 +21,50 @@ public class CharacterSettingModificationEffect implements Effect {
       .getLogger(CharacterSettingModificationEffect.class);
 
   protected String setting = null;
-  protected int modifier = 0;
+  protected RandomRangeValue modifier;
   protected Target target;
 
-  public CharacterSettingModificationEffect(String setting, int modifier, Target target) {
+  private Map<Integer, Integer> modifierValues = new HashMap<Integer, Integer>();
+
+  public CharacterSettingModificationEffect(String setting, String modifier, Target target) {
     this.setting = setting;
-    this.modifier = modifier;
+    this.modifier = new RandomRangeValue(modifier);
     this.target = target;
   }
 
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
+    modifierValues.clear();
+    Integer modifierValue = modifier.getRandom();
+
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
-      Integer newValue = charr.getIntSetting(setting) + modifier;
+
+      Integer newValue = charr.getIntSetting(setting) + modifierValue;
+      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr, setting,
+          newValue});
       charr.setIntSetting(setting, newValue);
-      log.debug("New settings : {}", charr);
+      modifierValues.put(charr.getId(), modifierValue);
+
       SettingChange settingChange =
           new SettingChange(charr.getId(), charr.getDescription(), setting);
       settingChange.setNewValue(Integer.toString(newValue));
-      settingChange.setDiff((modifier > 0 ? "-" + modifier : "" + (-modifier)));
+      settingChange.setDiff(modifierValue > 0 ? "+" + modifierValue : "" + modifierValue);
       cardEffectLog.getSettingChanges().add(settingChange);
     }
   }
 
   public void resolveEnd(GameContext context) {
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
-      charr.setIntSetting(setting, charr.getIntSetting(setting) - modifier);
-      log.debug("New settings : {}", charr);
+      Integer modifierValue = modifierValues.get(charr.getId());
+      Integer newValue = charr.getIntSetting(setting) - modifierValue;
+      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr, setting,
+          newValue});
+      charr.setIntSetting(setting, newValue);
     }
   }
 
   @Override
   public String toString() {
-    StringBuilder buf = new StringBuilder().append(setting);
-    if (modifier > 0)
-      buf.append("+");
-    buf.append(modifier).append(" TARGET ").append(target);
-    return buf.toString();
+    return "CharacterSettingModificationEffect [setting=" + setting + ", modifier=" + modifier
+        + ", target=" + target + "]";
   }
-
 }

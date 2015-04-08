@@ -16,7 +16,7 @@ import com.javaadash.tc2.core.interfaces.player.Player;
 public class IrreversibleCharacterSettingModificationEffectTest extends TestCase {
 
   private int initialSetting = 4;
-  private int modifier = -1;
+  private String modifier = "-1";
   private static String setting = "DEF";
 
   public void testResolve() throws Exception {
@@ -38,13 +38,15 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
     CardEffectLog effectDescription = new CardEffectLog(123, "junit Test");
     effect.resolve(context, effectDescription);
 
-    assertEquals(initialSetting + modifier, targetCharacter.getIntSetting(setting));
+    assertEquals(initialSetting + Integer.parseInt(modifier),
+        targetCharacter.getIntSetting(setting));
     // check description of settingChange is correctly filled
     assertEquals(1, effectDescription.getSettingChanges().size());
     SettingChange settingChange = effectDescription.getSettingChanges().get(0);
     assertEquals(setting, settingChange.getSetting());
-    assertEquals(Integer.toString(initialSetting + modifier), settingChange.getNewValue());
-    assertEquals(Integer.toString(modifier), settingChange.getDiff());
+    assertEquals(Integer.toString(initialSetting + Integer.parseInt(modifier)),
+        settingChange.getNewValue());
+    assertEquals(modifier, settingChange.getDiff());
     assertEquals(targetCharacter.getId(), settingChange.getCharacterId());
   }
 
@@ -57,7 +59,7 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
     Player startPlayer = GameUtils.getPlayer("junit1", 1, 0, 0);
     Card targetCharacter =
         startPlayer.getIngameDeck().getCard(CardType.CHARACTER, CardLocation.HAND);
-    targetCharacter.setIntSetting(setting, initialSetting + modifier);
+    targetCharacter.setIntSetting(setting, initialSetting + Integer.parseInt(modifier));
     startPlayer.getIngameDeck().setCardLocation(targetCharacter, CardLocation.BOARD);
 
     Player nextPlayer = GameUtils.getPlayer("junit2", 1, 0, 0);
@@ -66,7 +68,8 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
 
     effect.resolveEnd(context);
 
-    assertEquals(initialSetting + modifier, targetCharacter.getIntSetting(setting));
+    assertEquals(initialSetting + Integer.parseInt(modifier),
+        targetCharacter.getIntSetting(setting));
   }
 
 
