@@ -17,7 +17,7 @@ public class CharacterMatchResolverTest extends TestCase {
     // Setup context
     Card c1 = new Card();
     int att1 = 4;
-    int life1 = 12;
+    Integer life1 = 12;
     int score1 = 18;
     c1.setIntSetting("ATT", att1);
     c1.setIntSetting("LIFE", life1);
@@ -36,8 +36,10 @@ public class CharacterMatchResolverTest extends TestCase {
     List<CardEffectLog> effectDescriptions = new ArrayList<CardEffectLog>();
     characterMatchResolver.resolveCharacterMatch(c1, p1, c2, effectDescriptions);
 
-    assertEquals(life2 - (att1 - def2), c2.getIntSetting("LIFE"));
-    assertEquals(life1, c1.getIntSetting("LIFE"));
+    assertEquals(c2.getIntSetting("LIFE").getMax(), c2.getIntSetting("LIFE").getMin());
+    assertEquals(new Integer(life2 - (att1 - def2)), c2.getIntSetting("LIFE").getMin());
+    assertEquals(c1.getIntSetting("LIFE").getMax(), c1.getIntSetting("LIFE").getMin());
+    assertEquals(life1, c1.getIntSetting("LIFE").getMin());
     assertEquals(score1 + (att1 - def2), p1.getScore());
     assertEquals(score2, p2.getScore());
 
@@ -64,14 +66,15 @@ public class CharacterMatchResolverTest extends TestCase {
 
     Card c2 = new Card();
     int def2 = 2;
-    int life2 = 21;
+    Integer life2 = 21;
     c2.setIntSetting("DEF", def2);
     c2.setIntSetting("LIFE", life2);
 
     List<CardEffectLog> effectDescriptions = new ArrayList<CardEffectLog>();
     characterMatchResolver.resolveCharacterMatch(c1, p1, c2, effectDescriptions);
 
-    assertEquals(life2, c2.getIntSetting("LIFE"));
+    assertEquals(c2.getIntSetting("LIFE").getMax(), c2.getIntSetting("LIFE").getMin());
+    assertEquals(life2, c2.getIntSetting("LIFE").getMin());
     assertEquals(score1, p1.getScore());
 
     // check description of effects has been added

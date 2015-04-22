@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
+import com.javaadash.tc2.core.card.effect.setting.RangeValue;
 
 public class Card implements Serializable {
   private static final long serialVersionUID = 3548312040504128825L;
@@ -22,7 +23,10 @@ public class Card implements Serializable {
   protected Integer type;
   protected List<Effect> effects = new ArrayList<Effect>();
   protected List<Condition> conditions = new ArrayList<Condition>();
-  protected Map<String, String> settings = new HashMap<String, String>();
+
+  protected Map<String, String> staticSettings = new HashMap<String, String>();
+  protected Map<String, RangeValue> intSettings = new HashMap<String, RangeValue>();
+
   protected Chain chain;
   protected Boolean available = true;
 
@@ -41,8 +45,18 @@ public class Card implements Serializable {
     this.description = description;
   }
 
+  public Card(String cardCode, Integer type, String description, List<Effect> effects) {
+    this.id = ID_GENERATOR.getAndIncrement();
+    this.cardCode = cardCode;
+    this.type = type;
+    this.description = description;
+
+    this.effects = effects;
+  }
+
   public Card(String cardCode, Integer type, String description, List<Effect> effects,
-      List<Condition> conditions, Map<String, String> settings) {
+      List<Condition> conditions, Map<String, String> staticSettings,
+      Map<String, RangeValue> intSettings) {
     this.id = ID_GENERATOR.getAndIncrement();
     this.cardCode = cardCode;
     this.type = type;
@@ -50,7 +64,8 @@ public class Card implements Serializable {
 
     this.effects = effects;
     this.conditions = conditions;
-    this.settings = settings;
+    this.staticSettings = staticSettings;
+    this.intSettings = intSettings;
   }
 
   public void addCondition(Condition condition) {
@@ -69,24 +84,31 @@ public class Card implements Serializable {
     return Collections.unmodifiableList(conditions);
   }
 
-  public int getIntSetting(String setting) {
-    return Integer.parseInt(settings.get(setting));
+  public RangeValue getIntSetting(String setting) {
+    return intSettings.get(setting);
+  }
+
+  public void setIntSetting(String setting, RangeValue value) {
+    intSettings.put(setting, value);
   }
 
   public void setIntSetting(String setting, Integer value) {
-    settings.put(setting, value.toString());
+    intSettings.put(setting, new RangeValue(value));
   }
 
   public String getSetting(String setting) {
-    return settings.get(setting);
-  }
-
-  public void setSetting(String setting, String value) {
-    settings.put(setting, value);
+    if (staticSettings.containsKey(setting)) {
+      return staticSettings.get(setting);
+    }
+    return intSettings.get(setting).getDescription();
   }
 
   public Map<String, String> getSettings() {
-    return settings;
+    Map<String, String> tmpSettings = new HashMap<String, String>(staticSettings);
+    for (Map.Entry<String, RangeValue> intEntries : intSettings.entrySet()) {
+      tmpSettings.put(intEntries.getKey(), intEntries.getValue().getDescription());
+    }
+    return tmpSettings;
   }
 
   public Integer getType() {
@@ -118,7 +140,7 @@ public class Card implements Serializable {
   }
 
   // TODO in a factory and throw exceptions
-  public static Map<String, String> createSettings(String desc) {
+  public static Map<String, String> createStaticSettings(String desc) {
     Map<String, String> settings = new HashMap<String, String>();
     for (String set : desc.split("-")) {
       String[] s = set.trim().split(":");
@@ -129,11 +151,23 @@ public class Card implements Serializable {
     return settings;
   }
 
+  public static Map<String, RangeValue> createIntSettings(String desc) {
+    Map<String, RangeValue> settings = new HashMap<String, RangeValue>();
+    for (String set : desc.split("-")) {
+      String[] setting = set.trim().split(":");
+      if (setting.length > 1) {
+        settings.put(setting[0].trim(), new RangeValue(setting[1].trim()));
+      }
+    }
+    return settings;
+  }
+
   @Override
   public String toString() {
     return "Card [id=" + id + ", cardCode=" + cardCode + ", description=" + description + ", type="
-        + type + ", effects=" + effects + ", conditions=" + conditions + ", settings=" + settings
-        + ", chain=" + chain + ", available=" + available + "]";
+        + type + ", effects=" + effects + ", conditions=" + conditions + ", staticSettings="
+        + staticSettings + ", intSettings=" + intSettings + ", chain=" + chain + ", available="
+        + available + "]";
   }
 
   @Override

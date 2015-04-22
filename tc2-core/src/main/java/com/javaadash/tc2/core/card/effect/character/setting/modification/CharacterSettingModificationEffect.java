@@ -13,6 +13,7 @@ import com.javaadash.tc2.core.card.effect.SettingChange;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
 import com.javaadash.tc2.core.card.effect.setting.RandomRangeValue;
+import com.javaadash.tc2.core.card.effect.setting.RangeValue;
 import com.javaadash.tc2.core.context.GameContext;
 
 public class CharacterSettingModificationEffect implements Effect {
@@ -38,7 +39,7 @@ public class CharacterSettingModificationEffect implements Effect {
 
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
 
-      Integer newValue = charr.getIntSetting(setting) + modifierValue;
+      RangeValue newValue = charr.getIntSetting(setting).add(modifierValue);
       log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr, setting,
           newValue});
       charr.setIntSetting(setting, newValue);
@@ -46,7 +47,7 @@ public class CharacterSettingModificationEffect implements Effect {
 
       SettingChange settingChange =
           new SettingChange(charr.getId(), charr.getDescription(), setting);
-      settingChange.setNewValue(Integer.toString(newValue));
+      settingChange.setNewValue(newValue.getDescription());
       settingChange.setDiff(modifierValue > 0 ? "+" + modifierValue : "" + modifierValue);
       cardEffectLog.getSettingChanges().add(settingChange);
     }
@@ -55,7 +56,7 @@ public class CharacterSettingModificationEffect implements Effect {
   public void resolveEnd(GameContext context) {
     for (Card charr : TargetResolver.getCharactersFromTarget(target, context)) {
       Integer modifierValue = modifierValues.get(charr.getId());
-      Integer newValue = charr.getIntSetting(setting) - modifierValue;
+      RangeValue newValue = charr.getIntSetting(setting).remove(modifierValue);
       log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr, setting,
           newValue});
       charr.setIntSetting(setting, newValue);

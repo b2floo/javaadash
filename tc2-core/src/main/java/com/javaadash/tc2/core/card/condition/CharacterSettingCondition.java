@@ -39,11 +39,11 @@ public class CharacterSettingCondition implements Condition {
           setting, character.getSetting(setting), operator, value});
       switch (operator) {
         case GREATER:
-          if (character.getIntSetting(setting) <= Integer.parseInt(value))
+          if (character.getIntSetting(setting).getMax() <= Integer.parseInt(value))
             return false;
           break;
         case GREATER_EQUALS:
-          if (character.getIntSetting(setting) < Integer.parseInt(value))
+          if (character.getIntSetting(setting).getMax() < Integer.parseInt(value))
             return false;
           break;
         case EQUALS:
@@ -51,11 +51,11 @@ public class CharacterSettingCondition implements Condition {
             return false;
           break;
         case LESS:
-          if (character.getIntSetting(setting) >= Integer.parseInt(value))
+          if (character.getIntSetting(setting).getMin() >= Integer.parseInt(value))
             return false;
           break;
         case LESS_EQUALS:
-          if (character.getIntSetting(setting) > Integer.parseInt(value))
+          if (character.getIntSetting(setting).getMin() > Integer.parseInt(value))
             return false;
           break;
       }
