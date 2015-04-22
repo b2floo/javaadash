@@ -11,7 +11,6 @@ import com.javaadash.tc2.core.TC2AsynchronousGameManager;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.interfaces.message.ChooseActionMessage;
 import com.javaadash.tc2.core.interfaces.player.PlayerData;
-import com.javaadash.tc2.server.TC2Lobby;
 
 public class ChooseActionListener implements DataListener<ChooseActionMessage> {
   private Logger log = LoggerFactory.getLogger(ChooseActionListener.class);
