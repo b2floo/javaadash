@@ -28,8 +28,10 @@ public class SettingTransferEffect implements Effect {
   private String firstSetting;
   private Target firstSettingTarget;
   private RandomRangeValue modifier;
+  private boolean firstIrreversible = false;
   private String secondSetting;
   private Target secondSettingTarget;
+  private boolean secondIrreversible = false;
 
   private Map<String, Integer> modifierValues = new HashMap<String, Integer>();
 
@@ -43,12 +45,24 @@ public class SettingTransferEffect implements Effect {
     this.secondSettingTarget = secondSettingTarget;
   }
 
+  public SettingTransferEffect(String firstSetting, Target firstSettingTarget, String modifier,
+      boolean firstIrreversible, String secondSetting, Target secondSettingTarget,
+      boolean secondIrreversible) {
+    super();
+    this.firstSetting = firstSetting;
+    this.firstSettingTarget = firstSettingTarget;
+    this.modifier = new RandomRangeValue(modifier);
+    this.firstIrreversible = firstIrreversible;
+    this.secondSetting = secondSetting;
+    this.secondSettingTarget = secondSettingTarget;
+    this.secondIrreversible = secondIrreversible;
+  }
+
   @Override
   public void resolve(GameContext context, CardEffectLog cardEffectLog) {
     modifierValues.clear();
     Integer modifierValue = modifier.getRandom();
 
-    // TODO store initial values as RandomSettingResolver
     for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
       RangeValue newValue = charr.getIntSetting(firstSetting).remove(modifierValue);
       log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
@@ -79,20 +93,25 @@ public class SettingTransferEffect implements Effect {
 
   @Override
   public void resolveEnd(GameContext context) {
-    for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
-      Integer modifierValue = modifierValues.get(charr.getId() + firstSetting);
-      RangeValue newValue = charr.getIntSetting(firstSetting).add(modifierValue);
-      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
-          firstSetting, newValue});
-      charr.setIntSetting(firstSetting, newValue);
+    if (!firstIrreversible) {
+      for (Card charr : TargetResolver.getCharactersFromTarget(firstSettingTarget, context)) {
+        Integer modifierValue = modifierValues.get(charr.getId() + firstSetting);
+        RangeValue newValue = charr.getIntSetting(firstSetting).add(modifierValue);
+        log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
+            firstSetting, newValue});
+        charr.setIntSetting(firstSetting, newValue);
+      }
     }
-    for (Card charr : TargetResolver.getCharactersFromTarget(secondSettingTarget, context)) {
-      Integer modifierValue = modifierValues.get(charr.getId() + secondSetting);
-      RangeValue newValue = charr.getIntSetting(secondSetting).remove(modifierValue);
-      log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
-          secondSetting, newValue});
-      charr.setIntSetting(secondSetting, newValue);
+    if (!secondIrreversible) {
+      for (Card charr : TargetResolver.getCharactersFromTarget(secondSettingTarget, context)) {
+        Integer modifierValue = modifierValues.get(charr.getId() + secondSetting);
+        RangeValue newValue = charr.getIntSetting(secondSetting).remove(modifierValue);
+        log.debug("{} has calculated {} setting {} value to {}", new Object[] {this, charr,
+            secondSetting, newValue});
+        charr.setIntSetting(secondSetting, newValue);
+      }
     }
+    modifierValues.clear();
   }
 
   @Override
