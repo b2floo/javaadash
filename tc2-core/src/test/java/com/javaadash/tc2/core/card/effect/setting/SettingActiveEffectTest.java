@@ -32,7 +32,7 @@ public class SettingActiveEffectTest extends TestCase {
     Player p1 = GameUtils.getPlayer("Junit1", 2, 0, 0);
     Card char1 = p1.getIngameDeck().getCard(CardType.CHARACTER, CardLocation.HAND);
     p1.getIngameDeck().setCardLocation(char1, CardLocation.BOARD);
-    char1.setSetting("LIFE", "3");
+    char1.setIntSetting("LIFE", new RangeValue("3"));
 
     Player p2 = GameUtils.getPlayer("Junit2", 2, 0, 0);
     GameContext context = new GameContext(p1, p2);
@@ -47,7 +47,7 @@ public class SettingActiveEffectTest extends TestCase {
     Player p1 = GameUtils.getPlayer("Junit1", 2, 0, 0);
     Card char1 = p1.getIngameDeck().getCard(CardType.CHARACTER, CardLocation.HAND);
     p1.getIngameDeck().setCardLocation(char1, CardLocation.BOARD);
-    char1.setSetting("LIFE", "3");
+    char1.setIntSetting("LIFE", new RangeValue("3"));
 
     Player p2 = GameUtils.getPlayer("Junit2", 2, 0, 0);
     GameContext context = new GameContext(p1, p2);
@@ -61,7 +61,5 @@ public class SettingActiveEffectTest extends TestCase {
     settingActiveEffect.resolveEnd(context);
     assertTrue(mockEffect.isEndResolved());
   }
-
-
 
 }

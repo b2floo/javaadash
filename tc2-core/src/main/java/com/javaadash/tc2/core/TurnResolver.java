@@ -33,23 +33,22 @@ public class TurnResolver {
     // List change of settings for each card
     List<CardEffectLog> cardEffectLogs = new ArrayList<CardEffectLog>();
 
-    // first resolve characters effects
+    // resolve actions effects
+    List<Card> actions1 =
+        context.getFirstPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD);
+    List<Card> actions2 =
+        context.getSecondPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD);
+    context.setCurrentPlayer(context.getFirstPlayer());
+    effectResolver.resolveCardEffect(actions1, context, cardEffectLogs);
+    context.setCurrentPlayer(context.getSecondPlayer());
+    effectResolver.resolveCardEffect(actions2, context, cardEffectLogs);
+
+    // then resolve characters effects
     context.setCurrentPlayer(context.getFirstPlayer());
     effectResolver.resolveCardEffect(Collections.singletonList(char1), context, cardEffectLogs);
 
     context.setCurrentPlayer(context.getSecondPlayer());
     effectResolver.resolveCardEffect(Collections.singletonList(char2), context, cardEffectLogs);
-
-    // then resolve actions effects
-    List<Card> actions1 =
-        context.getFirstPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD);
-    List<Card> actions2 =
-        context.getSecondPlayer().getIngameDeck().getCards(CardType.ACTION, CardLocation.BOARD);
-
-    context.setCurrentPlayer(context.getFirstPlayer());
-    effectResolver.resolveCardEffect(actions1, context, cardEffectLogs);
-    context.setCurrentPlayer(context.getSecondPlayer());
-    effectResolver.resolveCardEffect(actions2, context, cardEffectLogs);
 
     // and the battle starts...
     context.setCurrentPlayer(context.getFirstPlayer());
@@ -59,17 +58,17 @@ public class TurnResolver {
     characterMatchResolver.resolveCharacterMatch(char2, context.getSecondPlayer(), char1,
         cardEffectLogs);
 
-    // end actions effects
-    context.setCurrentPlayer(context.getFirstPlayer());
-    effectResolver.resolveEndCardEffect(actions1, context);
-    context.setCurrentPlayer(context.getSecondPlayer());
-    effectResolver.resolveEndCardEffect(actions2, context);
-
     // end characters effects
     context.setCurrentPlayer(context.getFirstPlayer());
     effectResolver.resolveEndCardEffect(Collections.singletonList(char1), context);
     context.setCurrentPlayer(context.getSecondPlayer());
     effectResolver.resolveEndCardEffect(Collections.singletonList(char2), context);
+
+    // end actions effects
+    context.setCurrentPlayer(context.getFirstPlayer());
+    effectResolver.resolveEndCardEffect(actions1, context);
+    context.setCurrentPlayer(context.getSecondPlayer());
+    effectResolver.resolveEndCardEffect(actions2, context);
 
     // now send a message with all logged actions
     playManager.updateSettings(context, cardEffectLogs);

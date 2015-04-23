@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.SettingChange;
+import com.javaadash.tc2.core.card.effect.setting.RangeValue;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class CharacterMatchResolver {
@@ -22,7 +23,7 @@ public class CharacterMatchResolver {
   public void resolveCharacterMatch(Card char1, Player p1, Card char2,
       List<CardEffectLog> cardEffectLogs) {
     // calculate life loss
-    int damage1 = char1.getIntSetting("ATT") - char2.getIntSetting("DEF");
+    int damage1 = char1.getIntSetting("ATT").getMin() - char2.getIntSetting("DEF").getMin();
 
     CardEffectLog desc =
         new CardEffectLog(char1.getId(), "Fight: " + char1.getDescription() + " attacks "
@@ -35,17 +36,17 @@ public class CharacterMatchResolver {
     if (damage1 <= 0) {
       log.info("Damaged to {} : null", char2);
       settingChange.setDiff("0");
-      settingChange.setNewValue(Integer.toString(char2.getIntSetting("LIFE")));
+      settingChange.setNewValue(char2.getIntSetting("LIFE").getDescription());
 
     } else {
       p1.setScore(p1.getScore() + damage1);
 
       log.info("Damaged to {} : {}", char2, damage1);
-      int life2 = char2.getIntSetting("LIFE") - damage1;
+      RangeValue life2 = char2.getIntSetting("LIFE").remove(damage1);
       log.info("Life left : {}", life2);
       char2.setIntSetting("LIFE", life2);
       settingChange.setDiff("-" + (damage1));
-      settingChange.setNewValue(Integer.toString(life2));
+      settingChange.setNewValue(life2.getDescription());
     }
   }
 

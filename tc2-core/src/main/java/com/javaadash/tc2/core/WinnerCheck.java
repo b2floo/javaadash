@@ -53,7 +53,7 @@ public class WinnerCheck {
   private boolean resolveCharactersOut(Player p) {
     boolean out = true;
     for (Card character : p.getIngameDeck().getCards(CardType.CHARACTER)) {
-      if (character.getIntSetting("LIFE") <= 0) {
+      if (character.getIntSetting("LIFE").getMax() <= 0) {
         log.debug("Character {} is out of game", character);
         p.getIngameDeck().setCardLocation(character, CardLocation.OUTOFGAME);
       } else

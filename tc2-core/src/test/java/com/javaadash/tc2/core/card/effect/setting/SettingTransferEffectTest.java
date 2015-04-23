@@ -17,8 +17,8 @@ public class SettingTransferEffectTest extends TestCase {
 
   private SettingTransferEffect effect;
   private String modifier = "2";
-  private int lifeValue = 10;
-  private int attckValue = 5;
+  private Integer lifeValue = 10;
+  private Integer attckValue = 5;
 
   @Override
   protected void setUp() throws Exception {
@@ -38,8 +38,13 @@ public class SettingTransferEffectTest extends TestCase {
 
     CardEffectLog cardEffectLog = new CardEffectLog(123, "junit card log");
     effect.resolve(context, cardEffectLog);
-    assertEquals(attckValue + Integer.parseInt(modifier), char1.getIntSetting("ATT"));
-    assertEquals(lifeValue - Integer.parseInt(modifier), char1.getIntSetting("LIFE"));
+    assertEquals(char1.getIntSetting("ATT").getMin(), char1.getIntSetting("ATT").getMax());
+    assertEquals(new Integer(attckValue + Integer.parseInt(modifier)), char1.getIntSetting("ATT")
+        .getMax());
+
+    assertEquals(char1.getIntSetting("LIFE").getMin(), char1.getIntSetting("LIFE").getMax());
+    assertEquals(new Integer(lifeValue - Integer.parseInt(modifier)), char1.getIntSetting("LIFE")
+        .getMax());
 
     assertEquals(2, cardEffectLog.getSettingChanges().size());
     SettingChange settingChange = cardEffectLog.getSettingChanges().get(0);
@@ -71,8 +76,13 @@ public class SettingTransferEffectTest extends TestCase {
 
     CardEffectLog cardEffectLog = new CardEffectLog(123, "junit card log");
     effect.resolve(context, cardEffectLog);
-    assertEquals(attckValue + Integer.parseInt(modifier), char1.getIntSetting("ATT"));
-    assertEquals(lifeValue - Integer.parseInt(modifier), char1.getIntSetting("LIFE"));
+    assertEquals(char1.getIntSetting("ATT").getMin(), char1.getIntSetting("ATT").getMax());
+    assertEquals(new Integer(attckValue + Integer.parseInt(modifier)), char1.getIntSetting("ATT")
+        .getMax());
+
+    assertEquals(char1.getIntSetting("LIFE").getMin(), char1.getIntSetting("LIFE").getMax());
+    assertEquals(new Integer(lifeValue - Integer.parseInt(modifier)), char1.getIntSetting("LIFE")
+        .getMax());
 
     assertEquals(2, cardEffectLog.getSettingChanges().size());
     SettingChange settingChange = cardEffectLog.getSettingChanges().get(0);
@@ -100,8 +110,8 @@ public class SettingTransferEffectTest extends TestCase {
 
     effect.resolve(context, new CardEffectLog(0, ""));
     effect.resolveEnd(context);
-    assertEquals(attckValue, char1.getIntSetting("ATT"));
-    assertEquals(lifeValue, char1.getIntSetting("LIFE"));
+    assertEquals(attckValue, char1.getIntSetting("ATT").getMin());
+    assertEquals(lifeValue, char1.getIntSetting("LIFE").getMin());
   }
 
   public void testResolveWithRandom() throws TC2CoreException {
@@ -121,15 +131,19 @@ public class SettingTransferEffectTest extends TestCase {
     CardEffectLog cardEffectLog = new CardEffectLog(123, "junit card log");
     effect.resolve(context, cardEffectLog);
 
-    assertTrue(char1.getIntSetting("LIFE") >= lifeValue - 4);
-    assertTrue(char1.getIntSetting("LIFE") <= lifeValue - 1);
-    assertTrue(char1.getIntSetting("ATT") >= attckValue + 1);
-    assertTrue(char1.getIntSetting("ATT") <= attckValue + 4);
+    assertEquals(char1.getIntSetting("LIFE").getMin(), char1.getIntSetting("LIFE").getMax());
+    assertTrue(char1.getIntSetting("LIFE").getMin() >= lifeValue - 4);
+    assertTrue(char1.getIntSetting("LIFE").getMin() <= lifeValue - 1);
+    assertEquals(char1.getIntSetting("ATT").getMin(), char1.getIntSetting("ATT").getMax());
+    assertTrue(char1.getIntSetting("ATT").getMin() >= attckValue + 1);
+    assertTrue(char1.getIntSetting("ATT").getMin() <= attckValue + 4);
 
     assertEquals(2, cardEffectLog.getSettingChanges().size());
 
     effect.resolveEnd(context);
-    assertEquals(attckValue, char1.getIntSetting("ATT"));
-    assertEquals(lifeValue, char1.getIntSetting("LIFE"));
+    assertEquals(char1.getIntSetting("LIFE").getMin(), char1.getIntSetting("LIFE").getMax());
+    assertEquals(attckValue, char1.getIntSetting("ATT").getMin());
+    assertEquals(char1.getIntSetting("ATT").getMin(), char1.getIntSetting("ATT").getMax());
+    assertEquals(lifeValue, char1.getIntSetting("LIFE").getMin());
   }
 }

@@ -14,11 +14,11 @@ import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class RandomSettingEffectTest extends TestCase {
 
-  private RandomSettingEffect randomEffect;
+  private RandomSettingResolver randomEffect;
 
   @Override
   protected void setUp() throws Exception {
-    randomEffect = new RandomSettingEffect("ATT", Target.SELF);
+    randomEffect = new RandomSettingResolver("ATT", Target.SELF);
   }
 
   public void testResolve() throws TC2CoreException {
@@ -26,19 +26,19 @@ public class RandomSettingEffectTest extends TestCase {
     Player p1 = GameUtils.getPlayer("Junit1", 2, 0, 0);
     Card char1 = p1.getIngameDeck().getCard(CardType.CHARACTER, CardLocation.HAND);
     p1.getIngameDeck().setCardLocation(char1, CardLocation.BOARD);
-    char1.setSetting("ATT", "5/8");
+    char1.setIntSetting("ATT", new RangeValue("5/8"));
 
     Player p2 = GameUtils.getPlayer("Junit2", 2, 0, 0);
     GameContext context = new GameContext(p1, p2);
     context.setCurrentPlayer(p1);
 
     randomEffect.resolve(context, new CardEffectLog(0, ""));
-    assertTrue(char1.getIntSetting("ATT") >= 5);
-    assertTrue(char1.getIntSetting("ATT") <= 8);
+    assertEquals(char1.getIntSetting("ATT").getMin(), char1.getIntSetting("ATT").getMax());
+    assertTrue(char1.getIntSetting("ATT").getMin() >= 5);
+    assertTrue(char1.getIntSetting("ATT").getMin() <= 8);
 
     randomEffect.resolveEnd(context);
-    assertEquals("5/8", char1.getSetting("ATT"));
+    assertEquals("5/8", char1.getIntSetting("ATT").getDescription());
   }
-
 
 }

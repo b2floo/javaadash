@@ -1,14 +1,12 @@
 package com.javaadash.tc2.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardType;
-import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.MockEffect;
@@ -29,8 +27,7 @@ public class ActionEffectResolverTest extends TestCase {
         effects.add(mockEffect);
         allEffects.add(mockEffect);
       }
-      cards.add(new Card("-1", CardType.ACTION, "junit-action", effects,
-          new ArrayList<Condition>(), new HashMap<String, String>()));
+      cards.add(new Card("-1", CardType.ACTION, "junit-action", effects));
     }
 
     List<CardEffectLog> cardEffectDesc = new ArrayList<CardEffectLog>();
@@ -59,8 +56,7 @@ public class ActionEffectResolverTest extends TestCase {
         effects.add(mockEffect);
         allEffects.add(mockEffect);
       }
-      cards.add(new Card("-1", CardType.ACTION, "junit-action", effects,
-          new ArrayList<Condition>(), new HashMap<String, String>()));
+      cards.add(new Card("-1", CardType.ACTION, "junit-action", effects));
     }
 
     effectResolver.resolveEndCardEffect(cards, new GameContext());

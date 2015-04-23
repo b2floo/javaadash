@@ -10,6 +10,7 @@ import com.javaadash.tc2.core.server.netty.listener.ChooseActionListener;
 import com.javaadash.tc2.core.server.netty.listener.ChooseCharacterListener;
 import com.javaadash.tc2.core.server.netty.listener.ChooseDiscardListener;
 import com.javaadash.tc2.core.server.netty.listener.JoinGameListener;
+import com.javaadash.tc2.core.server.netty.listener.TC2Lobby;
 
 public class TC2Server {
 

@@ -38,8 +38,10 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
     CardEffectLog effectDescription = new CardEffectLog(123, "junit Test");
     effect.resolve(context, effectDescription);
 
-    assertEquals(initialSetting + Integer.parseInt(modifier),
-        targetCharacter.getIntSetting(setting));
+    assertEquals(targetCharacter.getIntSetting(setting).getMin(),
+        targetCharacter.getIntSetting(setting).getMax());
+    assertEquals(new Integer(initialSetting + Integer.parseInt(modifier)), targetCharacter
+        .getIntSetting(setting).getMin());
     // check description of settingChange is correctly filled
     assertEquals(1, effectDescription.getSettingChanges().size());
     SettingChange settingChange = effectDescription.getSettingChanges().get(0);
@@ -67,9 +69,10 @@ public class IrreversibleCharacterSettingModificationEffectTest extends TestCase
     context.setCurrentPlayer(startPlayer);
 
     effect.resolveEnd(context);
-
-    assertEquals(initialSetting + Integer.parseInt(modifier),
-        targetCharacter.getIntSetting(setting));
+    assertEquals(targetCharacter.getIntSetting(setting).getMin(),
+        targetCharacter.getIntSetting(setting).getMax());
+    assertEquals(new Integer(initialSetting + Integer.parseInt(modifier)), targetCharacter
+        .getIntSetting(setting).getMax());
   }
 
 

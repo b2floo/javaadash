@@ -14,7 +14,7 @@ import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class CharacterSettingModificationEffectTest extends TestCase {
-  private int initialSetting = 4;
+  private Integer initialSetting = 4;
   private String modifier = "-1";
   private static String setting = "DEF";
 
@@ -36,7 +36,10 @@ public class CharacterSettingModificationEffectTest extends TestCase {
     CardEffectLog effectDescription = new CardEffectLog(123, "junit Test");
     effect.resolve(context, effectDescription);
 
-    assertEquals(initialSetting + modifierInt, targetCharacter.getIntSetting(setting));
+    assertEquals(new Integer(initialSetting + modifierInt), targetCharacter.getIntSetting(setting)
+        .getMin());
+    assertEquals(new Integer(initialSetting + modifierInt), targetCharacter.getIntSetting(setting)
+        .getMax());
     // check description of settingChange is correctly filled
     assertEquals(1, effectDescription.getSettingChanges().size());
     SettingChange settingChange = effectDescription.getSettingChanges().get(0);
@@ -65,6 +68,7 @@ public class CharacterSettingModificationEffectTest extends TestCase {
     effect.resolve(context, new CardEffectLog(123, ""));
     effect.resolveEnd(context);
 
-    assertEquals(initialSetting, targetCharacter.getIntSetting(setting));
+    assertEquals(initialSetting, targetCharacter.getIntSetting(setting).getMin());
+    assertEquals(initialSetting, targetCharacter.getIntSetting(setting).getMax());
   }
 }

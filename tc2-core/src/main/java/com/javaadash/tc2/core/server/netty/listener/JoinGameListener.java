@@ -17,7 +17,6 @@ import com.javaadash.tc2.core.interfaces.message.JoinGameMessage;
 import com.javaadash.tc2.core.interfaces.player.Player;
 import com.javaadash.tc2.server.SocketIoPlayerInterface;
 import com.javaadash.tc2.server.StaticDeckGenerator;
-import com.javaadash.tc2.server.TC2Lobby;
 
 public class JoinGameListener implements DataListener<JoinGameMessage> {
 

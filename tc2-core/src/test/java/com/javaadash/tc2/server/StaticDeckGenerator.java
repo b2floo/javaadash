@@ -1,6 +1,5 @@
 package com.javaadash.tc2.server;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Map;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.Deck;
-import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.dictionnary.CardDictionary;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
@@ -42,18 +40,16 @@ public class StaticDeckGenerator {
       if (i % 5 == 0) {
         Card card0004 =
             new Card("0004", CardType.ACTION, "BARRACUDA", Arrays.asList(new Effect[] {effect00041,
-                effect00042}), new ArrayList<Condition>(), new HashMap<String, String>());
+                effect00042}));
         deck.addCard(card0004);
       } else if (i % 5 == 1) {
         Card card0007 =
             new Card("0007", CardType.ACTION, "KUBI", Arrays.asList(new Effect[] {effect00071,
-                effect00072}), new ArrayList<Condition>(), new HashMap<String, String>());
+                effect00072}));
         deck.addCard(card0007);
       } else if (i % 5 == 2) {
         Card card00026 =
-            new Card("00026", CardType.ACTION, "BRUDAL",
-                Arrays.asList(new Effect[] {effect000261}), new ArrayList<Condition>(),
-                new HashMap<String, String>());
+            new Card("00026", CardType.ACTION, "BRUDAL", Arrays.asList(new Effect[] {effect000261}));
         deck.addCard(card00026);
       } else if (i % 5 == 3) {
         deck.addCard(CardDictionary.getCard("00027"));
