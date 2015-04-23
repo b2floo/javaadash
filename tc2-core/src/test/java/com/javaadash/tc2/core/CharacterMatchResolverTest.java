@@ -96,15 +96,16 @@ public class CharacterMatchResolverTest extends TestCase {
     assertEquals(19, p1.getScore()); // 18 + (4-2) -1
 
     // check description of effects has been added
-    assertEquals(1, effectDescriptions.size());
-    assertEquals(2, effectDescriptions.get(0).getSettingChanges().size());
+    assertEquals(2, effectDescriptions.size());
+    assertEquals(1, effectDescriptions.get(0).getSettingChanges().size());
     SettingChange settingChange = effectDescriptions.get(0).getSettingChanges().get(0);
     assertEquals("LIFE", settingChange.getSetting());
     assertEquals("19", settingChange.getNewValue());
     assertEquals("-2", settingChange.getDiff());
     assertEquals(c2.getId(), settingChange.getCharacterId());
 
-    settingChange = effectDescriptions.get(0).getSettingChanges().get(1);
+    assertEquals(1, effectDescriptions.get(1).getSettingChanges().size());
+    settingChange = effectDescriptions.get(1).getSettingChanges().get(0);
     assertEquals("LIFE", settingChange.getSetting());
     assertEquals("20", settingChange.getNewValue());
     assertEquals("+1", settingChange.getDiff());
@@ -132,15 +133,16 @@ public class CharacterMatchResolverTest extends TestCase {
     assertEquals(18, p1.getScore());
 
     // check description of effects has been added
-    assertEquals(1, effectDescriptions.size());
-    assertEquals(2, effectDescriptions.get(0).getSettingChanges().size());
+    assertEquals(2, effectDescriptions.size());
+    assertEquals(1, effectDescriptions.get(0).getSettingChanges().size());
     SettingChange settingChange = effectDescriptions.get(0).getSettingChanges().get(0);
     assertEquals("LIFE", settingChange.getSetting());
     assertEquals("21", settingChange.getNewValue());
     assertEquals("0", settingChange.getDiff());
     assertEquals(c2.getId(), settingChange.getCharacterId());
 
-    settingChange = effectDescriptions.get(0).getSettingChanges().get(1);
+    assertEquals(1, effectDescriptions.get(1).getSettingChanges().size());
+    settingChange = effectDescriptions.get(1).getSettingChanges().get(0);
     assertEquals("LIFE", settingChange.getSetting());
     assertEquals("21", settingChange.getNewValue());
     assertEquals("+0", settingChange.getDiff());
