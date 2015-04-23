@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.SettingChange;
+import com.javaadash.tc2.core.card.effect.damage.DamageModifier;
 import com.javaadash.tc2.core.card.effect.setting.RangeValue;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
@@ -23,31 +24,64 @@ public class CharacterMatchResolver {
   public void resolveCharacterMatch(Card char1, Player p1, Card char2,
       List<CardEffectLog> cardEffectLogs) {
     // calculate life loss
-    int damage1 = char1.getIntSetting("ATT").getMin() - char2.getIntSetting("DEF").getMin();
+    int damage = char1.getIntSetting("ATT").getMin() - char2.getIntSetting("DEF").getMin();
 
-    CardEffectLog desc =
+    CardEffectLog cardEffectLog =
         new CardEffectLog(char1.getId(), "Fight: " + char1.getDescription() + " attacks "
             + char2.getDescription());
+    cardEffectLogs.add(cardEffectLog);
+
     SettingChange settingChange = new SettingChange(char2.getId(), char2.getDescription(), "LIFE");
-    desc.getSettingChanges().add(settingChange);
-    cardEffectLogs.add(desc);
+    cardEffectLog.getSettingChanges().add(settingChange);
 
-
-    if (damage1 <= 0) {
-      log.info("Damaged to {} : null", char2);
+    int tmpLifeCount = char2.getIntSetting("LIFE").getMin();
+    if (damage <= 0) {
+      log.info("Damage to {} : null", char2);
       settingChange.setDiff("0");
-      settingChange.setNewValue(char2.getIntSetting("LIFE").getDescription());
-
+      settingChange.setNewValue(Integer.toString(tmpLifeCount));
     } else {
-      p1.setScore(p1.getScore() + damage1);
-
-      log.info("Damaged to {} : {}", char2, damage1);
-      RangeValue life2 = char2.getIntSetting("LIFE").remove(damage1);
-      log.info("Life left : {}", life2);
-      char2.setIntSetting("LIFE", life2);
-      settingChange.setDiff("-" + (damage1));
-      settingChange.setNewValue(life2.getDescription());
+      log.info("Damage to {} : {}", char2, damage);
+      tmpLifeCount = tmpLifeCount - damage;
+      log.info("Life left : {}", tmpLifeCount);
+      settingChange.setDiff("-" + (damage));
+      settingChange.setNewValue(Integer.toString(tmpLifeCount));
     }
+
+    // Call DamageModifiers
+    for (DamageModifier damageModifier : char2.getDamageModifiers()) {
+
+      cardEffectLog =
+          new CardEffectLog(-1, "Activating " + damageModifier.getCardName() + " effects");
+      cardEffectLogs.add(cardEffectLog);
+
+      int modifierValue = damageModifier.getValue(damage);
+      // call modifier only if damage suffered or modifier add damages
+      if (modifierValue > 0 || damage > 0) {
+        damage += modifierValue;
+        updateDamageLogs(modifierValue, char2, tmpLifeCount, cardEffectLog);
+        tmpLifeCount = tmpLifeCount - damage;
+      } else {
+        updateDamageLogs(0, char2, tmpLifeCount, cardEffectLog);
+      }
+    }
+
+    if (damage > 0) {
+      RangeValue life2 = char2.getIntSetting("LIFE").remove(damage);
+      char2.setIntSetting("LIFE", life2);
+      p1.setScore(p1.getScore() + damage);
+    }
+  }
+
+  public void updateDamageLogs(int damage, Card char2, int tmpLifeCount, CardEffectLog cardEffectLog) {
+
+    SettingChange settingChange = new SettingChange(char2.getId(), char2.getDescription(), "LIFE");
+    cardEffectLog.getSettingChanges().add(settingChange);
+
+    log.info("Damage to {} : {}", char2, damage);
+    tmpLifeCount = tmpLifeCount - damage;
+    log.info("Life left : {}", tmpLifeCount);
+    settingChange.setDiff(damage > 0 ? "-" + damage : "+" + (-damage));
+    settingChange.setNewValue(Integer.toString(tmpLifeCount));
   }
 
   private Logger log = LoggerFactory.getLogger(CharacterMatchResolver.class);

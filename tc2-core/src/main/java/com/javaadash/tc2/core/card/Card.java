@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
+import com.javaadash.tc2.core.card.effect.damage.DamageModifier;
 import com.javaadash.tc2.core.card.effect.setting.RangeValue;
 
 public class Card implements Serializable {
@@ -29,6 +30,8 @@ public class Card implements Serializable {
 
   protected Chain chain;
   protected Boolean available = true;
+
+  protected List<DamageModifier> damageModifiers = new ArrayList<DamageModifier>();
 
   public Card() {
 
@@ -137,6 +140,18 @@ public class Card implements Serializable {
 
   public String getDescription() {
     return description;
+  }
+
+  public void registerDamageModifier(DamageModifier damageModifier) {
+    damageModifiers.add(damageModifier);
+  }
+
+  public void unregisterDamageModifier(DamageModifier damageModifier) {
+    damageModifiers.remove(damageModifier);
+  }
+
+  public List<DamageModifier> getDamageModifiers() {
+    return damageModifiers;
   }
 
   // TODO in a factory and throw exceptions

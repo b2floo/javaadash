@@ -36,7 +36,7 @@ public class StaticDeckGenerator {
 
     Effect effect000261 = new CharacterSettingModificationEffect("ATT", "2", Target.SELF);
 
-    int divisor = 6;
+    int divisor = 9;
     for (int i = 0; i < nbActions; i++) {
       if (i % divisor == 0) {
         Card card0004 =
@@ -56,8 +56,12 @@ public class StaticDeckGenerator {
         deck.addCard(CardDictionary.getCard("00027"));
       } else if (i % divisor == 4) {
         deck.addCard(CardDictionary.getCard("00028"));
-      } else if (i % divisor == 5) {
+      } else if (i % divisor == 5 || i % divisor == 6) {
         deck.addCard(CardDictionary.getCard("00029"));
+      } else if (i % divisor == 7) {
+        deck.addCard(CardDictionary.getCard("00030"));
+      } else if (i % divisor == 8) {
+        deck.addCard(CardDictionary.getCard("00031"));
       }
     }
 
