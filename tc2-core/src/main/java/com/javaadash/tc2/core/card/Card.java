@@ -165,9 +165,8 @@ public class Card implements Serializable {
   @Override
   public String toString() {
     return "Card [id=" + id + ", cardCode=" + cardCode + ", description=" + description + ", type="
-        + type + ", effects=" + effects + ", conditions=" + conditions + ", staticSettings="
-        + staticSettings + ", intSettings=" + intSettings + ", chain=" + chain + ", available="
-        + available + "]";
+        + type + ", available=" + available + ", intSettings=" + intSettings + ", staticSettings="
+        + staticSettings + ", conditions=" + conditions + ", chain=" + chain + "]";
   }
 
   @Override
