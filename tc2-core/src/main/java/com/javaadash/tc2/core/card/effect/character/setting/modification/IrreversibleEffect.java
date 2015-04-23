@@ -11,7 +11,7 @@ public class IrreversibleEffect implements Effect {
   private static final long serialVersionUID = -1528262995626726773L;
   private static final Logger log = LoggerFactory.getLogger(IrreversibleEffect.class);
 
-  private Effect effect;
+  protected Effect effect;
 
   public IrreversibleEffect(Effect effect) {
     this.effect = effect;

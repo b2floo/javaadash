@@ -34,8 +34,26 @@ public class RangeValue {
     return new RangeValue(min + modifier, max + modifier);
   }
 
+  public RangeValue add(Integer minModifier, Integer maxModifier) {
+    int newMin = min + minModifier;
+    int newMax = max + maxModifier;
+    if (newMin > newMax) {
+      newMax = newMin;
+    }
+    return new RangeValue(newMin, newMax);
+  }
+
   public RangeValue remove(Integer modifier) {
     return new RangeValue(min - modifier, max - modifier);
+  }
+
+  public RangeValue remove(Integer minModifier, Integer maxModifier) {
+    int newMin = min - minModifier;
+    int newMax = max - maxModifier;
+    if (newMin > newMax) {
+      newMax = newMin;
+    }
+    return new RangeValue(newMin, newMax);
   }
 
   public String getDescription() {

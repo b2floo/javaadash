@@ -36,25 +36,28 @@ public class StaticDeckGenerator {
 
     Effect effect000261 = new CharacterSettingModificationEffect("ATT", "2", Target.SELF);
 
+    int divisor = 6;
     for (int i = 0; i < nbActions; i++) {
-      if (i % 5 == 0) {
+      if (i % divisor == 0) {
         Card card0004 =
             new Card("0004", CardType.ACTION, "BARRACUDA", Arrays.asList(new Effect[] {effect00041,
                 effect00042}));
         deck.addCard(card0004);
-      } else if (i % 5 == 1) {
+      } else if (i % divisor == 1) {
         Card card0007 =
             new Card("0007", CardType.ACTION, "KUBI", Arrays.asList(new Effect[] {effect00071,
                 effect00072}));
         deck.addCard(card0007);
-      } else if (i % 5 == 2) {
+      } else if (i % divisor == 2) {
         Card card00026 =
             new Card("00026", CardType.ACTION, "BRUDAL", Arrays.asList(new Effect[] {effect000261}));
         deck.addCard(card00026);
-      } else if (i % 5 == 3) {
+      } else if (i % divisor == 3) {
         deck.addCard(CardDictionary.getCard("00027"));
-      } else if (i % 5 == 4) {
+      } else if (i % divisor == 4) {
         deck.addCard(CardDictionary.getCard("00028"));
+      } else if (i % divisor == 5) {
+        deck.addCard(CardDictionary.getCard("00029"));
       }
     }
 

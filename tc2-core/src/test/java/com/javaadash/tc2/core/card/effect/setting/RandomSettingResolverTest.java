@@ -12,7 +12,7 @@ import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
-public class RandomSettingEffectTest extends TestCase {
+public class RandomSettingResolverTest extends TestCase {
 
   private RandomSettingResolver randomEffect;
 
