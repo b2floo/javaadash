@@ -21,15 +21,27 @@ public class TargetResolver implements Serializable {
         chars.addAll(p.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.BOARD));
         break;
       case OPPONENT:
-        if (p == context.getFirstPlayer())
-          p = context.getSecondPlayer();
-        else
-          p = context.getFirstPlayer();
-        chars.addAll(p.getIngameDeck().getCards(CardType.CHARACTER, CardLocation.BOARD));
+        chars.addAll(getOpponent(p, context).getIngameDeck().getCards(CardType.CHARACTER,
+            CardLocation.BOARD));
         break;
-      default:
+      case ALL_PLAYER_CHARACTERS:
+        chars.addAll(p.getIngameDeck().getCards(CardType.CHARACTER));
+        break;
+      case ALL_OPPONENTS:
+        chars.addAll(getOpponent(p, context).getIngameDeck().getCards(CardType.CHARACTER));
+        break;
+      case ALL:
+        chars.addAll(p.getIngameDeck().getCards(CardType.CHARACTER));
+        chars.addAll(getOpponent(p, context).getIngameDeck().getCards(CardType.CHARACTER));
         break;
     }
     return chars;
+  }
+
+  public static Player getOpponent(Player p, GameContext context) {
+    if (p == context.getFirstPlayer())
+      return context.getSecondPlayer();
+    else
+      return context.getFirstPlayer();
   }
 }
