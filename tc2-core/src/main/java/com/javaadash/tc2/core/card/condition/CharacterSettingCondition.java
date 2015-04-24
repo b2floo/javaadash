@@ -47,9 +47,10 @@ public class CharacterSettingCondition implements Condition {
             return false;
           break;
         case EQUALS:
-          if (character.getSetting(setting).compareToIgnoreCase(value) != 0)
-            return false;
-          break;
+          if (character.getIntSetting(setting) != null) {
+            return (value.compareToIgnoreCase(character.getSetting(setting)) == 0);
+          }
+          return character.getSetting(setting).contains(value);
         case LESS:
           if (character.getIntSetting(setting).getMin() >= Integer.parseInt(value))
             return false;

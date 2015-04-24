@@ -1,5 +1,7 @@
 package com.javaadash.tc2.core.card.condition;
 
+import java.util.Collections;
+
 import junit.framework.TestCase;
 
 import com.javaadash.tc2.core.GameUtils;
@@ -9,11 +11,13 @@ import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.condition.CharacterSettingCondition.Operator;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.context.GameContext;
+import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class CharacterSettingConditionTest extends TestCase {
   private GameContext context;
   private Card c;
+  private static String settingName = "LIFE";
 
   @Override
   protected void setUp() throws Exception {
@@ -65,6 +69,26 @@ public class CharacterSettingConditionTest extends TestCase {
 
     c.setIntSetting(settingName, 1);
     assertFalse(condition.isFulfilled(context));
+
+    c.setIntSetting(settingName, 22);
+    assertFalse(condition.isFulfilled(context));
+  }
+
+  @SuppressWarnings("unchecked")
+  public void testEqualsWithMultiValuedStaticSetting() throws TC2CoreException {
+    c =
+        new Card("123", CardType.CHARACTER, "JUNIT", null, null, Collections.singletonMap("CLASS",
+            "MARAUDER, PRIEST"), Collections.EMPTY_MAP);
+    Player p = GameUtils.getPlayer("junit", 1, 0, 0, c);
+
+    context = new GameContext(p, new Player());
+    context.setCurrentPlayer(p);
+    p.getIngameDeck().setCardLocation(c, CardLocation.BOARD);
+
+    CharacterSettingCondition condition =
+        new CharacterSettingCondition("CLASS", Operator.EQUALS, "MARAUDER", Target.SELF);
+
+    assertTrue(condition.isFulfilled(context));
   }
 
   public void testLessEquals() {
@@ -96,7 +120,4 @@ public class CharacterSettingConditionTest extends TestCase {
   }
 
   // TODO add multiple characters target tests
-
-  private static String settingName = "LIFE";
-
 }
