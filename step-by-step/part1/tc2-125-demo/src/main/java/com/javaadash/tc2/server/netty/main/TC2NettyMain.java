@@ -2,10 +2,11 @@ package com.javaadash.tc2.server.netty.main;
 
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.javaadash.tc2.core.game.server.TC2Server;
 import com.javaadash.tc2.server.message.JoinGameMessage;
 import com.javaadash.tc2.server.netty.listener.JoinGameListener;
 
-public class TC2NettyServer {
+public class TC2NettyMain {
 
   public static void main(String[] args) throws InterruptedException {
 
@@ -15,7 +16,9 @@ public class TC2NettyServer {
 
     final SocketIOServer server = new SocketIOServer(config);
 
-    server.addEventListener("join_any_game", JoinGameMessage.class, new JoinGameListener());
+    TC2Server tc2Server = new TC2Server();
+    server
+        .addEventListener("join_any_game", JoinGameMessage.class, new JoinGameListener(tc2Server));
 
     server.start();
   }

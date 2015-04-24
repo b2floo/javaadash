@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Real time multi-player games with HTML5</title>
+        <meta charset="utf-8" />
+	
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        
+	    <style>
+		    body { 
+			    padding:20px;
+		    }
+		    #console { 
+			    height: 100px; 
+			    overflow: auto; 
+		    }
+	    </style>
+		
+		<!-- JQuery -->
+		<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+		<script src="js/socket.io/socket.io.js"></script>
+        <script src="js/moment.min.js"></script>
+		
+        <script type="text/javascript">
+			
+			//This create the connection to server
+           var socket = io.connect('http://localhost:9092', {
+             'reconnection delay' : 2000,
+             'force new connection' : true
+           });
+
+		   
+			socket.on('start_game', function(data) {
+				output('<span class="play-msg">'+data.message+'</span>');
+       		});
+
+			function output(message) {
+	            var currentTime = "<span>" +  moment().format('HH:mm:ss.SSS') + "</span>";
+	            var element = $("<div>" + currentTime + " " + message + "</div>");
+				$('#console').prepend(element);
+			}
+			
+			function joinAnyGame() {
+       		    var username = $('#username').val();
+                var jsonObject = {username: username};
+            	socket.emit('join_any_game', jsonObject);
+                output('<span>Game request sent, waiting for an opponent</span>');
+			};
+        </script>
+    </head>
+ 
+     <body>
+        <div class="container">
+            <div class="row">
+	            <form class="well form-inline col-lg-4 col-md-4 col-sm-4" onsubmit="return false;">
+	               <input id="username" class="input-xlarge" type="text" placeholder="Enter your name--"/>
+	               <button type="button" onClick="joinAnyGame()" class="btn">Join any game</button>
+	            </form>
+
+                <div id="console" class="well col-lg-7 col-md-7 col-sm-7 pull-right"></div>
+            </div>
+        </div>
+    </body>
+</html>
