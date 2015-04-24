@@ -1,6 +1,7 @@
-package com.javaadash.tc2.core.card.effect.setting;
+package com.javaadash.tc2.core.card;
 
 import java.util.Random;
+
 
 public class RandomRangeValue {
   private RangeValue rangeValue;

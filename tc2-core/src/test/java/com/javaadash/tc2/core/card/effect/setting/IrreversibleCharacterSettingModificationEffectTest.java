@@ -1,4 +1,4 @@
-package com.javaadash.tc2.core.card.effect.character.setting.modification;
+package com.javaadash.tc2.core.card.effect.setting;
 
 import junit.framework.TestCase;
 
@@ -6,10 +6,11 @@ import com.javaadash.tc2.core.GameUtils;
 import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.Card;
 import com.javaadash.tc2.core.card.CardType;
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.Effect;
-import com.javaadash.tc2.core.card.effect.SettingChange;
+import com.javaadash.tc2.core.card.effect.IrreversibleEffect;
 import com.javaadash.tc2.core.card.effect.Target;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
+import com.javaadash.tc2.core.card.effect.log.SettingChange;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.interfaces.player.Player;
 

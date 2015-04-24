@@ -1,4 +1,4 @@
-package com.javaadash.tc2.core.card.effect.character.setting.modification;
+package com.javaadash.tc2.core.card.effect.setting;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,13 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.card.Card;
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
+import com.javaadash.tc2.core.card.RandomRangeValue;
+import com.javaadash.tc2.core.card.RangeValue;
 import com.javaadash.tc2.core.card.effect.Effect;
-import com.javaadash.tc2.core.card.effect.SettingChange;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
-import com.javaadash.tc2.core.card.effect.setting.RandomRangeValue;
-import com.javaadash.tc2.core.card.effect.setting.RangeValue;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
+import com.javaadash.tc2.core.card.effect.log.SettingChange;
 import com.javaadash.tc2.core.context.GameContext;
 
 public class CharacterSettingModificationEffect implements Effect {

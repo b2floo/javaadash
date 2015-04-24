@@ -6,8 +6,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import com.javaadash.tc2.core.card.Card;
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
-import com.javaadash.tc2.core.card.effect.SettingChange;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
+import com.javaadash.tc2.core.card.effect.log.SettingChange;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class CharacterMatchResolverTest extends TestCase {

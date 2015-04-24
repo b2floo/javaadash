@@ -5,8 +5,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
 import com.javaadash.tc2.core.card.effect.MockEffect;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
 import com.javaadash.tc2.core.context.GameContext;
 
 public class TurnActiveEffectTest extends TestCase {

@@ -2,6 +2,7 @@ package com.javaadash.tc2.core.card.effect;
 
 import java.io.Serializable;
 
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
 import com.javaadash.tc2.core.context.GameContext;
 
 /**

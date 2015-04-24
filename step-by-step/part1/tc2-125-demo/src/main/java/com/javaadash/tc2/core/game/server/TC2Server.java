@@ -29,7 +29,7 @@ public class TC2Server implements TC2ServerInterface {
         opponent.getPlayerInterface().startGame(
             new StartGameMessage("Welcome, you start a game against " + newPlayer.getName()));
       } catch (IOException e) {
-        log.error("Error while sending start message to players" + e.getMessage(), e);
+        log.error("Error while sending start message to players" + e.getMessage());
       }
     }
   }

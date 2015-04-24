@@ -2,7 +2,7 @@ package com.javaadash.tc2.core.interfaces.message;
 
 import java.util.List;
 
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
 
 public class UpdateSettingsMessage {
   private List<CardEffectLog> cardEffectLogs;

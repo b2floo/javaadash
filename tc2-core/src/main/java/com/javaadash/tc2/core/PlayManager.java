@@ -10,7 +10,7 @@ import com.javaadash.tc2.core.board.CardLocation;
 import com.javaadash.tc2.core.card.CardDescription;
 import com.javaadash.tc2.core.card.CardType;
 import com.javaadash.tc2.core.card.CardsToDescriptionHelper;
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
 import com.javaadash.tc2.core.context.GameContext;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 import com.javaadash.tc2.core.interfaces.message.EndGameMessage;

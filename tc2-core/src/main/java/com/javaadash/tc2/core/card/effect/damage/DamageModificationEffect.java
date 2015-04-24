@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.card.Card;
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
+import com.javaadash.tc2.core.card.RandomRangeValue;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
 import com.javaadash.tc2.core.card.effect.TargetResolver;
-import com.javaadash.tc2.core.card.effect.setting.RandomRangeValue;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
 import com.javaadash.tc2.core.context.GameContext;
 
 public class DamageModificationEffect implements Effect, DamageModifier {

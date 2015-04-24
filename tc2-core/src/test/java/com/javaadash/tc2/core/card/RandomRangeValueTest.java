@@ -1,4 +1,4 @@
-package com.javaadash.tc2.core.card.effect.setting;
+package com.javaadash.tc2.core.card;
 
 import junit.framework.TestCase;
 

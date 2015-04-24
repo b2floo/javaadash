@@ -10,7 +10,7 @@ import com.javaadash.tc2.core.card.Deck;
 import com.javaadash.tc2.core.card.dictionnary.CardDictionary;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.Target;
-import com.javaadash.tc2.core.card.effect.character.setting.modification.CharacterSettingModificationEffect;
+import com.javaadash.tc2.core.card.effect.setting.CharacterSettingModificationEffect;
 import com.javaadash.tc2.core.exceptions.TC2CoreException;
 
 public class StaticDeckGenerator {
@@ -36,7 +36,7 @@ public class StaticDeckGenerator {
 
     Effect effect000261 = new CharacterSettingModificationEffect("ATT", "2", Target.SELF);
 
-    int divisor = 9;
+    int divisor = 10;
     for (int i = 0; i < nbActions; i++) {
       if (i % divisor == 0) {
         Card card0004 =
@@ -62,6 +62,8 @@ public class StaticDeckGenerator {
         deck.addCard(CardDictionary.getCard("00030"));
       } else if (i % divisor == 8) {
         deck.addCard(CardDictionary.getCard("00031"));
+      } else if (i % divisor == 9) {
+        deck.addCard(CardDictionary.getCard("00032"));
       }
     }
 

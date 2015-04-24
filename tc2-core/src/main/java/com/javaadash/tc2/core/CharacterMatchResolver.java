@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.javaadash.tc2.core.card.Card;
-import com.javaadash.tc2.core.card.effect.CardEffectLog;
-import com.javaadash.tc2.core.card.effect.SettingChange;
+import com.javaadash.tc2.core.card.RangeValue;
 import com.javaadash.tc2.core.card.effect.damage.DamageModifier;
-import com.javaadash.tc2.core.card.effect.setting.RangeValue;
+import com.javaadash.tc2.core.card.effect.log.CardEffectLog;
+import com.javaadash.tc2.core.card.effect.log.SettingChange;
 import com.javaadash.tc2.core.interfaces.player.Player;
 
 public class CharacterMatchResolver {

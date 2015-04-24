@@ -1,4 +1,4 @@
-package com.javaadash.tc2.core.card.effect;
+package com.javaadash.tc2.core.card.effect.log;
 
 import java.util.ArrayList;
 import java.util.List;

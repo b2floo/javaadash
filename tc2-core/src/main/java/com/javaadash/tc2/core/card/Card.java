@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.javaadash.tc2.core.card.condition.Condition;
 import com.javaadash.tc2.core.card.effect.Effect;
 import com.javaadash.tc2.core.card.effect.damage.DamageModifier;
-import com.javaadash.tc2.core.card.effect.setting.RangeValue;
 
 public class Card implements Serializable {
   private static final long serialVersionUID = 3548312040504128825L;
